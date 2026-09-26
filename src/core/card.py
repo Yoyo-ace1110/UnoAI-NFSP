@@ -34,12 +34,12 @@ class Card:
     @property
     def id(self) -> ID: return self.ID(self.code // 4)
     @id.setter
-    def id(self, x: ID) -> None: self.id = x
+    def id(self, id: ID) -> None: self.id = id
     
     @property
     def color(self) -> Color: return self.Color(self.code % 4)
     @color.setter
-    def color(self, x: Color) -> None: self.color = x
+    def color(self, color: Color) -> None: self.color = color
 
     def is_black(self) -> bool:
         """ 判斷是否為黑色牌 """

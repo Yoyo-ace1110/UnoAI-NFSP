@@ -2,6 +2,8 @@
 
 class Rules:
     # default rules
+    
+    player_count: int = 4  
     stack_skip:     bool = True  # 可否連續禁止
     stack_plus2:    bool = True  # +2 之間可連加
     stack_plus4:    bool = True  # +4 之間可連加
