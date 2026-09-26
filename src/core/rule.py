@@ -1,3 +1,29 @@
+# __all__ = ['Rules']
 
-chain_skip: bool  = True
-chain_plus2: bool = True
+class Rules:
+    # default rules
+    stack_skip:     bool = True  # 可否連續禁止
+    stack_plus2:    bool = True  # +2 之間可連加
+    stack_plus4:    bool = True  # +4 之間可連加
+    stack_all_plus: bool = True  # 任何 +2, +4 都可連加
+    draw_one:       bool = True  # 沒牌時僅抽一張
+    draw_to_play:   bool = False # 沒牌時持續抽牌直到能出牌
+    play_after_draw:bool = True  # 抽牌之後是否可以立即打掉
+    black_finisher: bool = False # 黑色牌能否是最後一張
+    color_retention:bool = True  # 手上必須留一張顏色牌
+    
+    # TODO
+    # @staticmethod
+    # def load_from(path: str) -> bool: ...
+    
+    @staticmethod
+    def is_ok() -> bool:
+        """ 判斷規則之間是否矛盾 """
+        if (Rules.stack_all_plus):
+            if (not Rules.stack_plus2): return False
+            if (not Rules.stack_plus4): return False
+        if (Rules.draw_to_play):
+            if (Rules.draw_one):            return False
+            if (not Rules.play_after_draw): return False
+        if (Rules.black_finisher and Rules.color_retention): return False
+        return True
