@@ -1,5 +1,3 @@
-class Agent: ...
-
 class Rule:
     """ 初始化規則(預設規則) """
     hand_size:      int  = 7     # 一開始發幾張牌

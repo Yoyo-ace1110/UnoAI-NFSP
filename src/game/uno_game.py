@@ -93,7 +93,8 @@ class UnoGame:
                 top_is_plus2: bool = (self.deck.top.value == Value.plus2 and self.has_effect)
                 top_is_plus4: bool = (self.deck.top.value == Value.plus4 and self.has_effect)
                 # 被禁止不用抽
-                if (top_is_skip): pass
+                if (top_is_skip): 
+                    self.has_effect = False
                 # 被加牌
                 elif (top_is_plus2 or top_is_plus4): 
                     self.current_player.draw(self.deck, self.plus_sum)
