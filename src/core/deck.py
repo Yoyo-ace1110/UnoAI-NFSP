@@ -1,6 +1,7 @@
 import random
 from core import Card, Color, Value
 
+# 牌堆
 class Deck:
     def __init__(self) -> None:
         """ 初始化牌堆 """
@@ -20,7 +21,7 @@ class Deck:
                 color = Color(j)
                 self.cards.append(Card(color, value))
         # 翻出第一張牌
-        choice: int = random.randint(0, self.size())
+        choice: int = random.randint(0, self.size()-1)
         self.top: Card = self.cards[choice]
         self.cards.pop(choice)
         # 加入功能牌
@@ -75,3 +76,9 @@ class Deck:
     def is_playable(self, card: Card) -> bool:
         """ 判斷牌能不能打 """
         return card.is_playable_after(self.top)
+
+"""
+[a, b)
+for i in range(a, b):
+    print(i)
+"""
