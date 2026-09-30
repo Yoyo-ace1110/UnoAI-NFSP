@@ -88,6 +88,5 @@ class Player:
     
     def play_drawed(self, card: Card) -> bool:
         """ 判斷是否打掉這張抽來的牌 """
-        # TODO:
-        # if (not Rule.play_after_draw): return False
-        ...
+        if (not Rule.play_after_draw): return False
+        return self.agent.play_drawed(card)
