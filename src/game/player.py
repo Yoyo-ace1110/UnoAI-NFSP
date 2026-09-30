@@ -48,11 +48,46 @@ class Player:
             # 不能打, 繼續抽
             self.hand.append(card)
 
-    def genmove(self) -> Card|None:
+    def color_count(self) -> int:
+        """ 判斷手上是否不是只剩黑色牌 """
+        count: int = 0
+        for card in self.hand:
+            if (not card.is_black()):
+                count += 1
+        return count
+
+    def softmax_playables(self, deck_top: Card) -> list[float]:
+        """ 輸出手上各牌出牌的機率
+            回傳一個出牌機率向量
+            索引值對應到手牌索引
+            最後一個元素代表抽牌 
+        """
+        playable_probs: list[float] = []
+        color_count: int = self.color_count()
+        prob_vec: tuple[float, ...] = self.agent.gen_prob_vector()
+        # 其他牌機率
+        for card in self.hand:
+            # 不能打就跳過
+            if (not card.is_playable_after(deck_top)): continue
+            if (not Rule.black_finisher and self.uno() and card.is_black()): continue
+            if (Rule.color_retention and card.is_color() and color_count == 1): continue
+            # 如果可以打則加入向量
+            playable_probs.append(prob_vec[card.id])
+        # 抽牌機率
+        playable_probs.append(prob_vec[-1])
+        return playable_probs
+
+    def genmove(self, deck_top: Card) -> Card|None:
         """ 出牌, None代表抽牌 """
-        # TODO:
+        prob_vec: list[float] = self.softmax_playables(deck_top)
+        max_index: int = max(range(len(prob_vec)), key=prob_vec.__getitem__)
+        # 最後一個元素代表抽牌
+        if (max_index == self.hand_size()): return None
+        # 其他則去手牌上找
+        return self.hand[max_index]
     
     def play_drawed(self, card: Card) -> bool:
         """ 判斷是否打掉這張抽來的牌 """
         # TODO:
-        if (not Rule.play_after_draw): return False
+        # if (not Rule.play_after_draw): return False
+        ...

@@ -76,9 +76,3 @@ class Deck:
     def is_playable(self, card: Card) -> bool:
         """ 判斷牌能不能打 """
         return card.is_playable_after(self.top)
-
-"""
-[a, b)
-for i in range(a, b):
-    print(i)
-"""

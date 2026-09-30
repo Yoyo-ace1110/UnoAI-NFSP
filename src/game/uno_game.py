@@ -81,12 +81,12 @@ class UnoGame:
         if (self.current_player.uno()): 
             print(f"Player{self.turn} Uno!")
 
-    def loop(self) -> None:
+    def game_loop(self) -> None:
         """ 遊戲主迴圈 """
         while True:
             self.log()
             # 做出決策
-            played: Card|None = self.current_player.genmove()
+            played: Card|None = self.current_player.genmove(self.deck.top)
             # 決定抽牌
             if (played is None):
                 top_is_skip : bool = (self.deck.top.value == Value.skip  and self.has_effect)
@@ -123,5 +123,10 @@ class UnoGame:
             if (self.current_player.is_winner()): 
                 self.game_over(winner_index=self.turn)
                 break   
+            # 判斷是否持續洗牌
+            if (Rule.always_suffle): self.deck.reshuffle()
             # 換下一回合
             self.turn_next()
+
+    def train_loop(self) -> None:
+        """ 訓練主迴圈 """

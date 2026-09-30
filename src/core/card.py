@@ -78,6 +78,10 @@ class Card:
         """ 判斷是否為黑色牌 """
         return self.value.is_black()
 
+    def is_color(self) -> bool:
+        """ 判斷是否為顏色牌 """
+        return not self.value.is_black()
+
     def is_playable_after(self, card: Card) -> bool:
         """ 判斷這張牌是否可以打 """
         # 連續禁止
