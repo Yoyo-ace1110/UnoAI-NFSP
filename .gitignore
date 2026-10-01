@@ -3,3 +3,4 @@ test.py
 *.spec
 build/
 .vscode/
+**/__pycache__/

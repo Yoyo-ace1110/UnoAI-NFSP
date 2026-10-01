@@ -1,9 +1,7 @@
 from abc import ABC, abstractmethod
 from core import Card
-import typing
 
-if typing.TYPE_CHECKING:
-    from game import UnoGame
+class UnoGame: ...
 
 class Agent(ABC):
     # 共用的全域資訊

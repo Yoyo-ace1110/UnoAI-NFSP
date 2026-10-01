@@ -14,8 +14,7 @@ class Player:
     def show_hand(self, index: int) -> None:
         """ 輸出手牌 """
         print(f"Player{index}: ", end="")
-        for card in self.hand: 
-            print(f"{card} ", end="")
+        for card in self.hand: print(f"{card} ", end="")
         print() # 最後的換行
 
     def hand_size(self) -> int: return len(self.hand)

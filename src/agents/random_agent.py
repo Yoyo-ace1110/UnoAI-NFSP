@@ -1,6 +1,6 @@
 from random import uniform, random
-from core.card import Card
-from agent import Agent
+from .agent import Agent
+from core import Card
 
 class RandomAgent(Agent):
     def gen_prob_vector(self) -> tuple[float, ...]:

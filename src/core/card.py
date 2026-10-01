@@ -1,5 +1,5 @@
 from __future__ import annotations
-from rule import Rule
+from .rule import Rule
 from enum import Enum
 
 # 顏色
@@ -9,9 +9,18 @@ class Color(Enum):
     Green  = 2
     Yellow = 3
     
+    @classmethod
+    def from_str(cls, text: str) -> Color:
+        """ 由使用者輸入建構 Color """
+        string: tuple[str, ...] = ("R", "B", "G", "Y" )
+        return cls(string.index(text))
+
+    def __str__(self) -> str:
+        string: tuple[str, ...] = ("R", "B", "G", "Y" )
+        return string[self.value]
+
     def __repr__(self) -> str:
-        string: tuple[str, str, str, str]
-        string = ("R", "B", "G", "Y" )
+        string: tuple[str, ...] = ("R", "B", "G", "Y" )
         return string[self.value]
 
 # 牌面
@@ -34,6 +43,13 @@ class Value(Enum):
     wild  = 13 # 變色
     plus4 = 14 # +4   
 
+    @classmethod
+    def from_str(cls, text: str) -> Value:
+        """ 由使用者輸入建構 Value """
+        string: tuple[str, ...] = ("turn", "skip", "wild", "+2", "+4")
+        if (text.isdecimal()): return cls(int(text))
+        return cls(string.index(text)+10)
+
     def is_number(self) -> bool:
         """ 判斷是否為數字 """
         return self.value <= 9
@@ -44,12 +60,17 @@ class Value(Enum):
         is_plus4: bool = (self.value == 14)
         return is_wild or is_plus4
 
-    def __repr__(self) -> str:
-        string: tuple[str, str, str, str, str]
+    def __str__(self) -> str:
+        string: tuple[str, ...] = ("turn", "skip", "wild", "+2", "+4")
         if (self.is_number()): return str(self.value)
-        string = ("turn", "skip", "wild", "+2", "+4")
         return str(string[self.value-10])
 
+    def __repr__(self) -> str:
+            string: tuple[str, ...] = ("turn", "skip", "wild", "+2", "+4")
+            if (self.is_number()): return str(self.value)
+            return str(string[self.value-10])
+
+# 牌張
 class Card:
     def __init__(self, color: Color, value: Value) -> None:
         """ 初始化牌張 """
@@ -72,6 +93,8 @@ class Card:
     @color.setter
     def color(self, color: Color) -> None: self.color = color
 
+    def __str__(self) -> str: return f"{self.color}|{self.value}"
+    
     def __repr__(self) -> str: return f"{self.color}|{self.value}"
 
     def is_black(self) -> bool:
@@ -82,19 +105,21 @@ class Card:
         """ 判斷是否為顏色牌 """
         return not self.value.is_black()
 
-    def is_playable_after(self, card: Card) -> bool:
+    def is_playable_after(self, deck_top: Card) -> bool:
         """ 判斷這張牌是否可以打 """
         # 連續禁止
-        if (card.value == Value.skip):
+        if (deck_top.value == Value.skip):
             return (Rule.stack_skip and self.value == Value.skip)
         # +2, +4
-        if (card.value == Value.plus2):
+        if (deck_top.value == Value.plus2):
             if (Rule.stack_plus2 and self.value == Value.plus2): return True
             if (Rule.stack_all_plus and self.value == Value.plus4): return True
             return False
-        if (card.value == Value.plus4):
+        if (deck_top.value == Value.plus4):
             if (Rule.stack_plus4 and self.value == Value.plus4): return True
-            if (Rule.stack_all_plus and self.value == Value.plus2 and self.color == card.color): return True
+            if (Rule.stack_all_plus and self.value == Value.plus2 and self.color == deck_top.color): return True
             return False
-        # 迴轉/變色/數字
-        return (self.color == card.color or self.value == card.value)
+        # 隨時可打
+        if (self.is_black()): return True
+        # 其他的牌
+        return (self.color == deck_top.color or self.value == deck_top.value)

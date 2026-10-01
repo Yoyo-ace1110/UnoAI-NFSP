@@ -1,5 +1,5 @@
 from core import Rule, Card, Value, Deck
-from player import Player
+from .player import Player
 from agents import Agent
 
 class UnoGame:
@@ -24,7 +24,7 @@ class UnoGame:
         self.plus_sum: int = 0
         # 效果處理
         self.has_effect: bool = False
-        Agent.game_ref = self
+        Agent.game_ref = self # pyright: ignore[reportAttributeAccessIssue]
 
     @property
     def current_player(self) -> Player: return self.players[self.turn]

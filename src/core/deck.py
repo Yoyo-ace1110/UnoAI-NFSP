@@ -1,5 +1,5 @@
 import random
-from core import Card, Color, Value
+from .card import Card, Color, Value
 
 # 牌堆
 class Deck:
@@ -68,7 +68,7 @@ class Deck:
     def draw(self, n: int) -> list[Card]:
         """ 抽出 n 張牌 """
         result: list[Card] = []
-        while (n > 0):
+        for _ in range(n):
             drawed: Card|None = self.draw_one()
             if (drawed is not None): result.append(drawed)
         return result
