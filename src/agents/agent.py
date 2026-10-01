@@ -1,8 +1,14 @@
 from abc import ABC, abstractmethod
 from core import Card
-# from core import Card
+import typing
+
+if typing.TYPE_CHECKING:
+    from game import UnoGame
 
 class Agent(ABC):
+    # 共用的全域資訊
+    game_ref: UnoGame
+    
     @abstractmethod
     def gen_prob_vector(self) -> tuple[float, ...]:
         """ 輸出出各種牌的機率

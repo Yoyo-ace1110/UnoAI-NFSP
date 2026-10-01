@@ -1,5 +1,4 @@
-from core import Rule, Card, Deck
-from core import Card, Value
+from core import Rule, Card, Value, Deck
 from player import Player
 from agents import Agent
 
@@ -25,6 +24,7 @@ class UnoGame:
         self.plus_sum: int = 0
         # 效果處理
         self.has_effect: bool = False
+        Agent.game_ref = self
 
     @property
     def current_player(self) -> Player: return self.players[self.turn]
@@ -81,6 +81,9 @@ class UnoGame:
         if (self.current_player.uno()): 
             print(f"Player{self.turn} Uno!")
 
+    def train_loop(self) -> None:
+        """ 訓練主迴圈 """
+
     def game_loop(self) -> None:
         """ 遊戲主迴圈 """
         while True:
@@ -127,6 +130,3 @@ class UnoGame:
             if (Rule.always_suffle): self.deck.reshuffle()
             # 換下一回合
             self.turn_next()
-
-    def train_loop(self) -> None:
-        """ 訓練主迴圈 """
