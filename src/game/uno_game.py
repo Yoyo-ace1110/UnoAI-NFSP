@@ -130,7 +130,12 @@ class UnoGame:
             if (played is None): self.decide_to_draw()
             # 無效的決策
             elif (not self.deck.is_playable(played)): 
-                raise ValueError("The Card is not playable")
+                # 人類打錯牌
+                if (isinstance(self.current_player.agent, HumanAgent)):
+                    print("The card is not playable, please try again")
+                    continue
+                # AI 出錯
+                raise ValueError("Bot played the Card that is not playable")
             # 正常出牌
             else: self.play_as_normal(played)
             # 判斷是否贏了
