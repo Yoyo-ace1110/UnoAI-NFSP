@@ -12,8 +12,15 @@ class Color(Enum):
     @classmethod
     def from_str(cls, text: str) -> Color:
         """ 由使用者輸入建構 Color """
-        string: tuple[str, ...] = ("R", "B", "G", "Y" )
-        return cls(string.index(text))
+        red_str: tuple[str, ...] = ("R", "r", "Red", "red")
+        blue_str: tuple[str, ...] = ("B", "b", "Blue", "blue")
+        green_str: tuple[str, ...] = ("G", "g", "Green", "green")
+        yellow_str: tuple[str, ...] = ("Y", "y", "Yellow", "yellow")
+        if (text in red_str): return cls.Red
+        if (text in blue_str): return cls.Blue
+        if (text in green_str): return cls.Green
+        if (text in yellow_str): return cls.Yellow
+        raise ValueError("Unable to parse the Color")
 
     def __str__(self) -> str:
         string: tuple[str, ...] = ("R", "B", "G", "Y" )
