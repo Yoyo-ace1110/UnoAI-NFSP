@@ -36,6 +36,8 @@ class Deck:
             for j in range(4):
                 color = Color(j)
                 self.cards.append(Card(color, value))
+        # 效果處理
+        self.has_effect: bool = False
 
     def size(self) -> int:
         """ 牌堆剩餘幾張牌 """
@@ -75,4 +77,4 @@ class Deck:
 
     def is_playable(self, card: Card) -> bool:
         """ 判斷牌能不能打 """
-        return card.is_playable_after(self.top)
+        return card.is_playable_after(self.top, self.has_effect)

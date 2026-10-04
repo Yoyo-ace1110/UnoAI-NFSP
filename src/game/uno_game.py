@@ -1,6 +1,6 @@
 from core import Rule, Card, Value, Deck
+from agents import Agent, HumanAgent
 from .player import Player
-from agents import Agent
 
 class UnoGame:
     def __init__(self, agents: list[Agent]) -> None:
@@ -22,8 +22,6 @@ class UnoGame:
             self.players.append(player)
         # 累加機制
         self.plus_sum: int = 0
-        # 效果處理
-        self.has_effect: bool = False
         Agent.game_ref = self # pyright: ignore[reportAttributeAccessIssue]
 
     @property
@@ -51,31 +49,69 @@ class UnoGame:
 
     def log(self) -> None:
         """ 輸出遊戲狀態 """
-        print(f"top card: {self.deck.top}")
+        print(f"\ntop card: {self.deck.top}")
         for i in range(self.players_size):
-            # 當前玩加輸出手牌, 其餘輸出張數
-            if (self.turn == i): self.players[i].show_hand(i)
+            player: Player = self.players[i]
+            # 人類玩家輸出手牌, 其餘輸出張數
+            if (isinstance(player.agent, HumanAgent)): player.show_hand(i)
             else: print(f"Player{i}: {self.players[i].hand_size()} cards")
 
     def game_over(self, winner_index: int) -> None:
         """ 遊戲結束 """
         print(f"Game Over! The Winner is Player{winner_index}")
 
+    def decide_to_draw(self) -> None:
+        """ 玩家決定抽牌 """
+        top_is_skip : bool = (self.deck.top.value == Value.skip  and self.deck.has_effect)
+        top_is_plus2: bool = (self.deck.top.value == Value.plus2 and self.deck.has_effect)
+        top_is_plus4: bool = (self.deck.top.value == Value.plus4 and self.deck.has_effect)
+        # 被禁止不用抽
+        if (top_is_skip): 
+            print(f"Player{self.turn} was skipped")
+            self.deck.has_effect = False
+            return
+        # 被加牌
+        if (top_is_plus2 or top_is_plus4): 
+            print(f"Player{self.turn} drawed {self.plus_sum} cards")
+            self.current_player.draw(self.deck, self.plus_sum)
+            self.deck.has_effect = False # 加完之後讓牌頂失效
+            self.plus_sum = 0 # 重置累加指標
+            return
+        # 抽到可以打
+        if (Rule.draw_to_play): 
+            self.current_player.draw_to_play(self.deck)
+            return
+        # 沒牌抽
+        drawed: Card|None = self.deck.draw_one()
+        if (drawed is None): 
+            print(f"deck is empty, Player{self.turn} drawed nothing")
+            return
+        # 抽一張
+        self.current_player.receive(drawed)
+        if (isinstance(self.current_player.agent, HumanAgent)):
+            print(f"Player{self.turn} drawed {drawed}")    
+        else: print(f"Player{self.turn} drawed 1 card")  
+        # 打掉這張
+        if (self.deck.is_playable(drawed) and self.current_player.play_drawed(drawed)): 
+            self.play_as_normal(drawed)
+
     def play_as_normal(self, played: Card) -> None:
         """ 正常出牌 """
         self.deck.set_top(played)
+        self.current_player.remove(played)
+        print(f"Player{self.turn} played {played}")
         # 迴轉機制
         if (played.value == Value.turn):
             self.reverse()
         # 禁止機制
         elif (played.value == Value.skip):
-            self.has_effect = True
+            self.deck.has_effect = True
         # 連加機制
         elif (played.value == Value.plus2):
-            self.has_effect = True
+            self.deck.has_effect = True
             self.plus_sum += 2
         elif (played.value == Value.plus4):
-            self.has_effect = True
+            self.deck.has_effect = True
             self.plus_sum += 4
         # Uno 機制
         if (self.current_player.uno()): 
@@ -89,34 +125,9 @@ class UnoGame:
         while True:
             self.log()
             # 做出決策
-            played: Card|None = self.current_player.genmove(self.deck.top)
+            played: Card|None = self.current_player.genmove(self.deck.top, self.deck.has_effect)
             # 決定抽牌
-            if (played is None):
-                top_is_skip : bool = (self.deck.top.value == Value.skip  and self.has_effect)
-                top_is_plus2: bool = (self.deck.top.value == Value.plus2 and self.has_effect)
-                top_is_plus4: bool = (self.deck.top.value == Value.plus4 and self.has_effect)
-                # 被禁止不用抽
-                if (top_is_skip): 
-                    self.has_effect = False
-                # 被加牌
-                elif (top_is_plus2 or top_is_plus4): 
-                    self.current_player.draw(self.deck, self.plus_sum)
-                    self.has_effect = False # 加完之後讓牌頂失效
-                    self.plus_sum = 0 # 重置累加指標
-                # 單純抽牌
-                else:
-                    # 抽一張
-                    if (Rule.draw_one):
-                        drawed: Card|None = self.deck.draw_one()
-                        # 沒牌抽
-                        if (drawed is None): pass
-                        # 打掉這張
-                        elif (self.current_player.play_drawed(drawed)):
-                            self.play_as_normal(drawed)
-                        # 收下這張
-                        else: self.current_player.receive(drawed) 
-                    # 抽到可以打
-                    else: self.current_player.draw_to_play(self.deck)
+            if (played is None): self.decide_to_draw()
             # 無效的決策
             elif (not self.deck.is_playable(played)): 
                 raise ValueError("The Card is not playable")
@@ -124,9 +135,11 @@ class UnoGame:
             else: self.play_as_normal(played)
             # 判斷是否贏了
             if (self.current_player.is_winner()): 
-                self.game_over(winner_index=self.turn)
-                break   
+                self.game_over(self.turn)
+                break
             # 判斷是否持續洗牌
-            if (Rule.always_suffle): self.deck.reshuffle()
+            if (Rule.always_suffle): 
+                self.deck.reshuffle()
+                print("deck was reshuffled")
             # 換下一回合
             self.turn_next()

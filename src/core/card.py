@@ -46,7 +46,7 @@ class Value(Enum):
     @classmethod
     def from_str(cls, text: str) -> Value:
         """ 由使用者輸入建構 Value """
-        string: tuple[str, ...] = ("turn", "skip", "wild", "+2", "+4")
+        string: tuple[str, ...] = ("turn", "skip", "+2", "wild", "+4")
         if (text.isdecimal()): return cls(int(text))
         return cls(string.index(text)+10)
 
@@ -61,12 +61,12 @@ class Value(Enum):
         return is_wild or is_plus4
 
     def __str__(self) -> str:
-        string: tuple[str, ...] = ("turn", "skip", "wild", "+2", "+4")
+        string: tuple[str, ...] = ("turn", "skip", "+2", "wild", "+4")
         if (self.is_number()): return str(self.value)
         return str(string[self.value-10])
 
     def __repr__(self) -> str:
-            string: tuple[str, ...] = ("turn", "skip", "wild", "+2", "+4")
+            string: tuple[str, ...] = ("turn", "skip", "+2", "wild", "+4")
             if (self.is_number()): return str(self.value)
             return str(string[self.value-10])
 
@@ -105,17 +105,17 @@ class Card:
         """ 判斷是否為顏色牌 """
         return not self.value.is_black()
 
-    def is_playable_after(self, deck_top: Card) -> bool:
+    def is_playable_after(self, deck_top: Card, has_effect: bool = False) -> bool:
         """ 判斷這張牌是否可以打 """
         # 連續禁止
-        if (deck_top.value == Value.skip):
+        if (deck_top.value == Value.skip and has_effect):
             return (Rule.stack_skip and self.value == Value.skip)
         # +2, +4
-        if (deck_top.value == Value.plus2):
+        if (deck_top.value == Value.plus2 and has_effect):
             if (Rule.stack_plus2 and self.value == Value.plus2): return True
             if (Rule.stack_all_plus and self.value == Value.plus4): return True
             return False
-        if (deck_top.value == Value.plus4):
+        if (deck_top.value == Value.plus4 and has_effect):
             if (Rule.stack_plus4 and self.value == Value.plus4): return True
             if (Rule.stack_all_plus and self.value == Value.plus2 and self.color == deck_top.color): return True
             return False
