@@ -18,8 +18,9 @@ class UnoGame:
         for i in range(len(agents)):
             hand: list[Card] = self.deck.draw(Rule.hand_size)
             player: Player = Player(agents[i])
-            player.deal_hand(hand)
             self.players.append(player)
+            player.deal_hand(hand)
+            player.set_index(i)
         # 累加機制
         self.plus_sum: int = 0
         Agent.game_ref = self # pyright: ignore[reportAttributeAccessIssue]
@@ -53,7 +54,7 @@ class UnoGame:
         for i in range(self.players_size):
             player: Player = self.players[i]
             # 人類玩家輸出手牌, 其餘輸出張數
-            if (isinstance(player.agent, HumanAgent)): player.show_hand(i)
+            if (isinstance(player.agent, HumanAgent)): player.show_hand()
             else: print(f"Player{i}: {self.players[i].hand_size()} cards")
 
     def game_over(self, winner_index: int) -> None:
@@ -93,7 +94,10 @@ class UnoGame:
         else: print(f"Player{self.turn} drawed 1 card")  
         # 打掉這張
         if (self.deck.is_playable(drawed) and self.current_player.play_drawed(drawed)): 
-            self.play_as_normal(drawed)
+            if (not drawed.is_black()): return self.play_as_normal(drawed)
+            # 如果是黑色牌可以選顏色
+            drawed.color = self.current_player.decide_color_for_black()
+            return self.play_as_normal(drawed)
 
     def play_as_normal(self, played: Card) -> None:
         """ 正常出牌 """
@@ -148,3 +152,5 @@ class UnoGame:
                 print("deck was reshuffled")
             # 換下一回合
             self.turn_next()
+
+# FIXME: print +4 with or without color info

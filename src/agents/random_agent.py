@@ -1,6 +1,6 @@
-from random import uniform, random
+from random import randint, uniform, random
+from core import Card, Color
 from .agent import Agent
-from core import Card
 
 class RandomAgent(Agent):
     def gen_prob_vector(self) -> tuple[float, ...]:
@@ -10,3 +10,7 @@ class RandomAgent(Agent):
     def play_drawed(self, card: Card) -> bool:
         """ 回傳一個純隨機 [True, False] """
         return bool(random() < 0.5)
+
+    def decide_color_for_black(self) -> Color:
+        """ 回傳一個純隨機的顏色 """
+        return Color(randint(0, 3))

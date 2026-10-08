@@ -17,7 +17,13 @@ class HumanAgent(Agent):
     def play_drawed(self, card: Card) -> bool:
         """ 讓人類判斷是否打掉抽到的牌 """
         while (True):
-            text: str = input("Play this card you just drawed (y/n): ")
+            # text: str = input("Play this card you just drawed? (y/n): ").strip()
+            text: str = input("是否打掉這張剛摸到的牌? (y/n): ").strip()
             if (text == "n" or text == "N"): return False
             if (text == "y" or text == "Y"): return True
             print("Unknown cammand, please try again")
+
+    def decide_color_for_black(self) -> Color:
+        """ 讓人類判斷打掉黑色牌後變甚麼顏色 """
+        text: str = input("請輸入要變的顏色(R/B/G/Y): ")
+        return Color.from_str(text.strip())

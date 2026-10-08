@@ -26,10 +26,8 @@ class Color(Enum):
         string: tuple[str, ...] = ("R", "B", "G", "Y" )
         return string[self.value]
 
-    def __repr__(self) -> str:
-        string: tuple[str, ...] = ("R", "B", "G", "Y" )
-        return string[self.value]
-
+    def __repr__(self) -> str: return self.__str__()
+    
 # 牌面
 class Value(Enum):
     # 數字牌
@@ -72,10 +70,7 @@ class Value(Enum):
         if (self.is_number()): return str(self.value)
         return str(string[self.value-10])
 
-    def __repr__(self) -> str:
-            string: tuple[str, ...] = ("turn", "skip", "+2", "wild", "+4")
-            if (self.is_number()): return str(self.value)
-            return str(string[self.value-10])
+    def __repr__(self) -> str: return self.__str__()
 
 # 牌張
 class Card:
@@ -93,16 +88,23 @@ class Card:
     @property
     def value(self) -> Value: return Value(self.id // 4)
     @value.setter
-    def value(self, value: Value) -> None: self.value = value
+    def value(self, value: Value) -> None: self.id = self.color.value + value.value*4
     
     @property
     def color(self) -> Color: return Color(self.id % 4)
     @color.setter
-    def color(self, color: Color) -> None: self.color = color
-
-    def __str__(self) -> str: return f"{self.color}|{self.value}"
+    def color(self, color: Color) -> None: self.id = color.value + self.value.value*4
     
-    def __repr__(self) -> str: return f"{self.color}|{self.value}"
+    def __lt__(self, other: Card) -> bool:
+        if (self.is_black()):           return self.id < other.id
+        if (self.color != other.color): return self.color.value < other.color.value
+        return self.value.value < other.value.value
+    
+    def __str__(self) -> str: 
+        if (self.is_black()): return f"{self.value}"
+        return f"{self.color}|{self.value}"
+    
+    def __repr__(self) -> str: return self.__str__()
 
     def is_black(self) -> bool:
         """ 判斷是否為黑色牌 """

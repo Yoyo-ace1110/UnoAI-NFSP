@@ -1,27 +1,42 @@
-from core import Card, Deck, Rule
-from agents import Agent
+from core import Color, Card, Deck, Rule
+from agents import Agent, HumanAgent
+import bisect
 
 class Player:
     def __init__(self, agent: Agent) -> None:
         """ 初始化玩家 """
+        self.index: int = -1
         self.agent: Agent = agent
         self.hand: list[Card] = []
+
+    def set_index(self, index: int) -> None:
+        """ 設定編號 """
+        self.index = index
+
+    def hand_size(self) -> int: return len(self.hand)
 
     def deal_hand(self, cards: list[Card]) -> None:
         """ 賦予手牌 """
         self.hand = cards
+        self.sort_hand()
 
-    def show_hand(self, index: int) -> None:
+    def show_hand(self) -> None:
         """ 輸出手牌 """
-        print(f"Player{index}: ", end="")
+        print(f"{"Human" if self.is_human() else "Computer"}{self.index}: ", end="")
         for card in self.hand: print(f"{card} ", end="")
         print() # 最後的換行
 
-    def hand_size(self) -> int: return len(self.hand)
-
+    def sort_hand(self) -> None:
+        """ 排序手牌 """
+        self.hand.sort()
+    
     def is_winner(self) -> bool:
         """ 判斷自己是否贏了 """
         return (self.hand_size() == 0)
+
+    def is_human(self) -> bool:
+        """ 判斷是否為人類玩家 """
+        return isinstance(self.agent, HumanAgent)
 
     def uno(self) -> bool:
         """ 判斷 Uno 了沒 """
@@ -30,14 +45,15 @@ class Player:
     def draw(self, deck: Deck, n: int) -> None:
         """ 抽牌 """
         self.hand.extend(deck.draw(n))
+        self.sort_hand()
 
     def remove(self, card: Card) -> None:
         """ 移除這張手牌 """
         self.hand.remove(card)
 
     def receive(self, card: Card) -> None:
-        """ 抽單一一張牌 """
-        self.hand.append(card)
+        """ 抽一張牌 (插入並排序)"""
+        bisect.insort(self.hand, card)
 
     def draw_to_play(self, deck: Deck) -> None:
         """ 抽牌直到有牌可以打, 並自動打出 """
@@ -49,15 +65,11 @@ class Player:
             # 可以打
             if (deck.is_playable(card)): deck.set_top(card)
             # 不能打, 繼續抽
-            self.hand.append(card)
+            self.receive(card)
 
-    def color_count(self) -> int:
-        """ 判斷手上是否不是只剩黑色牌 """
-        count: int = 0
-        for card in self.hand:
-            if (not card.is_black()):
-                count += 1
-        return count
+    def is_all_black(self) -> int:
+        """ 判斷手上是否全為黑色牌 """
+        return (self.hand[0].is_black())
 
     def softmax_playables(self, deck_top: Card, prob_vec: tuple[float, ...], has_effect: bool = False) -> list[float]:
         """ 輸出手上各牌出牌的機率
@@ -66,13 +78,12 @@ class Player:
             最後一個元素代表抽牌 
         """
         playable_probs: list[float] = []
-        color_count: int = self.color_count()
         # 其他牌機率
         for card in self.hand:
             # 檢查是否合法
             is_valid: bool = card.is_playable_after(deck_top, has_effect)
-            if (not Rule.black_finisher and self.uno() and card.is_black()): is_valid = False
-            if (Rule.color_retention and card.is_color() and color_count == 1): is_valid = False
+            if (not Rule.black_finisher and self.uno() and card.is_black()):       is_valid = False
+            if (Rule.color_retention and card.is_color() and self.is_all_black()): is_valid = False
             # 合法才用 Agent 給的機率, 不合法則填入 0
             if not is_valid:            playable_probs.append(0.0)
             elif (not card.is_black()): playable_probs.append(prob_vec[card.id])
@@ -107,3 +118,7 @@ class Player:
         """ 判斷是否打掉這張抽來的牌 """
         if (not Rule.play_after_draw): return False
         return self.agent.play_drawed(card)
+
+    def decide_color_for_black(self) -> Color:
+        """ 摸到黑色牌之後打掉的顏色 """
+        return self.agent.decide_color_for_black()
