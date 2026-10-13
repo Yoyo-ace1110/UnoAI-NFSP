@@ -23,7 +23,7 @@ class Player:
     def show_hand(self) -> None:
         """ 輸出手牌 """
         print(f"{"Human" if self.is_human() else "Computer"}{self.index}: ", end="")
-        for card in self.hand: print(f"{card} ", end="")
+        for card in self.hand: card.cout(show_color_for_black=False)
         print() # 最後的換行
 
     def sort_hand(self) -> None:

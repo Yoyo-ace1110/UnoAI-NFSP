@@ -50,7 +50,8 @@ class UnoGame:
 
     def log(self) -> None:
         """ 輸出遊戲狀態 """
-        print(f"\ntop card: {self.deck.top}")
+        print(f"\ntop card:")
+        self.deck.top.cout(True)
         for i in range(self.players_size):
             player: Player = self.players[i]
             # 人類玩家輸出手牌, 其餘輸出張數
@@ -90,7 +91,8 @@ class UnoGame:
         # 抽一張
         self.current_player.receive(drawed)
         if (isinstance(self.current_player.agent, HumanAgent)):
-            print(f"Player{self.turn} drawed {drawed}")    
+            print(f"Player{self.turn} drawed")
+            drawed.cout(False)
         else: print(f"Player{self.turn} drawed 1 card")  
         # 打掉這張
         if (self.deck.is_playable(drawed) and self.current_player.play_drawed(drawed)): 
@@ -103,7 +105,8 @@ class UnoGame:
         """ 正常出牌 """
         self.deck.set_top(played)
         self.current_player.remove(played)
-        print(f"Player{self.turn} played {played}")
+        print(f"Player{self.turn} played")
+        played.cout(show_color_for_black=True)
         # 迴轉機制
         if (played.value == Value.turn):
             self.reverse()
@@ -152,5 +155,3 @@ class UnoGame:
                 print("deck was reshuffled")
             # 換下一回合
             self.turn_next()
-
-# FIXME: print +4 with or without color info
