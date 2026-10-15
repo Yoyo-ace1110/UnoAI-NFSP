@@ -1,4 +1,4 @@
-from core import Color, Card, Deck, Rule
+from core import Card, Deck, Rule
 from agents import Agent, HumanAgent
 import bisect
 
@@ -55,18 +55,6 @@ class Player:
         """ 抽一張牌 (插入並排序)"""
         bisect.insort(self.hand, card)
 
-    def draw_to_play(self, deck: Deck) -> None:
-        """ 抽牌直到有牌可以打, 並自動打出 """
-        while (True):
-            # 抽牌
-            card: Card|None = deck.draw_one()
-            # 沒牌抽了
-            if (card is None): return None
-            # 可以打
-            if (deck.is_playable(card)): deck.set_top(card)
-            # 不能打, 繼續抽
-            self.receive(card)
-
     def is_all_black(self) -> int:
         """ 判斷手上是否全為黑色牌 """
         return (self.hand[0].is_black())
@@ -113,12 +101,3 @@ class Player:
             chosen_color: int = max(range(4), key=lambda c: agent_prob_vec[base_id+c])
             chosen_card.id = chosen_color + chosen_card.value.value * 4
         return chosen_card
-
-    def play_drawed(self, card: Card) -> bool:
-        """ 判斷是否打掉這張抽來的牌 """
-        if (not Rule.play_after_draw): return False
-        return self.agent.play_drawed(card)
-
-    def decide_color_for_black(self) -> Color:
-        """ 摸到黑色牌之後打掉的顏色 """
-        return self.agent.decide_color_for_black()

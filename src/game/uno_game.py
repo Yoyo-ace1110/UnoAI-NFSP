@@ -79,10 +79,6 @@ class UnoGame:
             self.deck.has_effect = False # 加完之後讓牌頂失效
             self.plus_sum = 0 # 重置累加指標
             return
-        # 抽到可以打
-        if (Rule.draw_to_play): 
-            self.current_player.draw_to_play(self.deck)
-            return
         # 沒牌抽
         drawed: Card|None = self.deck.draw_one()
         if (drawed is None): 
@@ -93,13 +89,8 @@ class UnoGame:
         if (isinstance(self.current_player.agent, HumanAgent)):
             print(f"Player{self.turn} drawed")
             drawed.cout(False)
-        else: print(f"Player{self.turn} drawed 1 card")  
-        # 打掉這張
-        if (self.deck.is_playable(drawed) and self.current_player.play_drawed(drawed)): 
-            if (not drawed.is_black()): return self.play_as_normal(drawed)
-            # 如果是黑色牌可以選顏色
-            drawed.color = self.current_player.decide_color_for_black()
-            return self.play_as_normal(drawed)
+            return
+        else: print(f"Player{self.turn} drawed 1 card")
 
     def play_as_normal(self, played: Card) -> None:
         """ 正常出牌 """
@@ -149,9 +140,5 @@ class UnoGame:
             if (self.current_player.is_winner()): 
                 self.game_over(self.turn)
                 break
-            # 判斷是否持續洗牌
-            if (Rule.always_suffle): 
-                self.deck.reshuffle()
-                print("deck was reshuffled")
             # 換下一回合
             self.turn_next()

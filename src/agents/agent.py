@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from core import Card, Color
 
 class UnoGame: ...
 
@@ -14,13 +13,4 @@ class Agent(ABC):
             索引值對應到牌的種類
             最後一個元素代表抽牌 
         """
-        ...
-    
-    def decide_color_for_black(self) -> Color:
-        """ 摸到黑色牌之後打掉的顏色 """
-        ...
-    
-    @abstractmethod
-    def play_drawed(self, card: Card) -> bool:
-        """ 判斷是否打掉這張摸來的牌 """
         ...

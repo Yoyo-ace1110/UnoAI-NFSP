@@ -52,6 +52,7 @@ class Deck:
         random.shuffle(self.cards)
     
     def reshuffle(self) -> None:
+        print("deck was reshuffled")
         self.cards.extend(self.played)
         self.played.clear()
         self.shuffle()
