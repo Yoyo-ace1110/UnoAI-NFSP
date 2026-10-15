@@ -1,11 +1,6 @@
 from abc import ABC, abstractmethod
 
-class UnoGame: ...
-
 class Agent(ABC):
-    # 共用的全域資訊
-    game_ref: UnoGame
-    
     @abstractmethod
     def gen_prob_vector(self) -> tuple[float, ...]:
         """ 輸出出各種牌的機率

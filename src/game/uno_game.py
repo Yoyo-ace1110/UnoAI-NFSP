@@ -1,36 +1,34 @@
-from core import Rule, Card, Value, Deck
+from core import Rule, Card, Value, Deck, to_vector
+from models import ReplayBuffer ,ReservoirMemory
 from agents import Agent, HumanAgent
 from .player import Player
+import torch
 
 class UnoGame:
-    def __init__(self, agents: list[Agent]) -> None:
+    def __init__(self, agents: list[Agent], eta: float) -> None:
         """ 初始化整個遊戲 """
-        if (not Rule.is_valid()):               raise ValueError("Invalid Rule") 
-        if (len(agents)*Rule.hand_size > 108):  raise ValueError("Too much player or initial hand size is too big")
-        # 依順序輪轉
-        self.turn: int = 0
-        self.direc: int = 1
-        # 建立牌堆
-        self.deck: Deck = Deck()
-        self.deck.shuffle()
-        # 建立玩家並發牌
-        self.players: list[Player] = []
-        for i in range(len(agents)):
-            hand: list[Card] = self.deck.draw(Rule.hand_size)
-            player: Player = Player(agents[i])
-            self.players.append(player)
-            player.deal_hand(hand)
-            player.set_index(i)
-        # 累加機制
-        self.plus_sum: int = 0
-        Agent.game_ref = self # pyright: ignore[reportAttributeAccessIssue]
+        if (not Rule.is_valid()):
+            raise ValueError("Invalid Rule") 
+        if (len(agents)*Rule.hand_size > 108):
+            raise ValueError("Too much player or initial hand size is too big")
+        self.turn : int
+        self.direc: int
+        self.deck: Deck
+        self.plus_sum: int
+        self.eta: float = eta
+        self.players: list[Player]
+        self.agents: list[Agent] = agents
+        self.reset(agents=self.agents)
 
     @property
     def current_player(self) -> Player: return self.players[self.turn]
 
     @property
+    def current_agent(self) -> Agent: return self.current_player.agent
+
+    @property
     def players_size(self) -> int: return len(self.players)
-    
+
     def turn_next(self) -> None:
         """ 輪到下一個人 """
         if (self.direc == 0): 
@@ -58,9 +56,37 @@ class UnoGame:
             if (isinstance(player.agent, HumanAgent)): player.show_hand()
             else: print(f"Player{i}: {self.players[i].hand_size()} cards")
 
+    def reset(self, agents: list[Agent]) -> None:
+        """ 重製遊戲狀態 """
+        self.players: list[Player] = []
+        # 累加機制
+        self.plus_sum = 0
+        # 依順序輪轉
+        self.turn  = 0
+        self.direc = 1
+        # 建立牌堆
+        self.deck = Deck()
+        self.deck.shuffle()
+        # 建立玩家並發牌
+        for i in range(len(agents)):
+            hand: list[Card] = self.deck.draw(Rule.hand_size)
+            player: Player = Player(agents[i])
+            self.players.append(player)
+            player.deal_hand(hand)
+            player.set_index(i)
+
     def game_over(self, winner_index: int) -> None:
         """ 遊戲結束 """
         print(f"Game Over! The Winner is Player{winner_index}")
+
+    def get_tensor(self) -> torch.Tensor:
+        """ 根據目前玩家將遊戲轉為向量 """
+        array: list[int] = [self.deck.size()]
+        array.extend(to_vector(self.deck.played))
+        array.extend(to_vector(self.current_player.hand))
+        for player in self.players: array.append(player.hand_size())
+        # [牌堆張數(1)|廢牌(60)|手牌(60)|剩餘張數(玩家數量)]
+        return torch.tensor(array, dtype=torch.float32)
 
     def decide_to_draw(self) -> None:
         """ 玩家決定抽牌 """
@@ -115,8 +141,42 @@ class UnoGame:
         if (self.current_player.uno()): 
             print(f"Player{self.turn} Uno!")
 
-    def train_loop(self) -> None:
-        """ 訓練主迴圈 """
+    def train_loop(self, num_episodes: int, q_buffer: ReplayBuffer, p_memory: ReservoirMemory, batch_size: int = 64) -> None:
+        """ 訓練主迴圈：執行多局自我對戰並進行 NFSP 雙網路訓練 """
+        print(f"=== 開始進行 {num_episodes} 局自我對戰訓練 ===")
+        for episode in range(1, num_episodes+1):
+            self.reset(agents=self.agents)
+            while True:
+                state = self.get_tensor()
+                # 執行動作並推進遊戲環境
+                played_card: Card|None = self.current_player.genmove(self.deck.top, self.deck.has_effect)
+                # 決定抽牌
+                if (played_card is None): self.decide_to_draw()
+                # 無效的決策
+                elif (not self.deck.is_playable(played_card)): 
+                    # 人類打錯牌
+                    if (isinstance(self.current_player.agent, HumanAgent)):
+                        print("The card is not playable, please try again")
+                        continue
+                    # AI 出錯
+                    raise ValueError("Bot played the Card that is not playable")
+                # 正常出牌
+                else: self.play_as_normal(played_card)
+                next_state = self.get_tensor()
+                # 檢查是否遊戲結束
+                done = self.current_player.is_winner()
+                reward = float(int(done))
+                # 存入雙記憶庫 (Dual Memory Mechanism)
+                q_buffer.push(state, played_card, reward, next_state, done)
+                p_memory.push(state, played_card)
+                # 觸發雙網路的訓練更新
+                # self.current_agent.q_trainer.update(batch_size)
+                # self.current_agent.policy_trainer.update(batch_size)
+                # 延後中斷遊戲(先訓練)
+                if (done): break
+                self.turn_next()
+            # 每 100 局輸出進度提示
+            if (episode%100 == 0): print(f"訓練進度：已完成第 {episode} 局自我對戰")
 
     def game_loop(self) -> None:
         """ 遊戲主迴圈 """
@@ -127,7 +187,7 @@ class UnoGame:
             # 決定抽牌
             if (played is None): self.decide_to_draw()
             # 無效的決策
-            elif (not self.deck.is_playable(played)): 
+            elif (not self.deck.is_playable(played)):
                 # 人類打錯牌
                 if (isinstance(self.current_player.agent, HumanAgent)):
                     print("The card is not playable, please try again")

@@ -142,3 +142,11 @@ class Card:
         if (self.is_black()): return True
         # 其他的牌
         return (self.color == deck_top.color or self.value == deck_top.value)
+
+# 其他函數
+def to_vector(cards: list[Card]) -> list[int]:
+    """ 將一堆牌轉為向量 """
+    vector: list[int] = [0] * 60
+    for card in cards: 
+        vector[card.id] += 1
+    return vector
