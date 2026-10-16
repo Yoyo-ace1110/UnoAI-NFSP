@@ -10,8 +10,14 @@ state_dim: int = sample_tensor.shape[0]
 
 q_trainer: DQNTrainer    = DQNTrainer   (state_dim)
 p_trainer: PolicyTrainer = PolicyTrainer(state_dim)
+q_trainer.load()
+p_trainer.load()
+
 uno_game.train_loop(
     num_episodes=10, 
     q_trainer=q_trainer, 
     p_trainer=p_trainer
 )
+
+q_trainer.save()
+p_trainer.save()

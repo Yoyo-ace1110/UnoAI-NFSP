@@ -3,10 +3,11 @@ from .card import Card, Color, Value
 
 # 牌堆
 class Deck:
-    def __init__(self) -> None:
+    def __init__(self, out: bool = True) -> None:
         """ 初始化牌堆 """
         color: Color
         value: Value
+        self.out: bool = out
         self.cards: list[Card] = []
         self.played: list[Card] = []
         # 加入 4 張 0
@@ -52,7 +53,7 @@ class Deck:
         random.shuffle(self.cards)
     
     def reshuffle(self) -> None:
-        print("deck was reshuffled")
+        if (self.out): print("deck was reshuffled")
         self.cards.extend(self.played)
         self.played.clear()
         self.shuffle()

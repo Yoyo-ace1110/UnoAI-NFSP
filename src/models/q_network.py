@@ -1,3 +1,4 @@
+import os
 import random
 import pickle
 import torch
@@ -8,9 +9,10 @@ from collections import deque
 from core import Card
 
 class QNetwork(nn.Module):
-    def __init__(self, state_dim: int, action_dim: int) -> None:
+    def __init__(self, state_dim: int, action_dim: int, file_path: str = "q_network.bin") -> None:
         """ Quality Network """
         super().__init__()
+        self.file_path: str = file_path
         self.fc1 = nn.Linear(state_dim, 256)    # 全連接層  輸入=>256
         self.fc2 = nn.Linear(256, 256)          # 隱藏層    256=>256
         self.out = nn.Linear(256, action_dim)   # 輸出層    256=>輸出
@@ -21,8 +23,20 @@ class QNetwork(nn.Module):
         x = F.relu(self.fc2(x))
         return self.out(x)
 
+    def save(self) -> None:
+        """ 儲存的權重檔 """
+        torch.save(self.state_dict(), self.file_path)
+        print(f"Q-Network 權重已成功儲存至: {self.file_path}")
+    
+    def load(self) -> None:
+        """ 讀取權重檔 """
+        if os.path.exists(self.file_path):
+            self.load_state_dict(torch.load(self.file_path))
+            print(f"已成功載入 Q-Network 權重: {self.file_path}")
+        else: print(f"找不到權重檔 {self.file_path}。")
+
 class ReplayBuffer:
-    def __init__(self, file_path: str = "q_network.bin", capacity: int = 10000) -> None:
+    def __init__(self, file_path: str = "ReplayBuffer.bin", capacity: int = 10000) -> None:
         """ Q-Network 記憶庫 """
         self.buffer: deque[tuple[torch.Tensor, int, float, torch.Tensor, bool]]
         self.buffer = deque(maxlen=capacity)
@@ -30,13 +44,17 @@ class ReplayBuffer:
 
     def load(self) -> None:
         """ 讀取二進位訓練資料 """
-        with open(self.file_path, mode="rb") as file:
-            self.buffer = pickle.load(file=file)
+        if os.path.exists(self.file_path):
+            with open(self.file_path, mode="rb") as file:
+                self.buffer = pickle.load(file=file)
+            print(f"ReplayBuffer 已成功從 {self.file_path} 讀取")
+        else: print(f"無法從 {self.file_path} 讀取 ReplayBuffer ")
 
     def save(self) -> None:
         """ 儲存二進位訓練資料 """ 
         with open(self.file_path, mode="wb") as file:
             pickle.dump(self.buffer, file=file)
+        print(f"ReplayBuffer 已成功儲存至: {self.file_path}")
 
     def size(self) -> int: return len(self.buffer)
 
@@ -50,20 +68,20 @@ class ReplayBuffer:
         batch = random.sample(self.buffer, batch_size)
         states, actions, rewards, next_states, dones = zip(*batch)
         return (
-            torch.tensor(states, dtype=torch.float32),
+            torch.stack (states),
             torch.tensor(actions, dtype=torch.int64),
             torch.tensor(rewards, dtype=torch.float32),
-            torch.tensor(next_states, dtype=torch.float32),
+            torch.stack (next_states),
             torch.tensor(dones, dtype=torch.float32)
         )
 
 class DQNTrainer:
     def __init__(self, state_dim: int, action_dim: int = 61, batch_size: int = 64, gamma: float = 0.99) -> None:
         """ Deep Q-Network Trainer """
-        self.gamma = gamma
-        self.batch_size = batch_size
-        self.q_net = QNetwork(state_dim, action_dim)
-        self.memory = ReplayBuffer()
+        self.gamma: float = gamma
+        self.batch_size: int = batch_size
+        self.memory: ReplayBuffer = ReplayBuffer()
+        self.q_net: QNetwork = QNetwork(state_dim, action_dim)
         # 使用 Adam 優化器
         self.optimizer = optim.Adam(self.q_net.parameters(), lr=0.001)
         self.criterion = nn.MSELoss()  # 均方誤差損失
@@ -96,5 +114,15 @@ class DQNTrainer:
         # 反向傳播與優化更新
         self.optimizer.zero_grad()
         loss.backward()
-        self.optimizer.step()
+        self.optimizer.step() # pyright: ignore[reportUnknownMemberType]
         return loss.item()
+
+    def save(self) -> None:
+        """ 儲存的訓練資料 """
+        self.memory.save()
+        self.q_net.save()
+
+    def load(self) -> None:
+        """ 讀取權重檔 """
+        self.memory.load()
+        self.q_net.load()

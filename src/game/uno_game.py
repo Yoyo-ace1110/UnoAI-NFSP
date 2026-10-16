@@ -13,9 +13,9 @@ class UnoGame:
             raise ValueError("Too much player or initial hand size is too big")
         self.turn : int
         self.direc: int
-        self.deck: Deck
         self.plus_sum: int
         self.eta: float = eta
+        self.deck: Deck = Deck()
         self.players: list[Player]
         self.agents: list[Agent] = agents
         self.reset(agents=self.agents)
@@ -65,7 +65,7 @@ class UnoGame:
         self.turn  = 0
         self.direc = 1
         # 建立牌堆
-        self.deck = Deck()
+        self.deck = Deck(self.deck.out)
         self.deck.shuffle()
         # 建立玩家並發牌
         for i in range(len(agents)):
@@ -88,19 +88,19 @@ class UnoGame:
         # [牌堆張數(1)|廢牌(60)|手牌(60)|剩餘張數(玩家數量)]
         return torch.tensor(array, dtype=torch.float32)
 
-    def decide_to_draw(self) -> None:
+    def decide_to_draw(self, out: bool = True) -> None:
         """ 玩家決定抽牌 """
         top_is_skip : bool = (self.deck.top.value == Value.skip  and self.deck.has_effect)
         top_is_plus2: bool = (self.deck.top.value == Value.plus2 and self.deck.has_effect)
         top_is_plus4: bool = (self.deck.top.value == Value.plus4 and self.deck.has_effect)
         # 被禁止不用抽
         if (top_is_skip): 
-            print(f"Player{self.turn} was skipped")
+            if (out): print(f"Player{self.turn} was skipped")
             self.deck.has_effect = False
             return
         # 被加牌
         if (top_is_plus2 or top_is_plus4): 
-            print(f"Player{self.turn} drawed {self.plus_sum} cards")
+            if (out): print(f"Player{self.turn} drawed {self.plus_sum} cards")
             self.current_player.draw(self.deck, self.plus_sum)
             self.deck.has_effect = False # 加完之後讓牌頂失效
             self.plus_sum = 0 # 重置累加指標
@@ -108,22 +108,22 @@ class UnoGame:
         # 沒牌抽
         drawed: Card|None = self.deck.draw_one()
         if (drawed is None): 
-            print(f"deck is empty, Player{self.turn} drawed nothing")
+            if (out): print(f"deck is empty, Player{self.turn} drawed nothing")
             return
         # 抽一張
         self.current_player.receive(drawed)
         if (isinstance(self.current_player.agent, HumanAgent)):
-            print(f"Player{self.turn} drawed")
+            if (out): print(f"Player{self.turn} drawed")
             drawed.cout(False)
             return
-        else: print(f"Player{self.turn} drawed 1 card")
+        if (out): print(f"Player{self.turn} drawed 1 card")
 
-    def play_as_normal(self, played: Card) -> None:
+    def play_as_normal(self, played: Card, out: bool = True) -> None:
         """ 正常出牌 """
         self.deck.set_top(played)
         self.current_player.remove(played)
-        print(f"Player{self.turn} played")
-        played.cout(show_color_for_black=True)
+        if (out): print(f"Player{self.turn} played")
+        if (out): played.cout(show_color_for_black=True)
         # 迴轉機制
         if (played.value == Value.turn):
             self.reverse()
@@ -139,11 +139,12 @@ class UnoGame:
             self.plus_sum += 4
         # Uno 機制
         if (self.current_player.uno()): 
-            print(f"Player{self.turn} Uno!")
+            if (out): print(f"Player{self.turn} Uno!")
 
     def train_loop(self, num_episodes: int, q_trainer: DQNTrainer, p_trainer: PolicyTrainer) -> None:
         """ 訓練主迴圈：執行多局自我對戰並進行 NFSP 雙網路訓練 """
-        print(f"=== 開始進行 {num_episodes} 局自我對戰訓練 ===")
+        self.deck.out = False   # 避免不必要的輸出
+        print(f"開始進行 {num_episodes} 局自我對戰")
         for episode in range(1, num_episodes+1):
             self.reset(agents=self.agents)
             while True:
@@ -151,7 +152,7 @@ class UnoGame:
                 # 執行動作並推進遊戲環境
                 played_card: Card|None = self.current_player.genmove(self.deck.top, self.deck.has_effect)
                 # 決定抽牌
-                if (played_card is None): self.decide_to_draw()
+                if (played_card is None): self.decide_to_draw(out=False)
                 # 無效的決策
                 elif (not self.deck.is_playable(played_card)): 
                     # 人類打錯牌
@@ -161,7 +162,7 @@ class UnoGame:
                     # AI 出錯
                     raise ValueError("Bot played the Card that is not playable")
                 # 正常出牌
-                else: self.play_as_normal(played_card)
+                else: self.play_as_normal(played_card, out=False)
                 next_state = self.get_tensor()
                 # 檢查是否遊戲結束
                 done = self.current_player.is_winner()
@@ -172,11 +173,12 @@ class UnoGame:
                 # 延後中斷遊戲(先訓練)
                 if (done): break
                 self.turn_next()
-            # 每 100 局輸出進度提示
-            if (episode%100 == 0): print(f"訓練進度：已完成第 {episode} 局自我對戰")
+            # 每 n 局輸出進度提示
+            if (episode%1 == 0): print(f"已完成第 {episode} 局自我對戰")
 
     def game_loop(self) -> None:
         """ 遊戲主迴圈 """
+        self.deck.out = True
         while True:
             self.log()
             # 做出決策

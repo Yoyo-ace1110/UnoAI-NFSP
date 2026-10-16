@@ -1,3 +1,4 @@
+import os
 import random
 import pickle
 import torch
@@ -7,9 +8,10 @@ import torch.nn.functional as F
 from core import Card
 
 class PNetwork(nn.Module):
-    def __init__(self, state_dim: int, action_dim: int) -> None:
+    def __init__(self, state_dim: int, action_dim: int, file_path: str = "p_network.bin") -> None:
         """ Policy Network """
         super().__init__()
+        self.file_path: str = file_path
         self.fc1 = nn.Linear(state_dim, 256)    # 全連接層  輸入=>256
         self.fc2 = nn.Linear(256, 256)          # 隱藏層    256=>256
         self.out = nn.Linear(256, action_dim)   # 輸出層    256=>輸出
@@ -20,8 +22,20 @@ class PNetwork(nn.Module):
         x = F.relu(self.fc2(x))
         return self.out(x)
 
+    def save(self) -> None:
+        """ 儲存的權重檔 """
+        torch.save(self.state_dict(), self.file_path)
+        print(f"Policy-Network 權重已成功儲存至: {self.file_path}")
+    
+    def load(self) -> None:
+        """ 讀取權重檔 """
+        if os.path.exists(self.file_path):
+            self.load_state_dict(torch.load(self.file_path))
+            print(f"已成功載入 Policy-Network 權重: {self.file_path}")
+        else: print(f"找不到權重檔 {self.file_path}。")
+
 class ReservoirMemory:
-    def __init__(self, file_path: str = "p_network.bin", capacity: int = 10000) -> None:
+    def __init__(self, file_path: str = "ReservoirMemory.bin", capacity: int = 10000) -> None:
         """ 蓄水池記憶庫 """
         self.file_path: str = file_path
         self.buffer: list[tuple[torch.Tensor, int]] = []
@@ -30,13 +44,17 @@ class ReservoirMemory:
 
     def load(self) -> None:
         """ 讀取二進位訓練資料 """
-        with open(self.file_path, mode="rb") as file:
-            self.buffer = pickle.load(file=file)
+        if os.path.exists(self.file_path):
+            with open(self.file_path, mode="rb") as file:
+                self.buffer = pickle.load(file=file)
+            print(f"ReservoirMemory 已成功從 {self.file_path} 讀取")
+        else: print(f"無法從 {self.file_path} 讀取 ReservoirMemory ")
 
     def save(self) -> None:
         """ 儲存二進位訓練資料 """ 
         with open(self.file_path, mode="wb") as file:
             pickle.dump(self.buffer, file=file)
+        print(f"ReplayBuffer 已成功儲存至: {self.file_path}")
 
     def size(self) -> int: return len(self.buffer)
 
@@ -55,10 +73,7 @@ class ReservoirMemory:
         """ 隨機抽樣一個批次進行監督學習訓練 """
         batch = random.sample(self.buffer, batch_size)
         states, actions = zip(*batch)
-        return (
-            torch.tensor(states, dtype=torch.float32),
-            torch.tensor(actions, dtype=torch.int64)
-        )
+        return (torch.stack(states), torch.tensor(actions, dtype=torch.int64))
 
 class PolicyTrainer:
     def __init__(self, state_dim: int, action_dim: int = 61, batch_size: int = 64) -> None:
@@ -91,5 +106,15 @@ class PolicyTrainer:
         # 反向傳播與優化更新
         self.optimizer.zero_grad()
         loss.backward()
-        self.optimizer.step()
+        self.optimizer.step() # pyright: ignore[reportUnknownMemberType]
         return loss.item()
+
+    def save(self) -> None:
+        """ 儲存的訓練資料 """
+        self.memory.save()
+        self.p_net.save()
+
+    def load(self) -> None:
+        """ 讀取權重檔 """
+        self.memory.load()
+        self.p_net.load()
