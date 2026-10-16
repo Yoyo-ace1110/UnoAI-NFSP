@@ -1,5 +1,5 @@
 from core import Rule, Card, Value, Deck, to_vector
-from models import ReplayBuffer ,ReservoirMemory
+from models import DQNTrainer, PolicyTrainer
 from agents import Agent, HumanAgent
 from .player import Player
 import torch
@@ -141,7 +141,7 @@ class UnoGame:
         if (self.current_player.uno()): 
             print(f"Player{self.turn} Uno!")
 
-    def train_loop(self, num_episodes: int, q_buffer: ReplayBuffer, p_memory: ReservoirMemory, batch_size: int = 64) -> None:
+    def train_loop(self, num_episodes: int, q_trainer: DQNTrainer, p_trainer: PolicyTrainer) -> None:
         """ 訓練主迴圈：執行多局自我對戰並進行 NFSP 雙網路訓練 """
         print(f"=== 開始進行 {num_episodes} 局自我對戰訓練 ===")
         for episode in range(1, num_episodes+1):
@@ -166,12 +166,9 @@ class UnoGame:
                 # 檢查是否遊戲結束
                 done = self.current_player.is_winner()
                 reward = float(int(done))
-                # 存入雙記憶庫 (Dual Memory Mechanism)
-                q_buffer.push(state, played_card, reward, next_state, done)
-                p_memory.push(state, played_card)
-                # 觸發雙網路的訓練更新
-                # self.current_agent.q_trainer.update(batch_size)
-                # self.current_agent.policy_trainer.update(batch_size)
+                # 存入雙記憶庫(Dual Memory Mechanism)並更新雙網路 
+                q_trainer.push(state, played_card, reward, next_state, done)
+                p_trainer.push(state, played_card)
                 # 延後中斷遊戲(先訓練)
                 if (done): break
                 self.turn_next()

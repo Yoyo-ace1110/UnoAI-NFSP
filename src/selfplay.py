@@ -1,11 +1,17 @@
+from torch import Tensor
 from game import UnoGame
-from models import QNetwork, PNetwork
-from agents import Agent, HumanAgent, RandomAgent
+from agents import Agent, RandomAgent
+from models import DQNTrainer, PolicyTrainer
 
-agents: list[Agent] = [HumanAgent(), RandomAgent()]
+agents: list[Agent] = [RandomAgent(), RandomAgent()]
 uno_game: UnoGame = UnoGame(agents=agents, eta=0.8)
+sample_tensor: Tensor = uno_game.get_tensor()
+state_dim: int = sample_tensor.shape[0]
+
+q_trainer: DQNTrainer    = DQNTrainer   (state_dim)
+p_trainer: PolicyTrainer = PolicyTrainer(state_dim)
 uno_game.train_loop(
     num_episodes=10, 
-    q_buffer=, 
-    p_memory=
+    q_trainer=q_trainer, 
+    p_trainer=p_trainer
 )
