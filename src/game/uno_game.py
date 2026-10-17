@@ -2,6 +2,7 @@ from core import Rule, Card, Value, Deck, to_vector
 from models import DQNTrainer, PolicyTrainer
 from agents import Agent, HumanAgent
 from .player import Player
+from torch import Tensor
 import torch
 
 class UnoGame:
@@ -79,7 +80,7 @@ class UnoGame:
         """ 遊戲結束 """
         print(f"Game Over! The Winner is Player{winner_index}")
 
-    def get_tensor(self) -> torch.Tensor:
+    def get_tensor(self) -> Tensor:
         """ 根據目前玩家將遊戲轉為向量 """
         array: list[int] = [self.deck.size()]
         array.extend(to_vector(self.deck.played))

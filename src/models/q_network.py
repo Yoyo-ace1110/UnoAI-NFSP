@@ -6,6 +6,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 from collections import deque
+from torch import Tensor
 from core import Card
 
 class QNetwork(nn.Module):
@@ -17,7 +18,7 @@ class QNetwork(nn.Module):
         self.fc2 = nn.Linear(256, 256)          # 隱藏層    256=>256
         self.out = nn.Linear(256, action_dim)   # 輸出層    256=>輸出
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, x: Tensor) -> Tensor:
         """ Forward Pass """
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
@@ -38,7 +39,7 @@ class QNetwork(nn.Module):
 class ReplayBuffer:
     def __init__(self, file_path: str = "ReplayBuffer.bin", capacity: int = 10000) -> None:
         """ Q-Network 記憶庫 """
-        self.buffer: deque[tuple[torch.Tensor, int, float, torch.Tensor, bool]]
+        self.buffer: deque[tuple[Tensor, int, float, Tensor, bool]]
         self.buffer = deque(maxlen=capacity)
         self.file_path: str = file_path
 
@@ -58,12 +59,12 @@ class ReplayBuffer:
 
     def size(self) -> int: return len(self.buffer)
 
-    def push(self, state: torch.Tensor, card: Card|None, reward: float, next_state: torch.Tensor, done: bool) -> None:
+    def push(self, state: Tensor, card: Card|None, reward: float, next_state: Tensor, done: bool) -> None:
         """ 將一步遊戲經驗存入記憶庫 (FIFO) """
         action: int = (60 if card is None else card.id)
         self.buffer.append((state, action, reward, next_state, done))
 
-    def sample(self, batch_size: int) -> tuple[torch.Tensor, ...]:
+    def sample(self, batch_size: int) -> tuple[Tensor, ...]:
         """ 隨機抽樣一個批次進行訓練 """
         batch = random.sample(self.buffer, batch_size)
         states, actions, rewards, next_states, dones = zip(*batch)
@@ -88,7 +89,7 @@ class DQNTrainer:
         # 用來計算增加多少筆資料的計數器
         self.steps_since_update = 0
 
-    def push(self, state: torch.Tensor, card: Card|None, reward: float, next_state: torch.Tensor, done: bool) -> float|None:
+    def push(self, state: Tensor, card: Card|None, reward: float, next_state: Tensor, done: bool) -> float|None:
         """ 存入記憶庫，並檢查是否達到 batch_size 觸發 update """
         self.steps_since_update += 1
         self.memory.push(state, card, reward, next_state, done)
