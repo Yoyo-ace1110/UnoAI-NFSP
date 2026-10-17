@@ -14,7 +14,7 @@ q_trainer.load()
 p_trainer.load()
 
 uno_game.train_loop(
-    num_episodes=10, 
+    num_episodes=1000, 
     q_trainer=q_trainer, 
     p_trainer=p_trainer
 )
