@@ -14,15 +14,16 @@ class QNetwork(nn.Module):
         """ Quality Network """
         super().__init__()
         self.file_path: str = file_path
-        self.fc1 = nn.Linear(state_dim, 256)    # 全連接層  輸入=>256
-        self.fc2 = nn.Linear(256, 256)          # 隱藏層    256=>256
-        self.out = nn.Linear(256, action_dim)   # 輸出層    256=>輸出
+        self.fc1: nn.Linear = nn.Linear(state_dim, 256)    # 全連接層  輸入=>256
+        self.fc2: nn.Linear = nn.Linear(256, 256)          # 隱藏層    256=>256
+        self.out: nn.Linear = nn.Linear(256, action_dim)   # 輸出層    256=>輸出
 
     def forward(self, x: Tensor) -> Tensor:
         """ Forward Pass """
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        return self.out(x)
+        x_: Tensor = x
+        x_: Tensor = F.relu(self.fc1(x_))
+        x_: Tensor = F.relu(self.fc2(x_))
+        return self.out(x_)
 
     def save(self) -> None:
         """ 儲存的權重檔 """
@@ -66,7 +67,13 @@ class ReplayBuffer:
 
     def sample(self, batch_size: int) -> tuple[Tensor, ...]:
         """ 隨機抽樣一個批次進行訓練 """
+        batch: list[tuple[Tensor, int, float, Tensor, bool]]
         batch = random.sample(self.buffer, batch_size)
+        states:         tuple[Tensor, ...]
+        actions:        tuple[int, ...]
+        rewards:        tuple[float, ...]
+        next_states:    tuple[Tensor, ...]
+        dones:          tuple[bool, ...]
         states, actions, rewards, next_states, dones = zip(*batch)
         return (
             torch.stack (states),
@@ -84,10 +91,10 @@ class DQNTrainer:
         self.memory: ReplayBuffer = ReplayBuffer()
         self.q_net: QNetwork = QNetwork(state_dim, action_dim)
         # 使用 Adam 優化器
-        self.optimizer = optim.Adam(self.q_net.parameters(), lr=0.001)
-        self.criterion = nn.MSELoss()  # 均方誤差損失
+        self.optimizer: optim.Adam = optim.Adam(self.q_net.parameters(), lr=0.001)
+        self.criterion: nn.MSELoss = nn.MSELoss()  # 均方誤差損失
         # 用來計算增加多少筆資料的計數器
-        self.steps_since_update = 0
+        self.steps_since_update: int = 0
 
     def push(self, state: Tensor, card: Card|None, reward: float, next_state: Tensor, done: bool) -> float|None:
         """ 存入記憶庫，並檢查是否達到 batch_size 觸發 update """
@@ -101,22 +108,27 @@ class DQNTrainer:
 
     def update(self) -> float:
         """ 執行一次 DQN 梯度下降更新 """
+        states:         Tensor
+        actions:        Tensor
+        rewards:        Tensor
+        next_states:    Tensor
+        dones:          Tensor
         states, actions, rewards, next_states, dones = self.memory.sample(self.batch_size)
         # 計算當前狀態的 Q 值
-        q_values = self.q_net(states).gather(1, actions.unsqueeze(1)).squeeze(1)
+        q_values: Tensor = self.q_net(states).gather(1, actions.unsqueeze(1)).squeeze(1)
         # 計算目標 Q 值 (Bellman Equation)
         with torch.no_grad():
             # max(1)[0] 取得下一個狀態中所有動作的最大 Q 值
-            next_q_values = self.q_net(next_states).max(1)[0]
+            next_q_values: Tensor = self.q_net(next_states).max(1)[0]
             # 若 done 為 True，則沒有未來回報 (1 - dones)
-            target_q_values = rewards + self.gamma*next_q_values*(1.0-dones)
-        # 計算 Loss (預測值與目標值的差距)
-        loss = self.criterion(q_values, target_q_values)
+            target_q_values: Tensor = rewards + self.gamma*next_q_values*(1.0-dones)
+        # 計算 Loss
+        loss: Tensor = self.criterion(q_values, target_q_values)
         # 反向傳播與優化更新
         self.optimizer.zero_grad()
-        loss.backward()
+        loss.backward()       # pyright: ignore[reportUnknownMemberType]
         self.optimizer.step() # pyright: ignore[reportUnknownMemberType]
-        return loss.item()
+        return float(loss.item())
 
     def save(self) -> None:
         """ 儲存的訓練資料 """

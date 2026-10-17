@@ -81,37 +81,38 @@ class ReservoirMemory:
 
 class PolicyTrainer:
     def __init__(self, state_dim: int, action_dim: int = 61, batch_size: int = 64) -> None:
-        self.batch_size = batch_size
-        self.memory = ReservoirMemory()
-        self.p_net = PNetwork(state_dim, action_dim)
-        self.optimizer = optim.Adam(self.p_net.parameters(), lr=0.001)
+        self.batch_size: int = batch_size
+        self.memory: ReservoirMemory = ReservoirMemory()
+        self.p_net: PNetwork = PNetwork(state_dim, action_dim)
+        self.optimizer: optim.Adam = optim.Adam(self.p_net.parameters(), lr=0.001)
         # 多分類問題使用 CrossEntropyLoss
-        self.criterion = nn.CrossEntropyLoss()
-        
-        self.steps_since_update = 0
+        self.criterion: nn.CrossEntropyLoss = nn.CrossEntropyLoss()
+        self.steps_since_update: int = 0
 
-    def push(self, state: Tensor, card: Card|None) -> float | None:
+    def push(self, state: Tensor, card: Card|None) -> float|None:
         """ 每次產生行為經驗時呼叫：存入蓄水池，並檢查是否達標觸發訓練 """
         self.memory.push(state, card)
         self.steps_since_update += 1
         # 達標且蓄水池資料足夠時觸發
-        if self.steps_since_update >= self.batch_size and self.memory.size() >= self.batch_size:
+        if (self.steps_since_update >= self.batch_size and self.memory.size() >= self.batch_size):
             self.steps_since_update = 0
             return self.update()
         return None
 
     def update(self) -> float:
         """ 執行一次 Policy Network 的監督學習更新 """
+        states : Tensor
+        actions: Tensor
         states, actions = self.memory.sample(self.batch_size)
         # 透過 Policy Network 預測動作的分數 (Logits)
-        logits = self.p_net(states)  # shape: (batch_size, action_dim)
+        logits: Tensor = self.p_net(states)  # shape: (batch_size, action_dim)
         # 計算交叉熵損失 (比較預測的動作分佈與實際執行的 action)
-        loss = self.criterion(logits, actions)
+        loss: Tensor = self.criterion(logits, actions)
         # 反向傳播與優化更新
         self.optimizer.zero_grad()
-        loss.backward()
+        loss.backward()       # pyright: ignore[reportUnknownMemberType]
         self.optimizer.step() # pyright: ignore[reportUnknownMemberType]
-        return loss.item()
+        return float(loss.item())
 
     def save(self) -> None:
         """ 儲存的訓練資料 """

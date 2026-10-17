@@ -155,19 +155,14 @@ class UnoGame:
                 # 決定抽牌
                 if (played_card is None): self.decide_to_draw(out=False)
                 # 無效的決策
-                elif (not self.deck.is_playable(played_card)): 
-                    # 人類打錯牌
-                    if (isinstance(self.current_player.agent, HumanAgent)):
-                        print("The card is not playable, please try again")
-                        continue
-                    # AI 出錯
+                elif (not self.deck.is_playable(played_card)):
                     raise ValueError("Bot played the Card that is not playable")
                 # 正常出牌
                 else: self.play_as_normal(played_card, out=False)
-                next_state = self.get_tensor()
+                next_state: Tensor = self.get_tensor()
                 # 檢查是否遊戲結束
-                done = self.current_player.is_winner()
-                reward = float(int(done))
+                done: bool = self.current_player.is_winner()
+                reward: float = float(int(done))
                 # 存入雙記憶庫(Dual Memory Mechanism)並更新雙網路 
                 q_trainer.push(state, played_card, reward, next_state, done)
                 p_trainer.push(state, played_card)
@@ -175,7 +170,7 @@ class UnoGame:
                 if (done): break
                 self.turn_next()
             # 每 n 局輸出進度提示
-            if (episode%1 == 0): print(f"已完成第 {episode} 局自我對戰")
+            if (episode%4 == 0): print(f"已完成第 {episode} 局自我對戰")
 
     def game_loop(self) -> None:
         """ 遊戲主迴圈 """
