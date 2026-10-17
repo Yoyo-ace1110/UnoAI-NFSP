@@ -9,7 +9,7 @@ from torch import Tensor
 from core import Card
 
 class PNetwork(nn.Module):
-    def __init__(self, state_dim: int, action_dim: int, file_path: str = "p_network.bin") -> None:
+    def __init__(self, state_dim: int, action_dim: int, file_path: str = "p_network_v1.bin") -> None:
         """ Policy Network """
         super().__init__()
         self.file_path: str = file_path
@@ -37,7 +37,7 @@ class PNetwork(nn.Module):
         else: print(f"找不到權重檔 {self.file_path}。")
 
 class ReservoirMemory:
-    def __init__(self, file_path: str = "ReservoirMemory.bin", capacity: int = 10000) -> None:
+    def __init__(self, file_path: str = "ReservoirMemory_v1.bin", capacity: int = 10000) -> None:
         """ 蓄水池記憶庫 """
         self.file_path: str = file_path
         self.buffer: list[tuple[Tensor, int]] = []

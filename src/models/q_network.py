@@ -10,7 +10,7 @@ from torch import Tensor
 from core import Card
 
 class QNetwork(nn.Module):
-    def __init__(self, state_dim: int, action_dim: int, file_path: str = "q_network.bin") -> None:
+    def __init__(self, state_dim: int, action_dim: int, file_path: str = "q_network_v1.bin") -> None:
         """ Quality Network """
         super().__init__()
         self.file_path: str = file_path
@@ -38,7 +38,7 @@ class QNetwork(nn.Module):
         else: print(f"找不到權重檔 {self.file_path}。")
 
 class ReplayBuffer:
-    def __init__(self, file_path: str = "ReplayBuffer.bin", capacity: int = 10000) -> None:
+    def __init__(self, file_path: str = "ReplayBuffer_v1.bin", capacity: int = 10000) -> None:
         """ Q-Network 記憶庫 """
         self.buffer: deque[tuple[Tensor, int, float, Tensor, bool]]
         self.buffer = deque(maxlen=capacity)
