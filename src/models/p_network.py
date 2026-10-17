@@ -5,6 +5,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
+from .device import DEVICE, to_device
 from torch import Tensor
 from core import Card
 
@@ -16,6 +17,7 @@ class PNetwork(nn.Module):
         self.fc1: nn.Linear = nn.Linear(state_dim, 256)    # 全連接層  輸入=>256
         self.fc2: nn.Linear = nn.Linear(256, 256)          # 隱藏層    256=>256
         self.out: nn.Linear = nn.Linear(256, action_dim)   # 輸出層    256=>輸出
+        self.to(DEVICE)
 
     def forward(self, x: Tensor) -> Tensor:
         """ Forward Pass """
@@ -32,7 +34,8 @@ class PNetwork(nn.Module):
     def load(self) -> None:
         """ 讀取權重檔 """
         if os.path.exists(self.file_path):
-            self.load_state_dict(torch.load(self.file_path))
+            self.load_state_dict(torch.load(self.file_path, map_location=DEVICE))
+            self.to(DEVICE)
             print(f"已成功載入 Policy-Network 權重: {self.file_path}")
         else: print(f"找不到權重檔 {self.file_path}。")
 
@@ -49,8 +52,8 @@ class ReservoirMemory:
         if os.path.exists(self.file_path):
             with open(self.file_path, mode="rb") as file:
                 self.buffer = pickle.load(file=file)
-            print(f"ReservoirMemory 已成功從 {self.file_path} 讀取")
-        else: print(f"無法從 {self.file_path} 讀取 ReservoirMemory ")
+            print(f"已成功從 {self.file_path} 讀取 ReservoirMemory")
+        else: print(f"無法從 {self.file_path} 讀取 ReservoirMemory")
 
     def save(self) -> None:
         """ 儲存二進位訓練資料 """ 
@@ -103,7 +106,7 @@ class PolicyTrainer:
         """ 執行一次 Policy Network 的監督學習更新 """
         states : Tensor
         actions: Tensor
-        states, actions = self.memory.sample(self.batch_size)
+        states, actions = to_device(*self.memory.sample(self.batch_size))
         # 透過 Policy Network 預測動作的分數 (Logits)
         logits: Tensor = self.p_net(states)  # shape: (batch_size, action_dim)
         # 計算交叉熵損失 (比較預測的動作分佈與實際執行的 action)

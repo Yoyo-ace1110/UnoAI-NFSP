@@ -1,5 +1,5 @@
 from core import Rule, Card, Value, Deck, to_vector
-from models import DQNTrainer, PolicyTrainer
+from models import DQNTrainer, PolicyTrainer, print_device_info
 from agents import Agent, HumanAgent
 from .player import Player
 from torch import Tensor
@@ -145,6 +145,7 @@ class UnoGame:
     def train_loop(self, num_episodes: int, q_trainer: DQNTrainer, p_trainer: PolicyTrainer) -> None:
         """ 訓練主迴圈：執行多局自我對戰並進行 NFSP 雙網路訓練 """
         self.deck.out = False   # 避免不必要的輸出
+        print_device_info()     # 輸出一次使用裝置
         print(f"開始進行 {num_episodes} 局自我對戰")
         for episode in range(1, num_episodes+1):
             self.reset(agents=self.agents)

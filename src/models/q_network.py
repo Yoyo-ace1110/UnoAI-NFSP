@@ -5,9 +5,11 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
+from .device import DEVICE, to_device
 from collections import deque
 from torch import Tensor
 from core import Card
+
 
 class QNetwork(nn.Module):
     def __init__(self, state_dim: int, action_dim: int, file_path: str = "q_network_v1.bin") -> None:
@@ -17,6 +19,7 @@ class QNetwork(nn.Module):
         self.fc1: nn.Linear = nn.Linear(state_dim, 256)    # 全連接層  輸入=>256
         self.fc2: nn.Linear = nn.Linear(256, 256)          # 隱藏層    256=>256
         self.out: nn.Linear = nn.Linear(256, action_dim)   # 輸出層    256=>輸出
+        self.to(DEVICE)
 
     def forward(self, x: Tensor) -> Tensor:
         """ Forward Pass """
@@ -33,7 +36,8 @@ class QNetwork(nn.Module):
     def load(self) -> None:
         """ 讀取權重檔 """
         if os.path.exists(self.file_path):
-            self.load_state_dict(torch.load(self.file_path))
+            self.load_state_dict(torch.load(self.file_path, map_location=DEVICE))
+            self.to(DEVICE)
             print(f"已成功載入 Q-Network 權重: {self.file_path}")
         else: print(f"找不到權重檔 {self.file_path}。")
 
@@ -49,7 +53,7 @@ class ReplayBuffer:
         if os.path.exists(self.file_path):
             with open(self.file_path, mode="rb") as file:
                 self.buffer = pickle.load(file=file)
-            print(f"ReplayBuffer 已成功從 {self.file_path} 讀取")
+            print(f"已成功從 {self.file_path} 讀取 ReplayBuffer")
         else: print(f"無法從 {self.file_path} 讀取 ReplayBuffer ")
 
     def save(self) -> None:
@@ -113,7 +117,7 @@ class DQNTrainer:
         rewards:        Tensor
         next_states:    Tensor
         dones:          Tensor
-        states, actions, rewards, next_states, dones = self.memory.sample(self.batch_size)
+        states, actions, rewards, next_states, dones = to_device(*self.memory.sample(self.batch_size))
         # 計算當前狀態的 Q 值
         q_values: Tensor = self.q_net(states).gather(1, actions.unsqueeze(1)).squeeze(1)
         # 計算目標 Q 值 (Bellman Equation)
