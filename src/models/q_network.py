@@ -10,7 +10,6 @@ from collections import deque
 from torch import Tensor
 from core import Card
 
-
 class QNetwork(nn.Module):
     def __init__(self, state_dim: int, action_dim: int = 61, file_path: str = "q_network_v1.bin") -> None:
         """ Quality Network """
@@ -18,6 +17,7 @@ class QNetwork(nn.Module):
         self.file_path: str = file_path
         self.fc1: nn.Linear = nn.Linear(state_dim, 256)    # 全連接層  輸入=>256
         self.fc2: nn.Linear = nn.Linear(256, 256)          # 隱藏層    256=>256
+        self.fc3: nn.Linear = nn.Linear(256, 256)          # 隱藏層    256=>256
         self.out: nn.Linear = nn.Linear(256, action_dim)   # 輸出層    256=>輸出
         self.to(DEVICE)
 
@@ -26,6 +26,7 @@ class QNetwork(nn.Module):
         x_: Tensor = x
         x_: Tensor = F.relu(self.fc1(x_))
         x_: Tensor = F.relu(self.fc2(x_))
+        x_: Tensor = F.relu(self.fc3(x_))
         return self.out(x_)
 
     def save(self) -> None:
@@ -94,11 +95,16 @@ class DQNTrainer:
         self.batch_size: int = batch_size
         self.memory: ReplayBuffer = ReplayBuffer()
         self.q_net: QNetwork = QNetwork(state_dim, action_dim)
+        # 設定目標網路避免球員兼裁判
+        self.target_net: QNetwork = QNetwork(state_dim, action_dim)
+        self.target_net.load_state_dict(self.q_net.state_dict())
         # 使用 Adam 優化器
         self.optimizer: optim.Adam = optim.Adam(self.q_net.parameters(), lr=0.001)
         self.criterion: nn.MSELoss = nn.MSELoss()  # 均方誤差損失
         # 用來計算增加多少筆資料的計數器
+        self.target_update_count: int = 0
         self.steps_since_update: int = 0
+        self.target_net.eval()
 
     def push(self, state: Tensor, card: Card|None, reward: float, next_state: Tensor, done: bool) -> float|None:
         """ 存入記憶庫，並檢查是否達到 batch_size 觸發 update """
@@ -123,7 +129,7 @@ class DQNTrainer:
         # 計算目標 Q 值 (Bellman Equation)
         with torch.no_grad():
             # max(1)[0] 取得下一個狀態中所有動作的最大 Q 值
-            next_q_values: Tensor = self.q_net(next_states).max(1)[0]
+            next_q_values: Tensor = self.target_net(next_states).max(1)[0]
             # 若 done 為 True，則沒有未來回報 (1 - dones)
             target_q_values: Tensor = rewards + self.gamma*next_q_values*(1.0-dones)
         # 計算 Loss
@@ -131,7 +137,12 @@ class DQNTrainer:
         # 反向傳播與優化更新
         self.optimizer.zero_grad()
         loss.backward()       # pyright: ignore[reportUnknownMemberType]
+        torch.nn.utils.clip_grad_norm_(self.q_net.parameters(), max_norm=1.0)
         self.optimizer.step() # pyright: ignore[reportUnknownMemberType]
+        # 定期同步 target network
+        self.target_update_count += 1
+        if (self.target_update_count % 100 == 0):
+            self.target_net.load_state_dict(self.q_net.state_dict())
         return float(loss.item())
 
     def save(self) -> None:
@@ -141,5 +152,6 @@ class DQNTrainer:
 
     def load(self) -> None:
         """ 讀取權重檔 """
-        self.memory.load()
         self.q_net.load()
+        self.memory.load()
+        self.target_net.load_state_dict(self.q_net.state_dict())

@@ -16,6 +16,7 @@ class PNetwork(nn.Module):
         self.file_path: str = file_path
         self.fc1: nn.Linear = nn.Linear(state_dim, 256)    # 全連接層  輸入=>256
         self.fc2: nn.Linear = nn.Linear(256, 256)          # 隱藏層    256=>256
+        self.fc3: nn.Linear = nn.Linear(256, 256)          # 隱藏層    256=>256
         self.out: nn.Linear = nn.Linear(256, action_dim)   # 輸出層    256=>輸出
         self.to(DEVICE)
 
@@ -24,6 +25,7 @@ class PNetwork(nn.Module):
         x_: Tensor = x
         x_: Tensor = F.relu(self.fc1(x_))
         x_: Tensor = F.relu(self.fc2(x_))
+        x_: Tensor = F.relu(self.fc3(x_))
         return self.out(x_)
 
     def save(self) -> None:

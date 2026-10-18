@@ -34,13 +34,13 @@ class Agent_v1(Agent):
     def _quality(self) -> tuple[float, ...]:
         """ predict by Q-Network """
         with torch.no_grad():
-            state: Tensor = to_device(self.get_tensor())
+            state: Tensor = to_device(self.get_tensor()).unsqueeze(0)
             q_values: Tensor = self.q_net(state)
             return tuple(q_values.squeeze(0).cpu().tolist()) # type: ignore
         
     def _policy(self) -> tuple[float, ...]:
         """ predict by Policy Network """
         with torch.no_grad():
-            state: Tensor = to_device(self.get_tensor())
+            state: Tensor = to_device(self.get_tensor()).unsqueeze(0)
             probabilities: Tensor = torch.softmax(self.p_net(state), dim=-1)
             return tuple(probabilities.squeeze(0).cpu().tolist()) # type: ignore

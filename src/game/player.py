@@ -24,6 +24,7 @@ class Player:
         """ 輸出手牌 """
         print(f"{'Human' if self.is_human() else 'Computer'}{self.index}: ", end="")
         for card in self.hand: card.cout(show_color_for_black=False, end=" ")
+        print()
 
     def sort_hand(self) -> None:
         """ 排序手牌 """
@@ -81,6 +82,7 @@ class Player:
                 playable_probs.append(black_prob)
         # 抽牌機率
         playable_probs.append(prob_vec[-1])
+        # print(playable_probs)
         return playable_probs
 
     def genmove(self, deck_top: Card, has_effect: bool = False) -> Card|None:

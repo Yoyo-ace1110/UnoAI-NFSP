@@ -83,10 +83,10 @@ class UnoGame:
 
     def get_tensor(self) -> Tensor:
         """ 根據目前玩家將遊戲轉為向量 """
-        array: list[int] = [self.deck.size()]
+        array: list[float] = [self.deck.size()/108]
         array.extend(to_vector(self.deck.played))
         array.extend(to_vector(self.current_player.hand))
-        for player in self.players: array.append(player.hand_size())
+        for player in self.players: array.append(player.hand_size()/108)
         # [牌堆張數(1)|廢牌(60)|手牌(60)|剩餘張數(玩家數量)]
         return torch.tensor(array, dtype=torch.float32)
 
