@@ -6,7 +6,7 @@ from torch import Tensor
 import torch
 
 class UnoGame:
-    def __init__(self, agents: list[Agent], eta: float) -> None:
+    def __init__(self, agents: list[Agent]) -> None:
         """ 初始化整個遊戲 """
         if (not Rule.is_valid()):
             raise ValueError("Invalid Rule") 
@@ -15,7 +15,6 @@ class UnoGame:
         self.turn : int
         self.direc: int
         self.plus_sum: int
-        self.eta: float = eta
         self.deck: Deck = Deck()
         self.players: list[Player]
         self.agents: list[Agent] = agents
@@ -49,8 +48,9 @@ class UnoGame:
 
     def log(self) -> None:
         """ 輸出遊戲狀態 """
-        print(f"\ntop card:")
+        print(f"\ntop card:", end=" ")
         self.deck.top.cout(True)
+        print(end="\n")
         for i in range(self.players_size):
             player: Player = self.players[i]
             # 人類玩家輸出手牌, 其餘輸出張數
@@ -75,6 +75,8 @@ class UnoGame:
             self.players.append(player)
             player.deal_hand(hand)
             player.set_index(i)
+        # 事後設定以避免輸入層的維度不同
+        for agent in agents: agent.set_game(self)
 
     def game_over(self, winner_index: int) -> None:
         """ 遊戲結束 """

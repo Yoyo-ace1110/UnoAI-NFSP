@@ -101,8 +101,8 @@ class Card:
         return self.value.value < other.value.value
     
     def __str__(self) -> str: 
-        if (self.is_black()): return f"{self.value}"
-        return f"{self.color}|{self.value}"
+        if (self.is_black()): return f"{self.value} "
+        return f"{self.color}|{self.value} "
     
     def __repr__(self) -> str: return self.__str__()
 
@@ -113,8 +113,8 @@ class Card:
         比如說打 +4 後變成黃色 color_for_black is True
         """
         if (self.is_black() and not show_color_for_black):
-            return print(f"{self.value}", end="")
-        print(f"{self.color}|{self.value}", end="")
+            return print(f"{self.value}", end=" ")
+        print(f"{self.color}|{self.value}", end=" ")
         
     def is_black(self) -> bool:
         """ 判斷是否為黑色牌 """

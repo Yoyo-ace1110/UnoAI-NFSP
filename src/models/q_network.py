@@ -12,7 +12,7 @@ from core import Card
 
 
 class QNetwork(nn.Module):
-    def __init__(self, state_dim: int, action_dim: int, file_path: str = "q_network_v1.bin") -> None:
+    def __init__(self, state_dim: int, action_dim: int = 61, file_path: str = "q_network_v1.bin") -> None:
         """ Quality Network """
         super().__init__()
         self.file_path: str = file_path

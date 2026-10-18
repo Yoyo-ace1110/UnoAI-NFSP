@@ -10,7 +10,7 @@ from torch import Tensor
 from core import Card
 
 class PNetwork(nn.Module):
-    def __init__(self, state_dim: int, action_dim: int, file_path: str = "p_network_v1.bin") -> None:
+    def __init__(self, state_dim: int, action_dim: int = 61, file_path: str = "p_network_v1.bin") -> None:
         """ Policy Network """
         super().__init__()
         self.file_path: str = file_path

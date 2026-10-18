@@ -73,7 +73,7 @@ class Player:
             if (not Rule.black_finisher and self.uno() and card.is_black()):       is_valid = False
             if (Rule.color_retention and card.is_color() and self.is_all_black()): is_valid = False
             # 合法才用 Agent 給的機率, 不合法則填入 0
-            if not is_valid:            playable_probs.append(0.0)
+            if not is_valid:            playable_probs.append(-float('inf'))
             elif (not card.is_black()): playable_probs.append(prob_vec[card.id])
             # 黑牌可以代表該功能的任意一種顏色
             else:
