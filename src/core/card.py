@@ -106,16 +106,17 @@ class Card:
     
     def __repr__(self) -> str: return self.__str__()
 
-    def cout(self, show_color_for_black: bool = True) -> None:
+    def cout(self, show_color_for_black: bool = True, end: str = "\n") -> None:
         """ 
         輸出牌張 color_for_black 帶表黑色牌是否要顯示顏色
         比如說打 只是輸出手牌  color_for_black is False
         比如說打 +4 後變成黃色 color_for_black is True
+        此輸出方式包含換行!!!
         """
         if (self.is_black() and not show_color_for_black):
-            return print(f"{self.value}", end=" ")
-        print(f"{self.color}|{self.value}", end=" ")
-        
+            return print(f"{self.value}", end=end)
+        print(f"{self.color}|{self.value}", end=end)
+
     def is_black(self) -> bool:
         """ 判斷是否為黑色牌 """
         return self.value.is_black()

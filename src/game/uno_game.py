@@ -50,7 +50,6 @@ class UnoGame:
         """ 輸出遊戲狀態 """
         print(f"\ntop card:", end=" ")
         self.deck.top.cout(True)
-        print(end="\n")
         for i in range(self.players_size):
             player: Player = self.players[i]
             # 人類玩家輸出手牌, 其餘輸出張數
@@ -125,7 +124,7 @@ class UnoGame:
         """ 正常出牌 """
         self.deck.set_top(played)
         self.current_player.remove(played)
-        if (out): print(f"Player{self.turn} played")
+        if (out): print(f"Player{self.turn} played", end="")
         if (out): played.cout(show_color_for_black=True)
         # 迴轉機制
         if (played.value == Value.turn):
@@ -165,7 +164,10 @@ class UnoGame:
                 next_state: Tensor = self.get_tensor()
                 # 檢查是否遊戲結束
                 done: bool = self.current_player.is_winner()
-                reward: float = float(int(done))
+                if (done): reward: float = 1.0
+                elif played_card is not None:
+                    reward: float = 0.04
+                else: reward: float = -0.04
                 # 存入雙記憶庫(Dual Memory Mechanism)並更新雙網路 
                 q_trainer.push(state, played_card, reward, next_state, done)
                 p_trainer.push(state, played_card)
