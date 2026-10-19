@@ -18,7 +18,24 @@ class UnoGame:
         self.deck: Deck = Deck()
         self.players: list[Player]
         self.agents: list[Agent] = agents
-        self.reset(agents=self.agents)
+        self.players: list[Player] = []
+        # 累加機制
+        self.plus_sum = 0
+        # 依順序輪轉
+        self.turn  = 0
+        self.direc = 1
+        # 建立牌堆
+        self.deck = Deck(self.deck.out)
+        self.deck.shuffle()
+        # 建立玩家並發牌
+        for i in range(len(agents)):
+            hand: list[Card] = self.deck.draw(Rule.hand_size)
+            player: Player = Player(agents[i])
+            self.players.append(player)
+            player.deal_hand(hand)
+            player.set_index(i)
+        # 事後設定以避免輸入層的維度不同
+        for agent in agents: agent.set_game(self)
 
     @property
     def current_player(self) -> Player: return self.players[self.turn]
@@ -56,26 +73,16 @@ class UnoGame:
             if (isinstance(player.agent, HumanAgent)): player.show_hand()
             else: print(f"Player{i}: {self.players[i].hand_size()} cards")
 
-    def reset(self, agents: list[Agent]) -> None:
-        """ 重製遊戲狀態 """
-        self.players: list[Player] = []
-        # 累加機制
-        self.plus_sum = 0
-        # 依順序輪轉
+    def reset(self) -> None:
+        """ 重置遊戲狀態 """
         self.turn  = 0
         self.direc = 1
-        # 建立牌堆
-        self.deck = Deck(self.deck.out)
-        self.deck.shuffle()
-        # 建立玩家並發牌
-        for i in range(len(agents)):
-            hand: list[Card] = self.deck.draw(Rule.hand_size)
-            player: Player = Player(agents[i])
-            self.players.append(player)
-            player.deal_hand(hand)
-            player.set_index(i)
-        # 事後設定以避免輸入層的維度不同
-        for agent in agents: agent.set_game(self)
+        self.plus_sum = 0
+        self.deck.reset()
+        # 重新發牌給玩家
+        for player in self.players: 
+            player.reset()
+            player.deal_hand(self.deck.draw(Rule.hand_size))
 
     def game_over(self, winner_index: int) -> None:
         """ 遊戲結束 """
@@ -150,7 +157,7 @@ class UnoGame:
         for agent in self.agents: agent.train()
         print(f"開始進行 {num_episodes} 局自我對戰")
         for episode in range(1, num_episodes+1):
-            self.reset(agents=self.agents)
+            self.reset()
             while True:
                 state = self.get_tensor()
                 # 執行動作
@@ -176,7 +183,7 @@ class UnoGame:
                 if (done): break
                 self.turn_next()
             # 每 n 局輸出進度提示
-            if (episode%4 == 0): print(f"已完成第 {episode} 局自我對戰")
+            if (episode%16 == 0): print(f"已完成第 {episode} 局")
         for agent in self.agents: agent.save()
 
     def crossplay(self, num_episodes: int, q_trainer: DQNTrainer, p_trainer: PolicyTrainer) -> None:
@@ -186,7 +193,7 @@ class UnoGame:
         for agent in self.agents: agent.eval()
         print(f"開始進行 {num_episodes} 局交叉對戰")
         for episode in range(1, num_episodes+1):
-            self.reset(agents=self.agents)
+            self.reset()
             while True:
                 state = self.get_tensor()
                 # 執行動作並推進遊戲環境
@@ -212,7 +219,7 @@ class UnoGame:
                 if (done): break
                 self.turn_next()
             # 每 n 局輸出進度提示
-            if (episode%4 == 0): print(f"已完成第 {episode} 局交叉對戰")
+            if (episode%16 == 0): print(f"已完成第 {episode} 局")
 
     def game_loop(self) -> None:
         """ 遊戲主迴圈 """

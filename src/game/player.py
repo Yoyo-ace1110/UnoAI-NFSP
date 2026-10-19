@@ -9,6 +9,10 @@ class Player:
         self.agent: Agent = agent
         self.hand: list[Card] = []
 
+    def reset(self) -> None:
+        """ 重置玩家 """
+        self.hand.clear()
+
     def set_index(self, index: int) -> None:
         """ 設定編號 """
         self.index = index

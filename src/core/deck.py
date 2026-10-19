@@ -48,6 +48,20 @@ class Deck:
         """ 判斷牌堆是否為空 """
         return (self.size() == 0)
     
+    def reset(self) -> None:
+        """ 重置牌庫 """
+        self.cards.extend(self.played)
+        self.cards.append(self.top)
+        self.played.clear()
+        self.shuffle()
+        # 抽出底牌
+        for card_index in range(self.size()):
+            card: Card = self.cards[card_index]
+            if (not card.is_number()): continue
+            self.set_top(self.cards.pop(card_index))
+            break
+        self.has_effect: bool = False
+
     def shuffle(self) -> None:
         """ 牌堆洗牌 """
         random.shuffle(self.cards)

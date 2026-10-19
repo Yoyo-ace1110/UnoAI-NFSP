@@ -124,6 +124,10 @@ class Card:
     def is_color(self) -> bool:
         """ 判斷是否為顏色牌 """
         return not self.value.is_black()
+    
+    def is_number(self) -> bool:
+        """ 判斷是否為數字牌 """
+        return not self.value.is_number()
 
     def is_playable_after(self, deck_top: Card, has_effect: bool = False) -> bool:
         """ 判斷這張牌是否可以打 """
