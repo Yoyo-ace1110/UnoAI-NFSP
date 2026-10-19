@@ -1,21 +1,5 @@
 from game import UnoGame
-from agents import Agent, RandomAgent
-from models import DQNTrainer, PolicyTrainer
+from agents import Agent_v1
 
-agents: list[Agent] = [RandomAgent(), RandomAgent()]
-uno_game: UnoGame = UnoGame(agents=agents)
-state_dim: int = uno_game.get_tensor().shape[0]
-
-q_trainer: DQNTrainer    = DQNTrainer   (state_dim)
-p_trainer: PolicyTrainer = PolicyTrainer(state_dim)
-q_trainer.load()
-p_trainer.load()
-
-uno_game.train_loop(
-    num_episodes=1024, 
-    q_trainer=q_trainer, 
-    p_trainer=p_trainer
-)
-
-q_trainer.save()
-p_trainer.save()
+uno_game: UnoGame = UnoGame(agents=[Agent_v1(), Agent_v1()])
+uno_game.selfplay(num_episodes=1024)

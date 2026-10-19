@@ -2,6 +2,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 from torch import Tensor
+from core import Card
 import weakref
 
 if TYPE_CHECKING: from game import UnoGame
@@ -11,12 +12,24 @@ class Agent(ABC):
         """ 設定 eta 以初始化 Agent """
         self.eta: float = eta
     
-    def reload(self) -> None: pass
+    def eval(self) -> None: pass
+    
+    def train(self) -> None: pass
+    
+    def push_p(self, state: Tensor, card: Card|None) -> float|None: pass
+
+    def push_q(self, state: Tensor, card: Card|None, reward: float, next_state: Tensor, done: bool) -> float|None: pass
+    
+    def reload(self, batch_size: int = 64, gamma: float = 0.99, lr: float = 0.001) -> None: pass
+    
+    def save(self) -> None: pass
     
     def set_game(self, game: 'UnoGame') -> None:
         """ get weak reference of game """
+        if hasattr(self, 'game'): return
         self.game: 'UnoGame' = weakref.proxy(game)
         self.reload()
+        self.eval()
     
     def get_tensor(self) -> Tensor:
         """ 取得遊戲狀態張量 """

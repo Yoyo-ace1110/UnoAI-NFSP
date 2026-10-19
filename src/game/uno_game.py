@@ -143,11 +143,47 @@ class UnoGame:
         if (self.current_player.uno()): 
             if (out): print(f"Player{self.turn} Uno!")
 
-    def train_loop(self, num_episodes: int, q_trainer: DQNTrainer, p_trainer: PolicyTrainer) -> None:
-        """ 訓練主迴圈：執行多局自我對戰並進行 NFSP 雙網路訓練 """
+    def selfplay(self, num_episodes: int) -> None:
+        """ 模型自我對戰訓練 """
         self.deck.out = False   # 避免不必要的輸出
         print_device_info()     # 輸出一次使用裝置
+        for agent in self.agents: agent.train()
         print(f"開始進行 {num_episodes} 局自我對戰")
+        for episode in range(1, num_episodes+1):
+            self.reset(agents=self.agents)
+            while True:
+                state = self.get_tensor()
+                # 執行動作
+                played_card: Card|None = self.current_player.genmove(self.deck.top, self.deck.has_effect)
+                # 決定抽牌
+                if (played_card is None): self.decide_to_draw(out=False)
+                # 無效的決策
+                elif (not self.deck.is_playable(played_card)):
+                    raise ValueError("Bot played the Card that is not playable")
+                # 正常出牌
+                else: self.play_as_normal(played_card, out=False)
+                next_state: Tensor = self.get_tensor()
+                # 檢查是否遊戲結束
+                done: bool = self.current_player.is_winner()
+                if (done): reward: float = 1.0
+                elif played_card is not None:
+                    reward: float = 0.04
+                else: reward: float = -0.04
+                # 存入雙記憶庫(Dual Memory Mechanism)並更新雙網路
+                self.current_agent.push_q(state, played_card, reward, next_state, done)
+                self.current_agent.push_p(state, played_card)
+                # 延後中斷遊戲(先訓練)
+                if (done): break
+                self.turn_next()
+            # 每 n 局輸出進度提示
+            if (episode%4 == 0): print(f"已完成第 {episode} 局自我對戰")
+
+    def crossplay(self, num_episodes: int, q_trainer: DQNTrainer, p_trainer: PolicyTrainer) -> None:
+        """ 模型交叉對戰訓練 """
+        self.deck.out = False   # 避免不必要的輸出
+        print_device_info()     # 輸出一次使用裝置
+        for agent in self.agents: agent.eval()
+        print(f"開始進行 {num_episodes} 局交叉對戰")
         for episode in range(1, num_episodes+1):
             self.reset(agents=self.agents)
             while True:
@@ -175,11 +211,13 @@ class UnoGame:
                 if (done): break
                 self.turn_next()
             # 每 n 局輸出進度提示
-            if (episode%4 == 0): print(f"已完成第 {episode} 局自我對戰")
+            if (episode%4 == 0): print(f"已完成第 {episode} 局交叉對戰")
 
     def game_loop(self) -> None:
         """ 遊戲主迴圈 """
         self.deck.out = True
+        for agent in self.agents: agent.eval()
+        # 主迴圈
         while True:
             self.log()
             # 做出決策

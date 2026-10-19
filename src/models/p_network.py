@@ -10,14 +10,14 @@ from torch import Tensor
 from core import Card
 
 class PNetwork(nn.Module):
-    def __init__(self, state_dim: int, action_dim: int = 61, file_path: str = "p_network_v1.bin") -> None:
+    def __init__(self, state_dim: int, file_path: str = "p_network_v1.bin") -> None:
         """ Policy Network """
         super().__init__()
         self.file_path: str = file_path
-        self.fc1: nn.Linear = nn.Linear(state_dim, 256)    # 全連接層  輸入=>256
-        self.fc2: nn.Linear = nn.Linear(256, 256)          # 隱藏層    256=>256
-        self.fc3: nn.Linear = nn.Linear(256, 256)          # 隱藏層    256=>256
-        self.out: nn.Linear = nn.Linear(256, action_dim)   # 輸出層    256=>輸出
+        self.fc1: nn.Linear = nn.Linear(state_dim, 256) # 全連接層  輸入=>256
+        self.fc2: nn.Linear = nn.Linear(256, 256)       # 隱藏層    256=>256
+        self.fc3: nn.Linear = nn.Linear(256, 256)       # 隱藏層    256=>256
+        self.out: nn.Linear = nn.Linear(256, 61)        # 輸出層    256=>輸出
         self.to(DEVICE)
 
     def forward(self, x: Tensor) -> Tensor:
@@ -85,17 +85,16 @@ class ReservoirMemory:
         return (torch.stack(states), torch.tensor(actions, dtype=torch.int64))
 
 class PolicyTrainer:
-    def __init__(self, state_dim: int, action_dim: int = 61, batch_size: int = 64) -> None:
+    def __init__(self, state_dim: int, batch_size: int = 64, lr: float = 0.001) -> None:
         self.batch_size: int = batch_size
+        self.p_net: PNetwork = PNetwork(state_dim)
         self.memory: ReservoirMemory = ReservoirMemory()
-        self.p_net: PNetwork = PNetwork(state_dim, action_dim)
-        self.optimizer: optim.Adam = optim.Adam(self.p_net.parameters(), lr=0.001)
-        # 多分類問題使用 CrossEntropyLoss
+        self.optimizer: optim.Adam = optim.Adam(self.p_net.parameters(), lr)
         self.criterion: nn.CrossEntropyLoss = nn.CrossEntropyLoss()
         self.steps_since_update: int = 0
 
     def push(self, state: Tensor, card: Card|None) -> float|None:
-        """ 每次產生行為經驗時呼叫：存入蓄水池，並檢查是否達標觸發訓練 """
+        """ 存入蓄水池並觸發訓練 """
         self.memory.push(state, card)
         self.steps_since_update += 1
         # 達標且蓄水池資料足夠時觸發
@@ -110,7 +109,7 @@ class PolicyTrainer:
         actions: Tensor
         states, actions = to_device(*self.memory.sample(self.batch_size))
         # 透過 Policy Network 預測動作的分數 (Logits)
-        logits: Tensor = self.p_net(states)  # shape: (batch_size, action_dim)
+        logits: Tensor = self.p_net(states)  # shape: (batch_size, 61)
         # 計算交叉熵損失 (比較預測的動作分佈與實際執行的 action)
         loss: Tensor = self.criterion(logits, actions)
         # 反向傳播與優化更新
