@@ -177,6 +177,7 @@ class UnoGame:
                 self.turn_next()
             # 每 n 局輸出進度提示
             if (episode%4 == 0): print(f"已完成第 {episode} 局自我對戰")
+        for agent in self.agents: agent.save()
 
     def crossplay(self, num_episodes: int, q_trainer: DQNTrainer, p_trainer: PolicyTrainer) -> None:
         """ 模型交叉對戰訓練 """
