@@ -5,12 +5,25 @@ from torch import Tensor
 from core import Card
 import weakref
 
-if TYPE_CHECKING: from game import UnoGame
+if TYPE_CHECKING: from engine import UnoGame
 
 class Agent(ABC):
-    def __init__(self, eta: float = 0.85) -> None:
+    def __init__(
+        self, 
+        eta: float = 0.85, 
+        p_network_path: str|None = None, 
+        q_network_path: str|None = None, 
+        replay_buffer_path: str|None = None, 
+        reservior_memory_path: str|None = None, 
+    ) -> None:
         """ 設定 eta 以初始化 Agent """
         self.eta: float = eta
+        self.q_net_path   : str|None = q_network_path
+        self.p_net_path   : str|None = p_network_path
+        self.q_memory_path: str|None = replay_buffer_path
+        self.p_memory_path: str|None = reservior_memory_path
+
+    def save(self) -> None: pass
     
     def eval(self) -> None: pass
     
@@ -21,8 +34,6 @@ class Agent(ABC):
     def push_q(self, state: Tensor, card: Card|None, reward: float, next_state: Tensor, done: bool) -> float|None: pass
     
     def reload(self, batch_size: int = 64, gamma: float = 0.99, lr: float = 0.001) -> None: pass
-    
-    def save(self) -> None: pass
     
     def set_game(self, game: 'UnoGame') -> None:
         """ get weak reference of game """

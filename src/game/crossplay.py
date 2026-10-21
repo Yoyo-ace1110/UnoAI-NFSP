@@ -1,4 +1,4 @@
-from game import UnoGame
+from engine import UnoGame
 from agents import Agent, RandomAgent
 from models import DQNTrainer, PolicyTrainer
 

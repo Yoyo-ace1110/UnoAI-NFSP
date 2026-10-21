@@ -1,4 +1,4 @@
-from game import UnoGame
+from engine import UnoGame
 from agents import Agent, Agent_v1
 
 agent: Agent_v1 = Agent_v1()

@@ -1,0 +1,7 @@
+=== UnoAI ELO 排行 ===
+Model Name                     | p_net                          | q_net                          | p_memory                       | q_memory                       | Size       | ELO Rating | Matches 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1_keep_drawing                 | networks\1_keep_drawing\p_network_v1.bin | networks\1_keep_drawing\q_network_v1.bin | networks\1_keep_drawing\ReservoirMemory_v1.bin | networks\1_keep_drawing\ReplayBuffer_v1.bin | 24912770   | 690.81     | 16      
+2_trained_by_random            | networks\2_trained_by_random\p_network_v1.bin | networks\2_trained_by_random\q_network_v1.bin | networks\2_trained_by_random\ReservoirMemory_v1.bin | networks\2_trained_by_random\ReplayBuffer_v1.bin | 24912770   | 690.81     | 16      
+3_trained_by_selfplay1024      | networks\3_trained_by_selfplay1024\p_network_v1.bin | networks\3_trained_by_selfplay1024\q_network_v1.bin | networks\3_trained_by_selfplay1024\ReservoirMemory_v1.bin | networks\3_trained_by_selfplay1024\ReplayBuffer_v1.bin | 24912770   | 690.81     | 16      
+4_trained_by_selfplay4096      | networks\4_trained_by_selfplay4096\p_network_v1.bin | networks\4_trained_by_selfplay4096\q_network_v1.bin | networks\4_trained_by_selfplay4096\ReservoirMemory_v1.bin | networks\4_trained_by_selfplay4096\ReplayBuffer_v1.bin | 24912770   | 690.81     | 16      

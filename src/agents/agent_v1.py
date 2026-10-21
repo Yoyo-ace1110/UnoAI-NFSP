@@ -6,12 +6,25 @@ from torch import Tensor
 from core import Card
 import torch
 
-if TYPE_CHECKING: from game import UnoGame
+if TYPE_CHECKING: from engine import UnoGame
 
 class Agent_v1(Agent):
-    def __init__(self, eta: float = 0.85) -> None:
+    def __init__(
+        self, 
+        eta: float = 0.85, 
+        p_network_path: str|None = None, 
+        q_network_path: str|None = None, 
+        replay_buffer_path: str|None = None, 
+        reservior_memory_path: str|None = None, 
+    ) -> None:
         """ AI Agent --version 1 """
-        super().__init__(eta=eta)
+        super().__init__(
+            eta, 
+            p_network_path, 
+            q_network_path, 
+            replay_buffer_path, 
+            reservior_memory_path
+        )
         self.no_grad: bool = True
 
     @property
@@ -38,8 +51,12 @@ class Agent_v1(Agent):
     def reload(self, batch_size: int = 64, gamma: float = 0.99, lr: float = 0.001) -> None:
         """ 重新載入模型 """
         state_dim: int = self.get_tensor().shape[0]
-        self.q_trainer: DQNTrainer = DQNTrainer(state_dim, batch_size, gamma, lr)
-        self.p_trainer: PolicyTrainer = PolicyTrainer(state_dim, batch_size, lr)
+        if (self.q_net_path is None): self.q_net_path = "q_network_v1.bin"
+        if (self.p_net_path is None): self.p_net_path = "p_network_v1.bin"
+        if (self.q_memory_path is None): self.q_memory_path = "ReplayBuffer_v1.bin"
+        if (self.p_memory_path is None): self.p_memory_path = "ReservoirMemory_v1.bin"
+        self.p_trainer: PolicyTrainer = PolicyTrainer(state_dim, lr,  batch_size, self.p_net_path, self.p_memory_path)
+        self.q_trainer: DQNTrainer = DQNTrainer(state_dim, lr, gamma, batch_size, self.q_net_path, self.q_memory_path)
         self.q_trainer.load()
         self.p_trainer.load()
     

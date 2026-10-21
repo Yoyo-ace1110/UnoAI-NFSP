@@ -89,12 +89,20 @@ class ReplayBuffer:
         )
 
 class DQNTrainer:
-    def __init__(self, state_dim: int, batch_size: int = 64, gamma: float = 0.99, lr: float = 0.001) -> None:
+    def __init__(
+        self, 
+        state_dim: int, 
+        lr: float = 0.00, 
+        gamma: float = 0.99, 
+        batch_size: int = 64, 
+        network_path: str = "q_network_v1.bin", 
+        memory_path: str = "ReplayBuffer_v1.bin"
+    ) -> None:
         """ Deep Q-Network Trainer """
         self.gamma: float = gamma
         self.batch_size: int = batch_size
-        self.q_net: QNetwork = QNetwork(state_dim)
-        self.memory: ReplayBuffer = ReplayBuffer()
+        self.memory: ReplayBuffer = ReplayBuffer(file_path=memory_path)
+        self.q_net: QNetwork = QNetwork(state_dim, file_path=network_path)
         # 設定目標網路避免球員兼裁判
         self.target_net: QNetwork = QNetwork(state_dim)
         self.target_net.load_state_dict(self.q_net.state_dict())

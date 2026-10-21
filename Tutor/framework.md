@@ -126,19 +126,25 @@ Agent 是包裝了 Q-Network、Policy Network 以及記憶庫的控制器，對�
 
 ```text
 UnoAI-NFSP/
+├── engine/
+│   ├── player.py         # 玩家類別
+│   └── uno_game.py       # 遊戲主迴圈
 ├── core/
 │   ├── rele.py           # 遊戲規則
 │   ├── card.py           # 卡牌類別
-│   ├── deck.py           # 發牌與牌庫管理
+│   └── deck.py           # 發牌與牌庫管理
 ├── models/ 
-├   # ReplayBuffer & ReservoirBuffer
-├   # 包含 η 切換決策、Loss 計算與更新邏輯
-│   ├── q_network.py      # PyTorch Q-Network      (輸入 4x15 Tensor -> 輸出 61 Quality-values)
-│   └── p_network.py      # PyTorch Policy Network (輸入 4x15 Tensor -> 輸出 61 Probabilities)
+│   ├── p_network.py      # PyTorch Policy Network && ReservoirBuffer (輸入 Tensor -> 輸出 Probabilities[61])
+│   └── q_network.py      # PyTorch Q-Network      && ReplayBuffer    (輸入 Tensor -> 輸出 Quality-value[61])
 ├── agents/ 
-│   ├── agent.py        # 決策代理人(基底)
+│   ├── agent.py        # Agent父類別
+│   ├── agent_v1.py     # AI出牌決策(v1)
 │   ├── human_agent.py  # 人類玩家出牌決策
-│   ├── random_agent.py # 純隨機AI出牌決策
-├── selfplay.py         # 訓練主程式
-└── humanplay.py        # 遊玩主程式
+│   └── random_agent.py # 純隨機AI出牌決策
+└── game/ 
+    ├── forward.py          # 通用的前置作業
+    ├── selfplay.py         # 自我訓練主程式
+    ├── crossplay.py        # 交叉訓練主程式
+    ├── humanplay.py        # 遊戲主程式
+    └── ELO_ranking.py      # 評分機制
 ```

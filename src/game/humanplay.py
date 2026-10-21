@@ -1,4 +1,4 @@
-from game import UnoGame
+from engine import UnoGame
 from agents import Agent, Agent_v1, HumanAgent # pyright: ignore[reportUnusedImport]
 
 agents: list[Agent] = [Agent_v1(), HumanAgent()]
