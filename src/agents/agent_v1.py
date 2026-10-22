@@ -48,7 +48,7 @@ class Agent_v1(Agent):
     def set_game(self, game: 'UnoGame') -> None:
         super().set_game(game)
     
-    def reload(self, batch_size: int = 64, gamma: float = 0.99, lr: float = 0.001) -> None:
+    def reload(self, batch_size: int = 64, gamma: float = 0.99, lr: float = 0.01) -> None:
         """ 重新載入模型 """
         state_dim: int = self.get_tensor().shape[0]
         if (self.q_net_path is None): self.q_net_path = "q_network_v1.bin"

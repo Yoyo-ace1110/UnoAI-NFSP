@@ -33,7 +33,7 @@ class Agent(ABC):
 
     def push_q(self, state: Tensor, card: Card|None, reward: float, next_state: Tensor, done: bool) -> float|None: pass
     
-    def reload(self, batch_size: int = 64, gamma: float = 0.99, lr: float = 0.001) -> None: pass
+    def reload(self, batch_size: int = 64, gamma: float = 0.99, lr: float = 0.01) -> None: pass
     
     def set_game(self, game: 'UnoGame') -> None:
         """ get weak reference of game """

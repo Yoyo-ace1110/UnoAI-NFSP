@@ -92,7 +92,7 @@ class DQNTrainer:
     def __init__(
         self, 
         state_dim: int, 
-        lr: float = 0.00, 
+        lr: float = 0.01, 
         gamma: float = 0.99, 
         batch_size: int = 64, 
         network_path: str = "q_network_v1.bin", 

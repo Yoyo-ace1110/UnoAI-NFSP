@@ -9,8 +9,9 @@ class Player:
         self.agent: Agent = agent
         self.hand: list[Card] = []
 
-    def reset(self) -> None:
+    def reset(self, deck: Deck) -> None:
         """ 重置玩家 """
+        deck.cards.extend(self.hand)
         self.hand.clear()
 
     def set_index(self, index: int) -> None:

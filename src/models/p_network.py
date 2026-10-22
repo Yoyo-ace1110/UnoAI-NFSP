@@ -88,7 +88,7 @@ class PolicyTrainer:
     def __init__(
         self, 
         state_dim: int, 
-        lr: float = 0.001, 
+        lr: float = 0.01, 
         batch_size: int = 64, 
         network_path: str = "p_network_v1.bin", 
         memory_path: str = "ReservoirMemory_v1.bin"

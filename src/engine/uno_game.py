@@ -3,6 +3,7 @@ from models import DQNTrainer, PolicyTrainer, print_device_info
 from agents import Agent, Agent_v1, RandomAgent, HumanAgent
 from .player import Player
 from torch import Tensor
+import random
 import torch
 import os
 
@@ -185,7 +186,7 @@ class UnoGame:
         self.deck.reset()
         # 重新發牌給玩家
         for player in self.players: 
-            player.reset()
+            player.reset(self.deck)
             player.deal_hand(self.deck.draw(Rule.hand_size))
 
     def game_over(self, winner_index: int) -> None:
@@ -227,7 +228,7 @@ class UnoGame:
         self.current_player.receive(drawed)
         if (isinstance(self.current_player.agent, HumanAgent)):
             if (out): print(f"Player{self.turn} drawed")
-            drawed.cout(False)
+            if (out): drawed.cout(False)
             return
         if (out): print(f"Player{self.turn} drawed 1 card")
 
@@ -253,7 +254,7 @@ class UnoGame:
         # Uno 機制
         if (self.current_player.uno()): 
             if (out): print(f"Player{self.turn} Uno!")
-
+    
     def selfplay(self, num_episodes: int) -> None:
         """ 模型自我對戰訓練 """
         self.deck.out = False   # 避免不必要的輸出
@@ -262,10 +263,15 @@ class UnoGame:
         print(f"開始進行 {num_episodes} 局自我對戰")
         for episode in range(1, num_episodes+1):
             self.reset()
+            trajectory: list[dict[str, Agent | int | Tensor | Card | None | bool]] = []  # 記錄本局所有步驟的軌跡
+            winner: int = -1
+            
             while True:
-                state = self.get_tensor()
+                current_p_idx: int = self.turn
+                current_agent: Agent = self.current_agent
+                state: Tensor = self.get_tensor()
                 # 執行動作
-                played_card: Card|None = self.current_player.genmove(self.deck.top, self.deck.has_effect)
+                played_card: Card | None = self.current_player.genmove(self.deck.top, self.deck.has_effect)
                 # 決定抽牌
                 if (played_card is None): self.decide_to_draw(out=False)
                 # 無效的決策
@@ -276,18 +282,46 @@ class UnoGame:
                 next_state: Tensor = self.get_tensor()
                 # 檢查是否遊戲結束
                 done: bool = self.current_player.is_winner()
-                if (done): reward: float = 1.0
-                elif played_card is not None:
-                    reward: float = 0.04
-                else: reward: float = -0.04
-                # 存入雙記憶庫(Dual Memory Mechanism)並更新雙網路
-                self.current_agent.push_q(state, played_card, reward, next_state, done)
-                self.current_agent.push_p(state, played_card)
+                
+                trajectory.append({
+                    "agent": current_agent,
+                    "player_idx": current_p_idx,
+                    "state": state,
+                    "card": played_card,
+                    "next_state": next_state,
+                    "is_win_step": done
+                })
+                
                 # 延後中斷遊戲(先訓練)
-                if (done): break
+                if (done): 
+                    winner = current_p_idx
+                    break
                 self.turn_next()
+            
+            agent_last_indices: dict[Agent, int] = {}
+            for idx, step in enumerate(trajectory):
+                agent_last_indices[step["agent"]] = idx  # type: ignore
+                
+            for idx, step in enumerate(trajectory):
+                agent: Agent = step["agent"]  # type: ignore
+                p_idx: int = step["player_idx"]  # type: ignore
+                is_last_for_agent: bool = (idx == agent_last_indices[agent])
+                
+                if winner != -1:
+                    base_reward: float = 1.0 if p_idx == winner else -1.0
+                    done_flag: bool = is_last_for_agent
+                    dist: int = len(trajectory) - 1 - idx
+                    reward: float = base_reward * (0.99 ** dist)
+                else:
+                    reward: float = 0.0
+                    done_flag: bool = True
+                
+                # 存入雙記憶庫(Dual Memory Mechanism)並更新雙網路
+                agent.push_q(step["state"], step["card"], reward, step["next_state"], done_flag)  # type: ignore
+                agent.push_p(step["state"], step["card"])  # type: ignore
+                
             # 每 n 局輸出進度提示
-            if (episode%16 == 0): print(f"已完成第 {episode} 局")
+            if (episode%1 == 0): print(f"已完成第 {episode} 局")
 
     def crossplay(self, num_episodes: int, q_trainer: DQNTrainer, p_trainer: PolicyTrainer) -> None:
         """ 模型交叉對戰訓練 """
@@ -297,10 +331,14 @@ class UnoGame:
         print(f"開始進行 {num_episodes} 局交叉對戰")
         for episode in range(1, num_episodes+1):
             self.reset()
+            trajectory: list[dict[str, int | Tensor | Card | None | bool]] = []
+            winner: int = -1
+            
             while True:
-                state = self.get_tensor()
+                current_p_idx: int = self.turn
+                state: Tensor = self.get_tensor()
                 # 執行動作並推進遊戲環境
-                played_card: Card|None = self.current_player.genmove(self.deck.top, self.deck.has_effect)
+                played_card: Card | None = self.current_player.genmove(self.deck.top, self.deck.has_effect)
                 # 決定抽牌
                 if (played_card is None): self.decide_to_draw(out=False)
                 # 無效的決策
@@ -311,26 +349,51 @@ class UnoGame:
                 next_state: Tensor = self.get_tensor()
                 # 檢查是否遊戲結束
                 done: bool = self.current_player.is_winner()
-                if (done): reward: float = 1.0
-                elif played_card is not None:
-                    reward: float = 0.04
-                else: reward: float = -0.04
-                # 存入雙記憶庫(Dual Memory Mechanism)並更新雙網路 
-                q_trainer.push(state, played_card, reward, next_state, done)
-                p_trainer.push(state, played_card)
+                
+                trajectory.append({
+                    "player_idx": current_p_idx,
+                    "state": state,
+                    "card": played_card,
+                    "next_state": next_state,
+                    "is_win_step": done
+                })
+                
                 # 延後中斷遊戲(先訓練)
-                if (done): break
+                if (done): 
+                    winner = current_p_idx
+                    break
                 self.turn_next()
+            
+            target_player_idx: int = 0
+            target_steps: list[int] = [i for i, step in enumerate(trajectory) if step["player_idx"] == target_player_idx]
+            
+            for i, step_idx in enumerate(target_steps):
+                step = trajectory[step_idx]
+                is_last: bool = (i == len(target_steps) - 1)
+                
+                if winner != -1:
+                    base_reward: float = 1.0 if winner == target_player_idx else -1.0
+                    done_flag: bool = is_last and step["is_win_step"]  # type: ignore
+                    dist: int = len(trajectory) - 1 - step_idx
+                    reward: float = base_reward * (0.99 ** dist)
+                else:
+                    reward: float = 0.0
+                    done_flag: bool = is_last
+                
+                # 存入雙記憶庫(Dual Memory Mechanism)並更新雙網路 
+                q_trainer.push(step["state"], step["card"], reward, step["next_state"], done_flag)  # type: ignore
+                p_trainer.push(step["state"], step["card"])  # type: ignore
+                
             # 每 n 局輸出進度提示
-            if (episode%16 == 0): print(f"已完成第 {episode} 局")
-
+            if (episode%1 == 0): print(f"已完成第 {episode} 局")
+    
     def game_loop(self, out: bool = True) -> int:
         """ 遊戲主迴圈，回傳贏家 """
         self.deck.out = out
         for agent in self.agents: agent.eval()
         # 主迴圈
         while True:
-            self.log()
+            if (out): self.log()
             # 做出決策
             played: Card|None = self.current_player.genmove(self.deck.top, self.deck.has_effect)
             # 決定抽牌
@@ -351,7 +414,7 @@ class UnoGame:
                 return self.turn
             # 換下一回合
             self.turn_next()
-    
+
     def rank_ELO(
         self, 
         eta: float = 0.85, 
@@ -404,7 +467,13 @@ class UnoGame:
                     replay_buffer_path=info.q_memory or None,
                     reservior_memory_path=info.p_memory or None,
                 )
-                self.agents = [tested_agent, RandomAgent()]
+                self.agents: list[Agent]
+                if (random.random() > 0.5):
+                    self.agents = [tested_agent, RandomAgent()]
+                    ai_index: int = 0
+                else:
+                    self.agents = [RandomAgent(), tested_agent]
+                    ai_index: int = 1
                 self.players = []
                 self.deck.reset()
                 for i, agent in enumerate(self.agents):
@@ -422,7 +491,7 @@ class UnoGame:
                 rb: float = 0.0 
                 ra: float = float(self.elo_table[model_name].elo)
                 expected_a: float = self.get_expected_score(ra, rb)
-                score_a: float = (1.0 if winner == 0 else 0.0)
+                score_a: float = (1.0 if winner == ai_index else 0.0)
                 # 更新模型 ELO
                 self.elo_table[model_name].elo = ra + k_val*(score_a-expected_a)
                 self.elo_table[model_name].matches = int(self.elo_table[model_name].matches) + 1
