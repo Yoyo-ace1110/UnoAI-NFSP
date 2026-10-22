@@ -1,3 +1,4 @@
+import forward # type: ignore
 from engine import UnoGame
 from agents import Agent, Agent_v1
 
