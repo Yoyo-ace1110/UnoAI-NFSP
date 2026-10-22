@@ -16,7 +16,7 @@ class ModelInfo:
         p_memory: str, 
         q_memory: str, 
         matches: int = 0, 
-        elo: float = 1200
+        elo: float = 0
     ) -> None:
         self.name: str = name
         self.p_net: str = p_net
@@ -357,6 +357,7 @@ class UnoGame:
         eta: float = 0.85, 
         k_val: float = 16, 
         matches: int = 100, 
+        init_elo: float = 0.0, 
         networks_dir: str = "./networks", 
         table_path: str = "./ELO_table.txt"
     ) -> None:
@@ -364,7 +365,7 @@ class UnoGame:
         discovered_models: dict[str, ModelInfo]
         discovered_models = self.scan_networks_info(networks_dir)
         self.elo_table = ELO_table(table_path)
-        # 同步更新模型資訊，預設 ELO=1200
+        # 同步更新模型資訊，並預設 ELO
         for model_name, info in discovered_models.items():
             # 現有模型
             if (model_name in self.elo_table):
@@ -382,7 +383,7 @@ class UnoGame:
                 p_memory=info.p_memory,
                 q_memory=info.q_memory,
                 size=info.size,
-                elo=1200.0,
+                elo=init_elo,
                 matches=0
             )
         # 讓每個待測模型與 RandomAgent (ELO = 0) 對戰
