@@ -35,6 +35,24 @@ class Agent(ABC):
     
     def reload(self, batch_size: int = 64, gamma: float = 0.99, lr: float = 0.01) -> None: pass
     
+    def softmax(self, prob_vec: list[float], prob_sum: float|None = None) -> list[float]:
+        """ softmax 61 維度的機率向量 """
+        # 自己計算總和
+        if (prob_sum is None):
+            prob_sum = 0
+            for prob in prob_vec: prob_sum += prob
+        # 總和為零 -> Error
+        if (prob_sum <= 0): raise ValueError("prob_sum==0 in Agent::softmax")
+        # 真正的 softmax
+        for i in range(len(prob_vec)): prob_vec[i] /= prob_sum
+        return prob_vec
+
+    def can_play(self, card: Card) -> bool:
+        """ 判斷現在能否打這張 """
+        in_hand : bool = self.game.curr_player.has(card)
+        playable: bool = self.game.deck.is_playable(card)
+        return (in_hand and playable)
+
     def set_game(self, game: 'UnoGame') -> None:
         """ get weak reference of game """
         if hasattr(self, 'game'): return
@@ -47,10 +65,12 @@ class Agent(ABC):
         return self.game.get_tensor()
     
     @abstractmethod
-    def gen_prob_vector(self) -> tuple[float, ...]:
+    def get_prob_vector(self) -> tuple[float, ...]:
         """ 輸出出各種牌的機率
             回傳一個出牌機率向量
             索引值對應到牌的種類
-            最後一個元素代表抽牌 
+            最後一個元素代表抽牌
+            註: 此函數會自動 softmax
+            註: 輸出不為 0 者必定合法
         """
         ...

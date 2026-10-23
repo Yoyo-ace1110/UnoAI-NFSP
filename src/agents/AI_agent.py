@@ -1,14 +1,11 @@
 from models import DQNTrainer, PolicyTrainer, QNetwork, PNetwork, to_device
-from typing import TYPE_CHECKING
 from random import random
 from .agent import Agent
 from torch import Tensor
 from core import Card
 import torch
 
-if TYPE_CHECKING: from engine import UnoGame
-
-class Agent_v1(Agent):
+class AIAgent(Agent):
     def __init__(
         self, 
         eta: float = 0.85, 
@@ -45,9 +42,6 @@ class Agent_v1(Agent):
         self.p_net.train()
         self.no_grad = False
 
-    def set_game(self, game: 'UnoGame') -> None:
-        super().set_game(game)
-    
     def reload(self, batch_size: int = 64, gamma: float = 0.99, lr: float = 0.01) -> None:
         """ 重新載入模型 """
         state_dim: int = self.get_tensor().shape[0]
@@ -70,7 +64,7 @@ class Agent_v1(Agent):
         self.q_trainer.save()
         self.p_trainer.save()
 
-    def gen_prob_vector(self) -> tuple[float, ...]:
+    def get_prob_vector(self) -> tuple[float, ...]:
         """ 根據 eta 切換模型並預測 """
         if (self.no_grad):
             with torch.no_grad(): 
@@ -80,12 +74,27 @@ class Agent_v1(Agent):
     def _quality(self) -> tuple[float, ...]:
         """ predict by Q-Network """
         state: Tensor = to_device(self.get_tensor()).unsqueeze(0)
-        q_values: Tensor = self.q_net(state)
-        return tuple(q_values.squeeze(0).cpu().tolist()) # type: ignore
-        
+        q_values: list[float] = self.q_net(state).squeeze(0).cpu().tolist()
+        # 合法化 q_values
+        for i in range(len(q_values)):
+            # from_id 要跳過抽牌
+            if (i == 60): continue
+            if (not self.can_play(Card.from_id(i))):
+                # Q值可以是任意實數，所以設為最小
+                q_values[i] = float('-inf')
+        # 只留下 Q 值最大者
+        max_index: int = max(range(len(q_values)), key=lambda i: q_values[i])
+        return tuple(float(i==max_index) for i in range(len(q_values)))
+    
     def _policy(self) -> tuple[float, ...]:
         """ predict by Policy Network """
-        with torch.no_grad():
-            state: Tensor = to_device(self.get_tensor()).unsqueeze(0)
-            probabilities: Tensor = torch.softmax(self.p_net(state), dim=-1)
-            return tuple(probabilities.squeeze(0).cpu().tolist()) # type: ignore
+        state: Tensor = to_device(self.get_tensor()).unsqueeze(0)
+        prob_tensor: Tensor = torch.softmax(self.p_net(state), dim=-1)
+        prob_vec: list[float] = prob_tensor.squeeze(0).cpu().tolist() # type: ignore
+        # 合法化 prob_vec
+        for i in range(len(prob_vec)):
+            # from_id 要跳過抽牌
+            if (i == 60): continue
+            if (not self.can_play(Card.from_id(i))):
+                prob_vec[i] = 0.0 # 不合法者機率為零
+        return tuple(self.softmax(prob_vec))

@@ -100,6 +100,14 @@ class Card:
         if (self.color != other.color): return self.color.value < other.color.value
         return self.value.value < other.value.value
     
+    def __eq__(self, other: object) -> bool:
+        """ 透過卡片 id 判斷兩張牌是否相等 """
+        if not isinstance(other, Card):
+            return NotImplemented
+        return (self.id == other.id)
+    
+    def __hash__(self) -> int: return hash(self.id)
+    
     def __str__(self) -> str: 
         if (self.is_black()): return f"{self.value} "
         return f"{self.color}|{self.value} "
@@ -127,7 +135,7 @@ class Card:
     
     def is_number(self) -> bool:
         """ 判斷是否為數字牌 """
-        return not self.value.is_number()
+        return self.value.is_number()
 
     def is_playable_after(self, deck_top: Card, has_effect: bool = False) -> bool:
         """ 判斷這張牌是否可以打 """

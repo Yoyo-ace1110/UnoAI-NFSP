@@ -1,8 +1,6 @@
-from typing import TYPE_CHECKING
 from random import uniform
 from .agent import Agent
-
-if TYPE_CHECKING: from engine import UnoGame
+from core import Card
 
 class RandomAgent(Agent):
     def __init__(
@@ -21,9 +19,16 @@ class RandomAgent(Agent):
             reservior_memory_path
         )
     
-    def set_game(self, game: 'UnoGame') -> None:
-        super().set_game(game)
-        
-    def gen_prob_vector(self) -> tuple[float, ...]:
-        """ 回傳一個純隨機的機率向量 """
-        return tuple(uniform(0, 1) for _ in  range(61))
+    def get_prob_vector(self) -> tuple[float, ...]:
+        """ 回傳一個隨機的機率向量 """
+        prob_vector: list[float] = []
+        prob_sum: float = 0.0
+        # 生成隨機向量
+        for i in range(61):
+            this_prob: float = 0.0
+            # 合法動作才隨機取 0-1 之間的機率
+            if (i == 60 or self.can_play(Card.from_id(i))):
+                this_prob = uniform(0, 1)
+            prob_vector.append(this_prob)
+            prob_sum += this_prob
+        return tuple(self.softmax(prob_vector, prob_sum))

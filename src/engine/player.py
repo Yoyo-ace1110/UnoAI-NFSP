@@ -1,5 +1,6 @@
-from core import Card, Deck, Rule
 from agents import Agent, HumanAgent
+from core import Card, Deck
+from random import choices
 import bisect
 
 class Player:
@@ -8,6 +9,17 @@ class Player:
         self.index: int = -1
         self.agent: Agent = agent
         self.hand: list[Card] = []
+
+    def has(self, target: Card) -> bool:
+        """ 檢查玩家是否有這張手牌 """
+        # 黑牌直接找牌面相同者
+        if (target.is_black()):
+            for card in self.hand:
+                if (card.value == target.value): 
+                    return True
+            return False
+        # 顏色牌則一一比較
+        return (target in self.hand)
 
     def reset(self, deck: Deck) -> None:
         """ 重置玩家 """
@@ -54,7 +66,14 @@ class Player:
 
     def remove(self, card: Card) -> None:
         """ 移除這張手牌 """
-        self.hand.remove(card)
+        if (not self.has(card)): raise ValueError("Player::remove(card) does not exist")
+        if (card.is_color()): return self.hand.remove(card)
+        # 拿掉相同牌面的第一張黑牌
+        for i in range(len(self.hand)):
+            if (self.hand[i].value == card.value): 
+                self.hand.pop(i)
+                return
+        raise ValueError("Player::remove(card) does not exist")
 
     def receive(self, card: Card) -> None:
         """ 抽一張牌 (插入並排序)"""
@@ -64,46 +83,15 @@ class Player:
         """ 判斷手上是否全為黑色牌 """
         return (self.hand[0].is_black())
 
-    def softmax_playables(self, deck_top: Card, prob_vec: tuple[float, ...], has_effect: bool = False) -> list[float]:
-        """ 輸出手上各牌出牌的機率
-            回傳一個出牌機率向量
-            索引值對應到手牌索引
-            最後一個元素代表抽牌 
-        """
-        playable_probs: list[float] = []
-        # 其他牌機率
-        for card in self.hand:
-            # 檢查是否合法
-            is_valid: bool = card.is_playable_after(deck_top, has_effect)
-            if (not Rule.black_finisher and self.uno() and card.is_black()):       is_valid = False
-            if (Rule.color_retention and card.is_color() and self.is_all_black()): is_valid = False
-            # 合法才用 Agent 給的機率, 不合法則填入 0
-            if not is_valid:            playable_probs.append(-float('inf'))
-            elif (not card.is_black()): playable_probs.append(prob_vec[card.id])
-            # 黑牌可以代表該功能的任意一種顏色
-            else:
-                base_id: int = card.value.value*4
-                black_prob: float = max(prob_vec[base_id+i] for i in range(4))
-                playable_probs.append(black_prob)
-        # 抽牌機率
-        playable_probs.append(prob_vec[-1])
-        # print(playable_probs)
-        return playable_probs
-
-    def genmove(self, deck_top: Card, has_effect: bool = False) -> Card|None:
+    def genmove(self) -> Card|None:
         """ 出牌, None代表抽牌 """
-        # 取得 Agent 輸出的 61 維決策機率向量
-        agent_prob_vec: tuple[float, ...] = self.agent.gen_prob_vector()
-        # 傳入 agent_prob_vec 計算合法手牌機率 (長度為 hand_size + 1)
-        playable_probs: list[float] = self.softmax_playables(deck_top, agent_prob_vec, has_effect)
-        max_index: int = max(range(len(playable_probs)), key=playable_probs.__getitem__)
-        # 最後一個元素代表抽牌
-        if (max_index == self.hand_size()): return None
-        # 其他則去手牌上找
-        chosen_card: Card = self.hand[max_index]
-        # 遇到黑牌要修正顏色為玩家在 agent_prob_vec 中指定的顏色
-        if chosen_card.is_black():
-            base_id: int = chosen_card.value.value*4
-            chosen_color: int = max(range(4), key=lambda c: agent_prob_vec[base_id+c])
-            chosen_card.id = chosen_color + chosen_card.value.value * 4
-        return chosen_card
+        prob_vec: tuple[float, ...] = self.agent.get_prob_vector()
+        # 根據機率隨機挑選一張
+        chosen_index: int = choices(
+            population=range(len(prob_vec)), 
+            weights=prob_vec, 
+            k=1
+        )[0]
+        # 轉成牌張並回傳
+        if (chosen_index == 60): return None
+        return Card.from_id(chosen_index)

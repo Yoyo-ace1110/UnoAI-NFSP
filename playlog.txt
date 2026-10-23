@@ -1,0 +1,501 @@
+UnoAI-NFSP/src/game/humanplay.py
+已成功載入 Q-Network 權重: q_network_v1.bin
+已成功從 ReplayBuffer_v1.bin 讀取 ReplayBuffer
+已成功從 ReservoirMemory_v1.bin 讀取 ReservoirMemory
+已成功載入 Policy-Network 權重: p_network_v1.bin
+
+top card: G|7
+Player0: 7 cards
+Human1: R|2 R|3 B|3 G|3 Y|3 +4 Y|5 
+Player0 played G|8
+
+top card: G|8
+Player0: 6 cards
+Human1: R|2 R|3 B|3 G|3 Y|3 +4 Y|5 
+請輸入要打的牌(如: R|+4): G|3
+Player1 played G|3
+
+top card: G|3
+Player0: 6 cards
+Human1: R|2 R|3 B|3 Y|3 +4 Y|5 
+Player0 drawed 1 card
+
+top card: G|3
+Player0: 7 cards
+Human1: R|2 R|3 B|3 Y|3 +4 Y|5 
+請輸入要打的牌(如: R|+4): B|3
+Player1 played B|3
+
+top card: B|3
+Player0: 7 cards
+Human1: R|2 R|3 Y|3 +4 Y|5 
+Player0 drawed 1 card
+
+top card: B|3
+Player0: 8 cards
+Human1: R|2 R|3 Y|3 +4 Y|5 
+請輸入要打的牌(如: R|+4): R|+4
+Player1 played R|+4
+
+top card: R|+4
+Player0: 8 cards
+Human1: R|2 R|3 Y|3 Y|5 
+Player0 drawed 4 cards
+
+top card: R|+4
+Player0: 12 cards
+Human1: R|2 R|3 Y|3 Y|5 
+請輸入要打的牌(如: R|+4): R|2
+Player1 played R|2
+
+top card: R|2
+Player0: 12 cards
+Human1: R|3 Y|3 Y|5 
+Player0 drawed 1 card
+
+top card: R|2
+Player0: 13 cards
+Human1: R|3 Y|3 Y|5 
+請輸入要打的牌(如: R|+4): R|3
+Player1 played R|3
+
+top card: R|3
+Player0: 13 cards
+Human1: Y|3 Y|5 
+Player0 played B|+4
+
+top card: B|+4
+Player0: 12 cards
+Human1: Y|3 Y|5 
+請輸入要打的牌(如: R|+4): draw
+Player1 drawed 4 cards
+
+top card: B|+4
+Player0: 12 cards
+Human1: R|5 R|6 B|0 G|skip Y|3 Y|5 
+Player0 played B|4
+
+top card: B|4
+Player0: 11 cards
+Human1: R|5 R|6 B|0 G|skip Y|3 Y|5 
+請輸入要打的牌(如: R|+4): B|0                                                            
+Player1 played B|0
+
+top card: B|0
+Player0: 11 cards
+Human1: R|5 R|6 G|skip Y|3 Y|5 
+Player0 played G|0
+
+top card: G|0
+Player0: 10 cards
+Human1: R|5 R|6 G|skip Y|3 Y|5 
+請輸入要打的牌(如: R|+4): G|skip
+Player1 played G|skip
+
+top card: G|skip
+Player0: 10 cards
+Human1: R|5 R|6 Y|3 Y|5 
+Player0 was skipped
+
+top card: G|skip
+Player0: 10 cards
+Human1: R|5 R|6 Y|3 Y|5 
+請輸入要打的牌(如: R|+4): draw
+Player1 drawed
+wild
+
+top card: G|skip
+Player0: 10 cards
+Human1: R|5 R|6 Y|3 Y|5 wild 
+Player0 drawed 1 card
+
+top card: G|skip
+Player0: 11 cards
+Human1: R|5 R|6 Y|3 Y|5 wild 
+請輸入要打的牌(如: R|+4): R|wild
+Player1 played R|wild
+
+top card: R|wild
+Player0: 11 cards
+Human1: R|5 R|6 Y|3 Y|5 
+Player0 drawed 1 card
+
+top card: R|wild
+Player0: 12 cards
+Human1: R|5 R|6 Y|3 Y|5 
+請輸入要打的牌(如: R|+4): R|6
+Player1 played R|6
+
+top card: R|6
+Player0: 12 cards
+Human1: R|5 Y|3 Y|5 
+Player0 drawed 1 card
+
+top card: R|6
+Player0: 13 cards
+Human1: R|5 Y|3 Y|5 
+請輸入要打的牌(如: R|+4): R|5
+Player1 played R|5
+
+top card: R|5
+Player0: 13 cards
+Human1: Y|3 Y|5 
+Player0 played B|5
+
+top card: B|5
+Player0: 12 cards
+Human1: Y|3 Y|5 
+請輸入要打的牌(如: R|+4): Y|5
+Player1 played Y|5
+Player1 Uno!
+
+top card: Y|5
+Player0: 12 cards
+Human1: Y|3 
+Player0 played Y|+2
+
+top card: Y|+2
+Player0: 11 cards
+Human1: Y|3 
+請輸入要打的牌(如: R|+4): draw
+Player1 drawed 2 cards
+
+top card: Y|+2
+Player0: 11 cards
+Human1: B|turn G|1 Y|3 
+Player0 played Y|9
+
+top card: Y|9
+Player0: 10 cards
+Human1: B|turn G|1 Y|3 
+請輸入要打的牌(如: R|+4): Y|3
+Player1 played Y|3
+
+top card: Y|3
+Player0: 10 cards
+Human1: B|turn G|1 
+Player0 drawed 1 card
+
+top card: Y|3
+Player0: 11 cards
+Human1: B|turn G|1 
+請輸入要打的牌(如: R|+4): draw
+Player1 drawed
+R|0
+
+top card: Y|3
+Player0: 11 cards
+Human1: R|0 B|turn G|1 
+Player0 played G|+4
+
+top card: G|+4
+Player0: 10 cards
+Human1: R|0 B|turn G|1 
+請輸入要打的牌(如: R|+4): draw
+Player1 drawed 4 cards
+
+top card: G|+4
+Player0: 10 cards
+Human1: R|0 B|6 B|turn G|1 G|6 Y|0 Y|6 
+Player0 drawed 1 card
+
+top card: G|+4
+Player0: 11 cards
+Human1: R|0 B|6 B|turn G|1 G|6 Y|0 Y|6 
+請輸入要打的牌(如: R|+4): G|1
+Player1 played G|1
+
+top card: G|1
+Player0: 11 cards
+Human1: R|0 B|6 B|turn G|6 Y|0 Y|6 
+Player0 played B|1
+
+top card: B|1
+Player0: 10 cards
+Human1: R|0 B|6 B|turn G|6 Y|0 Y|6 
+請輸入要打的牌(如: R|+4): B|turn
+Player1 played B|turn
+
+top card: B|turn
+Player0: 10 cards
+Human1: R|0 B|6 G|6 Y|0 Y|6 
+請輸入要打的牌(如: R|+4): B|6
+Player1 played B|6
+
+top card: B|6
+Player0: 10 cards
+Human1: R|0 G|6 Y|0 Y|6 
+Player0 drawed 1 card
+
+top card: B|6
+Player0: 11 cards
+Human1: R|0 G|6 Y|0 Y|6 
+請輸入要打的牌(如: R|+4): G|6
+Player1 played G|6
+
+top card: G|6
+Player0: 11 cards
+Human1: R|0 Y|0 Y|6 
+Player0 played Y|wild
+
+top card: Y|wild
+Player0: 10 cards
+Human1: R|0 Y|0 Y|6 
+請輸入要打的牌(如: R|+4): Y|6
+Player1 played Y|6
+
+top card: Y|6
+Player0: 10 cards
+Human1: R|0 Y|0 
+Player0 drawed 1 card
+
+top card: Y|6
+Player0: 11 cards
+Human1: R|0 Y|0 
+請輸入要打的牌(如: R|+4): Y|0
+Player1 played Y|0
+Player1 Uno!
+
+top card: Y|0
+Player0: 11 cards
+Human1: R|0 
+Player0 played Y|2
+
+top card: Y|2
+Player0: 10 cards
+Human1: R|0 
+請輸入要打的牌(如: R|+4): draw
+Player1 drawed
+Y|turn
+
+top card: Y|2
+Player0: 10 cards
+Human1: R|0 Y|turn 
+Player0 drawed 1 card
+
+top card: Y|2
+Player0: 11 cards
+Human1: R|0 Y|turn 
+請輸入要打的牌(如: R|+4): Y|turn
+Player1 played Y|turn
+Player1 Uno!
+
+top card: Y|turn
+Player0: 11 cards
+Human1: R|0 
+請輸入要打的牌(如: R|+4): draw
+Player1 drawed
+B|2
+
+top card: Y|turn
+Player0: 11 cards
+Human1: R|0 B|2 
+Player0 drawed 1 card
+
+top card: Y|turn
+Player0: 12 cards
+Human1: R|0 B|2 
+請輸入要打的牌(如: R|+4): draw
+Player1 drawed
+R|turn
+
+top card: Y|turn
+Player0: 12 cards
+Human1: R|0 R|turn B|2 
+Player0 played Y|8
+
+top card: Y|8
+Player0: 11 cards
+Human1: R|0 R|turn B|2 
+請輸入要打的牌(如: R|+4): draw
+Player1 drawed
+R|7
+
+top card: Y|8
+Player0: 11 cards
+Human1: R|0 R|7 R|turn B|2 
+Player0 drawed 1 card
+
+top card: Y|8
+Player0: 12 cards
+Human1: R|0 R|7 R|turn B|2 
+請輸入要打的牌(如: R|+4): draw 
+Player1 drawed
+G|2
+
+top card: Y|8
+Player0: 12 cards
+Human1: R|0 R|7 R|turn B|2 G|2 
+Player0 played B|wild
+
+top card: B|wild
+Player0: 11 cards
+Human1: R|0 R|7 R|turn B|2 G|2 
+請輸入要打的牌(如: R|+4): B|2
+Player1 played B|2
+
+top card: B|2
+Player0: 11 cards
+Human1: R|0 R|7 R|turn G|2 
+Player0 played B|7
+
+top card: B|7
+Player0: 10 cards
+Human1: R|0 R|7 R|turn G|2 
+請輸入要打的牌(如: R|+4): R|7
+Player1 played R|7
+
+top card: R|7
+Player0: 10 cards
+Human1: R|0 R|turn G|2 
+Player0 drawed 1 card
+
+top card: R|7
+Player0: 11 cards
+Human1: R|0 R|turn G|2 
+請輸入要打的牌(如: R|+4): R|0
+Player1 played R|0
+
+top card: R|0
+Player0: 11 cards
+Human1: R|turn G|2 
+Player0 played Y|wild
+
+top card: Y|wild
+Player0: 10 cards
+Human1: R|turn G|2 
+請輸入要打的牌(如: R|+4): draw
+Player1 drawed
+Y|skip
+
+top card: Y|wild
+Player0: 10 cards
+Human1: R|turn G|2 Y|skip 
+Player0 drawed 1 card
+
+top card: Y|wild
+Player0: 11 cards
+Human1: R|turn G|2 Y|skip 
+請輸入要打的牌(如: R|+4): Y|skip
+Player1 played Y|skip
+
+top card: Y|skip
+Player0: 11 cards
+Human1: R|turn G|2 
+Player0 played B|skip
+
+top card: B|skip
+Player0: 10 cards
+Human1: R|turn G|2 
+請輸入要打的牌(如: R|+4): draw
+Player1 was skipped
+
+top card: B|skip
+Player0: 10 cards
+Human1: R|turn G|2 
+Player0 played B|+2
+
+top card: B|+2
+Player0: 9 cards
+Human1: R|turn G|2 
+請輸入要打的牌(如: R|+4): draw
+Player1 drawed 2 cards
+
+top card: B|+2
+Player0: 9 cards
+Human1: R|4 R|turn G|2 +4 
+Player0 played G|+2
+
+top card: G|+2
+Player0: 8 cards
+Human1: R|4 R|turn G|2 +4 
+請輸入要打的牌(如: R|+4): draw
+Player1 drawed 2 cards
+
+top card: G|+2
+Player0: 8 cards
+Human1: R|4 R|8 R|turn G|2 G|9 +4 
+Player0 drawed 1 card
+
+top card: G|+2
+Player0: 9 cards
+Human1: R|4 R|8 R|turn G|2 G|9 +4 
+請輸入要打的牌(如: R|+4): G|2
+Player1 played G|2
+
+top card: G|2
+Player0: 9 cards
+Human1: R|4 R|8 R|turn G|9 +4 
+Player0 drawed 1 card
+
+top card: G|2
+Player0: 10 cards
+Human1: R|4 R|8 R|turn G|9 +4 
+請輸入要打的牌(如: R|+4): G|9 
+Player1 played G|9
+
+top card: G|9
+Player0: 10 cards
+Human1: R|4 R|8 R|turn +4 
+Player0 played R|9
+
+top card: R|9
+Player0: 9 cards
+Human1: R|4 R|8 R|turn +4 
+請輸入要打的牌(如: R|+4): R|4
+Player1 played R|4
+
+top card: R|4
+Player0: 9 cards
+Human1: R|8 R|turn +4 
+Player0 drawed 1 card
+
+top card: R|4
+Player0: 10 cards
+Human1: R|8 R|turn +4 
+請輸入要打的牌(如: R|+4): R|8
+Player1 played R|8
+
+top card: R|8
+Player0: 10 cards
+Human1: R|turn +4 
+Player0 drawed 1 card
+
+top card: R|8
+Player0: 11 cards
+Human1: R|turn +4 
+請輸入要打的牌(如: R|+4): R|turn
+Player1 played R|turn
+Player1 Uno!
+
+top card: R|turn
+Player0: 11 cards
+Human1: +4 
+請輸入要打的牌(如: R|+4): draw
+deck was reshuffled
+Player1 drawed
+G|8
+
+top card: R|turn
+Player0: 11 cards
+Human1: G|8 +4 
+Player0 drawed 1 card
+
+top card: R|turn
+Player0: 12 cards
+Human1: G|8 +4 
+請輸入要打的牌(如: R|+4): G|+4
+Player1 played G|+4
+Player1 Uno!
+
+top card: G|+4
+Player0: 12 cards
+Human1: G|8 
+Player0 drawed 4 cards
+
+top card: G|+4
+Player0: 16 cards
+Human1: G|8 
+請輸入要打的牌(如: R|+4): G|8
+Player1 played G|8
+Game Over! The Winner is Player1

@@ -1,9 +1,9 @@
 import forward # type: ignore
 from engine import UnoGame
-from agents import Agent, Agent_v1
+from agents import Agent, AIAgent
 
-agent: Agent_v1 = Agent_v1()
+agent: AIAgent = AIAgent()
 agents: list[Agent] = [agent, agent]
 uno_game: UnoGame = UnoGame(agents=agents)
-uno_game.selfplay(num_episodes=512)
+uno_game.selfplay(num_episodes=64)
 agent.save()

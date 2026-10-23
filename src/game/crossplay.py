@@ -1,9 +1,9 @@
 import forward # type: ignore
 from engine import UnoGame
-from agents import Agent, RandomAgent
+from agents import Agent, ClassicAgent
 from models import DQNTrainer, PolicyTrainer
 
-agents: list[Agent] = [RandomAgent(), RandomAgent()]
+agents: list[Agent] = [ClassicAgent(), ClassicAgent()]
 uno_game: UnoGame = UnoGame(agents=agents)
 state_dim: int = uno_game.get_tensor().shape[0]
 
@@ -13,7 +13,7 @@ q_trainer.load()
 p_trainer.load()
 
 uno_game.crossplay(
-    num_episodes=512, 
+    num_episodes=1024, 
     q_trainer=q_trainer, 
     p_trainer=p_trainer
 )

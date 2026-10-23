@@ -20,7 +20,8 @@ class Deck:
             value = Value(i)
             for j in range(4):
                 color = Color(j)
-                self.cards.append(Card(color, value))
+                card: Card = Card(color, value)
+                self.cards.extend((card, card))
         # 翻出第一張牌
         choice: int = random.randint(0, self.size()-1)
         self.top: Card = self.cards[choice]
@@ -55,12 +56,11 @@ class Deck:
         self.played.clear()
         self.shuffle()
         # 抽出底牌
-        for card_index in range(self.size()):
-            card: Card = self.cards[card_index]
-            if (not card.is_number()): continue
-            self.set_top(self.cards.pop(card_index))
-            break
-        self.has_effect: bool = False
+        for i in range(self.size()):
+            if self.cards[i].is_number():
+                self.top = self.cards.pop(i)
+                break
+        self.has_effect = False
 
     def shuffle(self) -> None:
         """ 牌堆洗牌 """
