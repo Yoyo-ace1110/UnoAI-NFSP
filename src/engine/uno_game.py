@@ -196,12 +196,24 @@ class UnoGame:
         print(f"Game Over! The Winner is Player{winner_index}")
 
     def get_tensor(self) -> Tensor:
-        """ 根據目前玩家將遊戲轉為向量 """
-        array: list[float] = [self.deck.size()/108]
+        """ 
+        根據目前玩家將遊戲轉為向量 
+        牌堆張數(1)
+        廢牌(60)
+        手牌(60)
+        剩餘張數(玩家數量)
+        目前連加累計(1)
+        底牌(1)
+        has_effect(1)
+        """
+        array: list[float] = [self.deck.size()/108.0]
         array.extend(to_vector(self.deck.played))
         array.extend(to_vector(self.curr_player.hand))
-        for player in self.players: array.append(player.hand_size()/108)
-        # [牌堆張數(1)|廢牌(60)|手牌(60)|剩餘張數(玩家數量)]
+        for player in self.players:
+            array.append(player.hand_size()/108.0)
+        array.append(self.plus_sum)
+        array.append(self.deck.top.id)
+        array.append(float(self.deck.has_effect))
         return torch.tensor(array, dtype=torch.float32)
 
     def decide_to_draw(self, out: bool = True) -> None:
@@ -258,21 +270,19 @@ class UnoGame:
             if (out): print(f"Player{self.turn} Uno!")
     
     def selfplay(self, num_episodes: int) -> None:
-        """ 模型自我對戰訓練 """
+        """ 模型自我對戰訓練（含決策點對齊的 next_state） """
         self.deck.out = False   # 避免不必要的輸出
         print_device_info()     # 輸出一次使用裝置
         for agent in self.agents: agent.train()
         print(f"開始進行 {num_episodes} 局自我對戰")
+        
         for episode in range(1, num_episodes+1):
             self.reset()
             winner: int = -1
             # 記錄本局所有步驟的軌跡
             trajectory: list[dict[str, Agent|int|Tensor|Card|None|bool|float]] = []  
             while True:
-                current_p_idx: int = self.turn
-                current_agent: Agent = self.curr_agent
                 state: Tensor = self.get_tensor()
-                # 執行動作
                 played_card: Card|None = self.curr_player.genmove()
                 # 決定抽牌或打牌的即時獎懲機制
                 step_reward: float = 0.0
@@ -286,48 +296,58 @@ class UnoGame:
                 else: 
                     self.play_as_normal(played_card, out=False)
                     step_reward = +0.025  # 打牌獎勵
-                next_state: Tensor = self.get_tensor()
                 # 檢查是否遊戲結束
                 done: bool = self.curr_player.is_winner()
                 trajectory.append({
-                    "agent": current_agent,
-                    "player_idx": current_p_idx,
+                    "agent": self.curr_agent,
+                    "player_idx": self.turn,
                     "state": state,
                     "card": played_card,
-                    "next_state": next_state,
                     "is_win_step": done,
                     "step_reward": step_reward
                 })
                 # 延後中斷遊戲(先訓練)
                 if (done): 
-                    winner = current_p_idx
+                    winner = self.turn
                     break
                 self.turn_next()
-            # 改用 player_idx 追蹤每位玩家在該局中的最後一步，避免共用 agent 實例時被覆蓋
-            player_last_indices: dict[int, int] = {}
+            # 追蹤每位玩家在該局中的所有步數索引，用來做決策點對齊
+            player_steps: dict[int, list[int]] = {}
             for idx, step in enumerate(trajectory):
-                player_last_indices[step["player_idx"]] = idx  # type: ignore
-            for idx, step in enumerate(trajectory):
-                agent: Agent = step["agent"]  # type: ignore
                 p_idx: int = step["player_idx"]  # type: ignore
-                is_last_for_player: bool = (idx == player_last_indices[p_idx])
-                s_reward: float = step["step_reward"]  # type: ignore
-                if winner != -1:
-                    base_reward: float = (1.0 if p_idx == winner else -1.0) + s_reward
-                    # 只要遊戲結束，每位玩家各自的最後一步都必須標記 done=True
-                    done_flag: bool = is_last_for_player
-                    dist: int = len(trajectory) - 1 - idx
-                    reward: float = base_reward * (0.99 ** dist)
-                else:
-                    base_reward: float = s_reward
-                    done_flag: bool = is_last_for_player
-                    dist: int = len(trajectory) - 1 - idx
-                    reward: float = base_reward * (0.99**dist)
-                # 存入雙記憶庫(Dual Memory Mechanism)並更新雙網路
-                agent.push_q(step["state"], step["card"], reward, step["next_state"], done_flag)  # type: ignore
-                agent.push_p(step["state"], step["card"])  # type: ignore
+                if (p_idx not in player_steps):
+                    player_steps[p_idx] = []
+                player_steps[p_idx].append(idx) 
+            player_last_indices: dict[int, int] = {p_idx: indices[-1] for p_idx, indices in player_steps.items()}
+            # 針對每位玩家的動作序列進行對齊與獎勵分發
+            for p_idx, indices in player_steps.items():
+                for i, step_idx in enumerate(indices):
+                    step = trajectory[step_idx]
+                    agent: Agent = step["agent"]  # type: ignore
+                    is_last_for_player: bool = (step_idx == player_last_indices[p_idx])
+                    s_reward: float = step["step_reward"]  # type: ignore
+                    if winner != -1:
+                        base_reward: float = (1.0 if p_idx == winner else -1.0) + s_reward
+                        done_flag: bool = is_last_for_player
+                        dist: int = len(trajectory) - 1 - step_idx
+                        reward: float = base_reward * (0.99 ** dist)
+                    else:
+                        base_reward: float = s_reward
+                        done_flag: bool = is_last_for_player
+                        dist: int = len(trajectory) - 1 - step_idx
+                        reward: float = base_reward * (0.99 ** dist)
+                    # 讓 next_state 指向下一次輪到同一位玩家時的盤面狀態
+                    if i + 1 < len(indices):
+                        next_step_idx = indices[i + 1]
+                        aligned_next_state: Tensor = trajectory[next_step_idx]["state"]  # type: ignore
+                    else:
+                        # 若是該玩家的最後一步，next_state 帶入當前 state 即可
+                        aligned_next_state: Tensor = step["state"] # type: ignore
+                    # 存入雙記憶庫(Dual Memory Mechanism)並更新雙網路
+                    agent.push_q(step["state"], step["card"], reward, aligned_next_state, done_flag)  # type: ignore
+                    agent.push_p(step["state"], step["card"])  # type: ignore
             # 每 n 局輸出進度提示
-            if (episode%1 == 0): print(f"已完成第 {episode} 局")
+            if (episode%1 == 0): print(f"已完成第 {episode} 局") 
 
     def crossplay(self, num_episodes: int, q_trainer: DQNTrainer, p_trainer: PolicyTrainer) -> None:
         """ 模型交叉對戰訓練 """
@@ -358,6 +378,7 @@ class UnoGame:
                 next_state: Tensor = self.get_tensor()
                 # 檢查是否遊戲結束
                 done: bool = self.curr_player.is_winner()
+                print(self.curr_player.hand_size())
                 trajectory.append({
                     "player_idx": self.turn,
                     "state": state,
@@ -377,26 +398,28 @@ class UnoGame:
                 step = trajectory[step_idx]
                 is_last: bool = (i == len(target_steps) - 1)
                 s_reward: float = step["step_reward"]  # type: ignore
-                
                 if winner != -1:
-                    base_reward: float = (1.0 if winner == target_player_idx else -1.0) + s_reward
-                    # 【修正 3】：移除原本綁定 step["is_win_step"] 的限制。
-                    # 只要遊戲結束（winner != -1），目標玩家（即使輸了）的最後一步也必須是終止態 (done=True)
                     done_flag: bool = is_last
+                    base_reward: float = float(winner==target_player_idx) + s_reward
                     dist: int = len(trajectory) - 1 - step_idx
-                    reward: float = base_reward * (0.99 ** dist)
+                    reward: float = base_reward * (0.99**dist)
                 else:
                     base_reward: float = s_reward
                     done_flag: bool = is_last
                     dist: int = len(trajectory) - 1 - step_idx
-                    reward: float = base_reward * (0.99 ** dist)
-                    
+                    reward: float = base_reward * (0.99**dist)
+                # 決策點對齊
+                if i + 1 < len(target_steps):
+                    next_step_idx = target_steps[i + 1]
+                    aligned_next_state: Tensor = trajectory[next_step_idx]["state"]  # type: ignore
+                else:
+                    aligned_next_state: Tensor = step["state"]  # type: ignore
                 # 存入雙記憶庫(Dual Memory Mechanism)並更新雙網路 
-                q_trainer.push(step["state"], step["card"], reward, step["next_state"], done_flag)  # type: ignore
+                q_trainer.push(step["state"], step["card"], reward, aligned_next_state, done_flag)  # type: ignore
                 p_trainer.push(step["state"], step["card"])  # type: ignore
             # 每 n 局輸出進度提示
-            if (episode%64 == 0): print(f"已完成第 {episode} 局")
-    
+            if (episode%1 == 0): print(f"已完成第 {episode} 局")
+
     def game_loop(self, out: bool = True) -> int:
         """ 遊戲主迴圈，回傳贏家 """
         self.deck.out = out
@@ -430,10 +453,10 @@ class UnoGame:
         table_path: str = "./ELO_table.txt"
     ) -> None:
         """ 掃描 networks 資料夾底下的模型後，做成 ELO 排名表儲存到 table_path """
+        self.elo_table = ELO_table(table_path)
         discovered_models: dict[str, ModelInfo]
         discovered_models = self.scan_networks_info(networks_dir)
-        self.elo_table = ELO_table(table_path)
-        # 同步更新模型資訊，並預設 ELO
+        # 同步更新模型資訊，並設置 ELO
         for model_name, info in discovered_models.items():
             # 現有模型
             if (model_name in self.elo_table):
@@ -463,22 +486,25 @@ class UnoGame:
             if (games_to_play <= 0): continue
             print(f"正在評估模型 {model_name}")
             info = self.elo_table[model_name]
+            # 迴圈外載入 + inference_only
+            tested_agent: Agent = AIAgent(
+                eta, inference_only=True, 
+                p_network_path=(info.p_net or None),
+                q_network_path=(info.q_net or None),
+                replay_buffer_path=(info.q_memory or None),
+                reservior_memory_path=(info.p_memory or None)
+            )
             for _ in range(games_to_play):
                 # 建立待測模型與 RandomAgent
-                tested_agent: Agent = AIAgent(
-                    eta,
-                    p_network_path=info.p_net or None,
-                    q_network_path=info.q_net or None,
-                    replay_buffer_path=info.q_memory or None,
-                    reservior_memory_path=info.p_memory or None,
-                )
-                self.agents: list[Agent]
                 if (random.random() > 0.5):
                     self.agents = [tested_agent, RandomAgent()]
                     ai_index: int = 0
                 else:
                     self.agents = [RandomAgent(), tested_agent]
                     ai_index: int = 1
+                # 重設遊戲與手牌
+                for player in self.players:
+                    player.reset(self.deck)
                 self.players = []
                 self.deck.reset()
                 for i, agent in enumerate(self.agents):
@@ -491,6 +517,7 @@ class UnoGame:
                 self.turn  = 0
                 self.direc = 1
                 self.plus_sum = 0
+                # 實際對戰直接呼叫 game_loop
                 winner: int = self.game_loop(out=False)
                 # 計算得分與更新 ELO
                 rb: float = 0.0 

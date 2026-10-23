@@ -10,13 +10,15 @@ class HumanAgent(Agent):
         q_network_path: str|None = None, 
         replay_buffer_path: str|None = None, 
         reservior_memory_path: str|None = None, 
+        inference_only: bool = False
     ) -> None:
         super().__init__(
             eta, 
             p_network_path, 
             q_network_path, 
             replay_buffer_path, 
-            reservior_memory_path
+            reservior_memory_path,
+            inference_only
         )
     
     def get_prob_vector(self) -> tuple[float, ...]:

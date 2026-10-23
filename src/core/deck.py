@@ -20,8 +20,8 @@ class Deck:
             value = Value(i)
             for j in range(4):
                 color = Color(j)
-                card: Card = Card(color, value)
-                self.cards.extend((card, card))
+                self.cards.append(Card(color, value))
+                self.cards.append(Card(color, value))
         # 翻出第一張牌
         choice: int = random.randint(0, self.size()-1)
         self.top: Card = self.cards[choice]
@@ -31,6 +31,7 @@ class Deck:
             value = Value(i)
             for j in range(4):
                 color = Color(j)
+                self.cards.append(Card(color, value))
                 self.cards.append(Card(color, value))
         # 加入黑色牌
         for i in range(13, 15):

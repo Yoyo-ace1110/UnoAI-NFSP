@@ -96,7 +96,7 @@ class Card:
     def color(self, color: Color) -> None: self.id = color.value + self.value.value*4
     
     def __lt__(self, other: Card) -> bool:
-        if (self.is_black()):           return self.id < other.id
+        if (self.is_black() or other.is_black()): return self.id < other.id
         if (self.color != other.color): return self.color.value < other.color.value
         return self.value.value < other.value.value
     
