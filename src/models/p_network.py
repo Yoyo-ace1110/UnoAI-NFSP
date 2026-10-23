@@ -42,7 +42,7 @@ class PNetwork(nn.Module):
         else: print(f"找不到權重檔 {self.file_path}。")
 
 class ReservoirMemory:
-    def __init__(self, file_path: str = "ReservoirMemory_v1.bin", capacity: int = 10000) -> None:
+    def __init__(self, file_path: str = "ReservoirMemory_v1.bin", capacity: int = 100000) -> None:
         """ 蓄水池記憶庫 """
         self.file_path: str = file_path
         self.buffer: list[tuple[Tensor, int]] = []

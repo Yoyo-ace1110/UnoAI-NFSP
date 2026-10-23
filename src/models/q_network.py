@@ -43,7 +43,7 @@ class QNetwork(nn.Module):
         else: print(f"找不到權重檔 {self.file_path}。")
 
 class ReplayBuffer:
-    def __init__(self, file_path: str = "ReplayBuffer_v1.bin", capacity: int = 10000) -> None:
+    def __init__(self, file_path: str = "ReplayBuffer_v1.bin", capacity: int = 100000) -> None:
         """ Q-Network 記憶庫 """
         self.buffer: deque[tuple[Tensor, int, float, Tensor, bool]]
         self.buffer = deque(maxlen=capacity)

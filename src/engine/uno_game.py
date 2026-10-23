@@ -289,7 +289,6 @@ class UnoGame:
                 next_state: Tensor = self.get_tensor()
                 # 檢查是否遊戲結束
                 done: bool = self.curr_player.is_winner()
-                print(self.curr_player.hand_size())
                 trajectory.append({
                     "agent": current_agent,
                     "player_idx": current_p_idx,
@@ -304,21 +303,18 @@ class UnoGame:
                     winner = current_p_idx
                     break
                 self.turn_next()
-            
-            # 【修正 1】：改用 player_idx 追蹤每位玩家在該局中的最後一步，避免共用 agent 實例時被覆蓋
+            # 改用 player_idx 追蹤每位玩家在該局中的最後一步，避免共用 agent 實例時被覆蓋
             player_last_indices: dict[int, int] = {}
             for idx, step in enumerate(trajectory):
                 player_last_indices[step["player_idx"]] = idx  # type: ignore
-
             for idx, step in enumerate(trajectory):
                 agent: Agent = step["agent"]  # type: ignore
                 p_idx: int = step["player_idx"]  # type: ignore
                 is_last_for_player: bool = (idx == player_last_indices[p_idx])
                 s_reward: float = step["step_reward"]  # type: ignore
-                
                 if winner != -1:
                     base_reward: float = (1.0 if p_idx == winner else -1.0) + s_reward
-                    # 【修正 2】：只要遊戲結束，每位玩家各自的最後一步都必須標記 done=True
+                    # 只要遊戲結束，每位玩家各自的最後一步都必須標記 done=True
                     done_flag: bool = is_last_for_player
                     dist: int = len(trajectory) - 1 - idx
                     reward: float = base_reward * (0.99 ** dist)
@@ -327,11 +323,9 @@ class UnoGame:
                     done_flag: bool = is_last_for_player
                     dist: int = len(trajectory) - 1 - idx
                     reward: float = base_reward * (0.99**dist)
-                
                 # 存入雙記憶庫(Dual Memory Mechanism)並更新雙網路
                 agent.push_q(step["state"], step["card"], reward, step["next_state"], done_flag)  # type: ignore
                 agent.push_p(step["state"], step["card"])  # type: ignore
-                
             # 每 n 局輸出進度提示
             if (episode%1 == 0): print(f"已完成第 {episode} 局")
 
@@ -364,7 +358,6 @@ class UnoGame:
                 next_state: Tensor = self.get_tensor()
                 # 檢查是否遊戲結束
                 done: bool = self.curr_player.is_winner()
-                print(self.curr_player.hand_size())
                 trajectory.append({
                     "player_idx": self.turn,
                     "state": state,
@@ -378,7 +371,6 @@ class UnoGame:
                     winner = self.turn
                     break
                 self.turn_next()
-                
             target_player_idx: int = 0
             target_steps: list[int] = [i for i, step in enumerate(trajectory) if step["player_idx"] == target_player_idx]
             for i, step_idx in enumerate(target_steps):
@@ -402,9 +394,8 @@ class UnoGame:
                 # 存入雙記憶庫(Dual Memory Mechanism)並更新雙網路 
                 q_trainer.push(step["state"], step["card"], reward, step["next_state"], done_flag)  # type: ignore
                 p_trainer.push(step["state"], step["card"])  # type: ignore
-                
             # 每 n 局輸出進度提示
-            if (episode%1 == 0): print(f"已完成第 {episode} 局")
+            if (episode%64 == 0): print(f"已完成第 {episode} 局")
     
     def game_loop(self, out: bool = True) -> int:
         """ 遊戲主迴圈，回傳贏家 """

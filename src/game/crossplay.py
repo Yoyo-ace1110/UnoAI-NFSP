@@ -1,7 +1,7 @@
 import forward # type: ignore
 from engine import UnoGame
-from agents import Agent, ClassicAgent
 from models import DQNTrainer, PolicyTrainer
+from agents import Agent, RandomAgent, ClassicAgent # pyright: ignore[reportUnusedImport]
 
 agents: list[Agent] = [ClassicAgent(), ClassicAgent()]
 uno_game: UnoGame = UnoGame(agents=agents)
@@ -13,7 +13,7 @@ q_trainer.load()
 p_trainer.load()
 
 uno_game.crossplay(
-    num_episodes=1024, 
+    num_episodes=16384, 
     q_trainer=q_trainer, 
     p_trainer=p_trainer
 )
