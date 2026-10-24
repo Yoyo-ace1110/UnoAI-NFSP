@@ -1,2 +1,2 @@
-![](./src/visualize/crossplay_result.png)
-![](./src/visualize/selfplay_result.png)
+![](./src/visualize/crossplay_result_smoothed.png)
+![](./src/visualize/selfplay_result_smoothed.png)
