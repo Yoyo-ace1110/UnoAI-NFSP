@@ -1,9 +1,9 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
 from .agent import Agent
-from core import Card, Value, Color
+from core import Value, Color
 
-if TYPE_CHECKING: from engine import Player
+_TURN, _SKIP  = Value.turn.value, Value.skip.value
+_PLUS2, _WILD, _PLUS4 = Value.plus2.value, Value.wild.value, Value.plus4.value
 
 class ClassicAgent(Agent):
     def __init__(
@@ -23,53 +23,32 @@ class ClassicAgent(Agent):
             reservior_memory_path,
             inference_only
         )
+
+    @staticmethod
+    def _pick(ids: list[int]) -> tuple[float, ...]:
+        """ 在 ids 中均勻選擇 """
+        prob_vector: list[float] = [0.0] * 61
+        for i in ids: prob_vector[i] = 1.0 / len(ids)
+        return tuple(prob_vector)
     
     def get_prob_vector(self) -> tuple[float, ...]:
-        """ 根據經典規則輸出出牌機率向量 """
-        prob_vector: list[float] = [0.0] * 61
-        legal: list[int] = self.legal_ids()
-        if (not legal):
-            # 無牌可出，選擇抽牌
-            prob_vector[60] = 1.0
-            return tuple(self.softmax(prob_vector))
-        player: Player = self.game.curr_player
-        hand_colors: set[Color] = {card.color for card in player.hand if card.is_color()}
+        """ 根據經典規則輸出出牌機率向量 (只掃一次合法牌，依優先級挑選) """
+        ids: list[int] = self.legal_ids()
+        # 沒有合法牌 -> 抽牌 (索引 60)
+        if (not ids): return self._pick([60])
         # 優先級 1: 數字牌
-        tier1 = [i for i in legal if ((i < 60) and Card.from_id(i).is_number())]
-        if tier1:
-            for i in tier1: prob_vector[i] = 1.0
-            return tuple(self.softmax(prob_vector))
+        tier: list[int] = [i for i in ids if (i >> 2) <= 9]
+        if (tier): return self._pick(tier)
         # 優先級 2: 迴轉 (turn) 或 禁止 (skip)
-        tier2 = [i for i in legal if ((i < 60) and Card.from_id(i).value in (Value.turn, Value.skip))]
-        if tier2:
-            for i in tier2: prob_vector[i] = 1.0
-            return tuple(self.softmax(prob_vector))
-        # 優先級 3: 變色牌 (wild)
-        tier3_fallback : list[int] = []
-        tier3_preferred: list[int] = []
-        for i in legal:
-            if (i >= 60): continue
-            card: Card = Card.from_id(i)
-            if (card != Value.wild): continue
-            if (card.color in hand_colors):
-                tier3_preferred.append(i)
-            tier3_fallback.append(i)
-        if tier3_preferred:
-            for i in tier3_preferred: prob_vector[i] = 1.0
-            return tuple(self.softmax(prob_vector))
-        if tier3_fallback:
-            for i in tier3_fallback: prob_vector[i] = 1.0
-            return tuple(self.softmax(prob_vector))
+        tier = [i for i in ids if (i >> 2) in (_TURN, _SKIP)]
+        if (tier): return self._pick(tier)
+        # 優先級 3: 變色牌 (wild)，優先選擇自己手上有的顏色
+        tier = [i for i in ids if (i >> 2) == _WILD]
+        if (tier):
+            hand_colors: set[int] = {c.id & 3 for c in self.game.curr_player.hand if c.is_color()}
+            return self._pick([i for i in tier if (i & 3) in hand_colors] or tier)
         # 優先級 4a: +2
-        tier4a = [i for i in legal if ((i < 60) and (Card.from_id(i).value == Value.plus2))]
-        if tier4a:
-            for i in tier4a: prob_vector[i] = 1.0
-            return tuple(self.softmax(prob_vector))
+        tier = [i for i in ids if (i >> 2) == _PLUS2]
+        if (tier): return self._pick(tier)
         # 優先級 4b: +4
-        tier4b = [i for i in legal if ((i < 60) and (Card.from_id(i).value == Value.plus4))]
-        if tier4b:
-            for i in tier4b: prob_vector[i] = 1.0
-            return tuple(self.softmax(prob_vector))
-        # this should not happen
-        prob_vector[legal[0]] = 1.0
-        return tuple(self.softmax(prob_vector))
+        return self._pick([i for i in ids if (i >> 2) == _PLUS4] or ids)

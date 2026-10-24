@@ -72,46 +72,60 @@ class Value(Enum):
 
     def __repr__(self) -> str: return self.__str__()
 
+# 列舉表：用 tuple 索引取代 Enum(x) 呼叫（Enum 建構在 Python 裡很慢，是原本的主要熱點）
+_COLORS: tuple[Color, ...] = tuple(Color)
+_VALUES: tuple[Value, ...] = tuple(Value)
+_TURN:  int = Value.turn.value
+_SKIP:  int = Value.skip.value
+_PLUS2: int = Value.plus2.value
+_WILD:  int = Value.wild.value
+_PLUS4: int = Value.plus4.value
+
 # 牌張
 class Card:
+    __slots__ = ("id",)
+
     def __init__(self, color: Color, value: Value) -> None:
         """ 初始化牌張 """
         self.id: int = color.value + value.value*4
 
     @classmethod
     def from_id(cls, id: int) -> Card:
-        """ 使用 id 初始化牌張 """
-        color: Color = Color(id %  4)
-        value: Value = Value(id // 4)
-        return cls(color, value)
+        """ 使用 id 初始化牌張 (不經過 Enum，速度快) """
+        card: Card = cls.__new__(cls)
+        card.id = id
+        return card
 
     @property
-    def value(self) -> Value: return Value(self.id // 4)
+    def value(self) -> Value: return _VALUES[self.id >> 2]
     @value.setter
-    def value(self, value: Value) -> None: self.id = self.color.value + value.value*4
-    
+    def value(self, value: Value) -> None: self.id = (self.id & 3) + value.value*4
+
     @property
-    def color(self) -> Color: return Color(self.id % 4)
+    def color(self) -> Color: return _COLORS[self.id & 3]
     @color.setter
-    def color(self, color: Color) -> None: self.id = color.value + self.value.value*4
-    
-    def __lt__(self, other: Card) -> bool:
-        if (self.is_black() or other.is_black()): return self.id < other.id
-        if (self.color != other.color): return self.color.value < other.color.value
-        return self.value.value < other.value.value
-    
+    def color(self, color: Color) -> None: self.id = color.value + (self.id >> 2)*4
+
+    @property
+    def sort_key(self) -> int:
+        """ 排序用鍵值: 顏色牌依 (顏色, 牌面)，黑牌一律排在最後 (Player.is_all_black 依賴此性質) """
+        value: int = self.id >> 2
+        if (value >= _WILD): return 1000 + self.id
+        return (self.id & 3)*100 + value
+
+    def __lt__(self, other: Card) -> bool: return self.sort_key < other.sort_key
+
     def __eq__(self, other: object) -> bool:
         """ 透過卡片 id 判斷兩張牌是否相等 """
-        if not isinstance(other, Card):
-            return NotImplemented
+        if not isinstance(other, Card): return NotImplemented
         return (self.id == other.id)
-    
+
     def __hash__(self) -> int: return hash(self.id)
-    
-    def __str__(self) -> str: 
+
+    def __str__(self) -> str:
         if (self.is_black()): return f"{self.value} "
         return f"{self.color}|{self.value} "
-    
+
     def __repr__(self) -> str: return self.__str__()
 
     def cout(self, show_color_for_black: bool = True, end: str = "\n") -> None:
@@ -127,34 +141,37 @@ class Card:
 
     def is_black(self) -> bool:
         """ 判斷是否為黑色牌 """
-        return self.value.is_black()
+        return (self.id >> 2) >= _WILD
 
     def is_color(self) -> bool:
         """ 判斷是否為顏色牌 """
-        return not self.value.is_black()
-    
+        return (self.id >> 2) < _WILD
+
     def is_number(self) -> bool:
         """ 判斷是否為數字牌 """
-        return self.value.is_number()
+        return (self.id >> 2) <= 9
 
     def is_playable_after(self, deck_top: Card, has_effect: bool = False) -> bool:
         """ 判斷這張牌是否可以打 """
-        # 連續禁止
-        if (deck_top.value == Value.skip and has_effect):
-            return (Rule.stack_skip and self.value == Value.skip)
-        # +2, +4
-        if (deck_top.value == Value.plus2 and has_effect):
-            if (Rule.stack_plus2 and self.value == Value.plus2): return True
-            if (Rule.stack_all_plus and self.value == Value.plus4): return True
-            return False
-        if (deck_top.value == Value.plus4 and has_effect):
-            if (Rule.stack_plus4 and self.value == Value.plus4): return True
-            if (Rule.stack_all_plus and self.value == Value.plus2 and self.color == deck_top.color): return True
-            return False
+        value: int = self.id >> 2
+        top_value: int = deck_top.id >> 2
+        if (has_effect):
+            # 連續禁止
+            if (top_value == _SKIP):
+                return (Rule.stack_skip and value == _SKIP)
+            # +2, +4
+            if (top_value == _PLUS2):
+                if (Rule.stack_plus2 and value == _PLUS2): return True
+                if (Rule.stack_all_plus and value == _PLUS4): return True
+                return False
+            if (top_value == _PLUS4):
+                if (Rule.stack_plus4 and value == _PLUS4): return True
+                if (Rule.stack_all_plus and value == _PLUS2 and (self.id & 3) == (deck_top.id & 3)): return True
+                return False
         # 隨時可打
-        if (self.is_black()): return True
+        if (value >= _WILD): return True
         # 其他的牌
-        return (self.color == deck_top.color or self.value == deck_top.value)
+        return ((self.id & 3) == (deck_top.id & 3) or value == top_value)
 
 # 其他函數
 def to_vector(cards: list[Card]) -> list[int]:

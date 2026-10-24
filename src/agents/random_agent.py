@@ -1,4 +1,3 @@
-from random import uniform
 from .agent import Agent
 
 class RandomAgent(Agent):
@@ -19,16 +18,10 @@ class RandomAgent(Agent):
             reservior_memory_path,
             inference_only
         )
-
+    
     def get_prob_vector(self) -> tuple[float, ...]:
-        """ 回傳一個隨機的機率向量 """
-        legal: list[int] = self.legal_ids()
-        prob_vector: list[float] = [0.0]*61
-        # 抽牌永遠隨機
-        prob_vector[60] = uniform(0, 1)
-        prob_sum: float = prob_vector[60]
-        # 生成隨機向量
-        for i in legal:
-            prob_vector[i] = uniform(0, 1)
-            prob_sum += prob_vector[i]
-        return tuple(self.softmax(prob_vector, prob_sum))
+        """ 在所有合法動作中均勻隨機 """
+        prob_vector: list[float] = [0.0] * 61
+        for i in self.legal_ids(): prob_vector[i] = 1.0
+        if (self.draw_allowed()): prob_vector[60] = 1.0
+        return tuple(self.softmax(prob_vector))

@@ -24,30 +24,47 @@ class Agent(ABC):
         self.q_memory_path: str|None = replay_buffer_path
         self.p_memory_path: str|None = reservior_memory_path
         self.inference_only: bool = inference_only
+        self.training: bool = False
+        # NFSP: 上一個動作是否由「最佳回應(Q 網路)」模式產生。只有這種動作才該存進 SL 記憶庫。
+        # 非 NFSP 的 Agent (Classic / Random / Human) 視為示範者，一律為 True。
+        self.last_step_is_br: bool = True
 
     def save(self) -> None: pass
     
-    def eval(self) -> None: pass
+    def eval(self) -> None: self.training = False
     
-    def train(self) -> None: pass
+    def train(self) -> None: self.training = True
     
-    def push_p(self, state: Tensor, card: Card|None) -> float|None: pass
+    def push_p(self, state: Tensor, card: Card|None, mask: Tensor|None = None) -> float|None: pass
 
-    def push_q(self, state: Tensor, card: Card|None, reward: float, next_state: Tensor, done: bool) -> float|None: pass
+    def push_q(
+        self, 
+        state: Tensor, 
+        card: Card|None, 
+        reward: float, 
+        next_state: Tensor, 
+        done: bool, 
+        next_mask: Tensor|None = None
+    ) -> float|None: pass
     
-    def reload(self, batch_size: int = 64, gamma: float = 0.99, lr: float = 0.001) -> None: pass
+    def reload(self, batch_size: int = 64, gamma: float = 0.99, lr: float = 1e-3) -> None: pass
     
     def softmax(self, prob_vec: list[float], prob_sum: float|None = None) -> list[float]:
-        """ softmax 61 維度的機率向量 """
+        """ 將 61 維度的權重向量正規化成機率 """
         # 自己計算總和
-        if (prob_sum is None):
-            prob_sum = 0
-            for prob in prob_vec: prob_sum += prob
+        if (prob_sum is None): prob_sum = sum(prob_vec)
         # 總和為零 -> Error
-        if (prob_sum <= 0): raise ValueError("prob_sum <= 0 in Agent::softmax")
-        # 真正的 softmax
+        if (prob_sum <= 0): raise ValueError("prob_sum==0 in Agent::softmax")
         for i in range(len(prob_vec)): prob_vec[i] /= prob_sum
         return prob_vec
+
+    def legal_ids(self) -> list[int]:
+        """ 目前所有合法的牌 id (已快取；只掃手牌，不掃 60 個 id) """
+        return self.game.legal_ids()
+
+    def draw_allowed(self) -> bool:
+        """ 目前是否可以選擇抽牌 """
+        return self.game.draw_allowed()
 
     def can_play(self, card: Card) -> bool:
         """ 判斷現在能否打這張 """
@@ -55,30 +72,6 @@ class Agent(ABC):
         playable: bool = self.game.deck.is_playable(card)
         return (in_hand and playable)
 
-    def legal_ids(self) -> list[int]:
-        """ 取得手牌中所有合法的 ID """
-        ids: list[int] = []
-        deck = self.game.deck
-        seen_color: set[int] = set()
-        seen_black: set[int] = set()
-        for card in self.game.curr_player.hand:
-            if card.is_black():
-                val: int = card.value.value
-                if (val in seen_black): continue
-                # 黑牌對應 4 種顏色變化
-                seen_black.add(val)
-                if (deck.is_playable(card)):
-                    ids.extend(val*4+col for col in range(4))
-            else:
-                if (card.id in seen_color): continue
-                seen_color.add(card.id)
-                if deck.is_playable(card): ids.append(card.id)          
-        return sorted(ids)
-
-    def get_tensor(self) -> Tensor:
-        """ 取得遊戲狀態張量 """
-        return self.game.get_tensor()
-    
     def set_game(self, game: 'UnoGame') -> None:
         """ get weak reference of game """
         if hasattr(self, 'game'): return
@@ -86,13 +79,16 @@ class Agent(ABC):
         self.reload()
         self.eval()
     
+    def get_tensor(self) -> Tensor:
+        """ 取得遊戲狀態張量 """
+        return self.game.get_tensor()
+    
     @abstractmethod
     def get_prob_vector(self) -> tuple[float, ...]:
         """ 輸出出各種牌的機率
             回傳一個出牌機率向量
             索引值對應到牌的種類
             最後一個元素代表抽牌
-            註: 此函數會自動 softmax
             註: 輸出不為 0 者必定合法
         """
         ...

@@ -1,14 +1,13 @@
 import os
-import random
-import pickle
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 from .device import DEVICE, to_device
-from collections import deque
 from torch import Tensor
 from core import Card
+
+NUM_ACTIONS: int = 61   # 60 種牌 + 抽牌
 
 class QNetwork(nn.Module):
     def __init__(self, state_dim: int, file_path: str = "q_network_v1.bin") -> None:
@@ -18,15 +17,15 @@ class QNetwork(nn.Module):
         self.fc1: nn.Linear = nn.Linear(state_dim, 256) # 全連接層  輸入=>256
         self.fc2: nn.Linear = nn.Linear(256, 256)       # 隱藏層    256=>256
         self.fc3: nn.Linear = nn.Linear(256, 256)       # 隱藏層    256=>256
-        self.out: nn.Linear = nn.Linear(256, 61)        # 輸出層    256=>輸出
+        self.out: nn.Linear = nn.Linear(256, NUM_ACTIONS) # 輸出層  256=>輸出
         self.to(DEVICE)
 
     def forward(self, x: Tensor) -> Tensor:
         """ Forward Pass """
         x_: Tensor = x
-        x_: Tensor = F.relu(self.fc1(x_))
-        x_: Tensor = F.relu(self.fc2(x_))
-        x_: Tensor = F.relu(self.fc3(x_))
+        x_ = F.relu(self.fc1(x_))
+        x_ = F.relu(self.fc2(x_))
+        x_ = F.relu(self.fc3(x_))
         return self.out(x_)
 
     def save(self) -> None:
@@ -34,113 +33,181 @@ class QNetwork(nn.Module):
         torch.save(self.state_dict(), self.file_path)
         print(f"Q-Network 權重已成功儲存至: {self.file_path}")
     
-    def load(self) -> None:
-        """ 讀取權重檔 """
-        if os.path.exists(self.file_path):
-            self.load_state_dict(torch.load(self.file_path, map_location=DEVICE))
-            self.to(DEVICE)
-            print(f"已成功載入 Q-Network 權重: {self.file_path}")
-        else: print(f"找不到權重檔 {self.file_path}。")
+    def load(self) -> bool:
+        """ 讀取權重檔，成功回傳 True。結構不符(如舊版狀態向量)或檔案不存在回傳 False，不丟例外 """
+        if (not os.path.exists(self.file_path)): 
+            print(f"找不到權重檔 {self.file_path}。")
+            return False
+        try:
+            self.load_state_dict(torch.load(self.file_path, map_location=DEVICE, weights_only=True))
+        except Exception as error:
+            print(f"無法載入 {self.file_path} (可能是舊版狀態維度的權重，請刪除或重訓): {str(error).splitlines()[0]}")
+            return False
+        self.to(DEVICE)
+        print(f"已成功載入 Q-Network 權重: {self.file_path}")
+        return True
 
 class ReplayBuffer:
     def __init__(self, file_path: str = "ReplayBuffer_v1.bin", capacity: int = 100000) -> None:
-        """ Q-Network 記憶庫 """
-        self.buffer: deque[tuple[Tensor, int, float, Tensor, bool]]
-        self.buffer = deque(maxlen=capacity)
+        """ Q-Network 記憶庫 (環形緩衝區；預先配置的大張量，取樣時不需要 torch.stack 一堆小張量) """
         self.file_path: str = file_path
+        self.capacity: int = capacity
+        self._size: int = 0
+        self._pos: int = 0
+        self._states:      Tensor|None = None
+        self._actions:     Tensor|None = None
+        self._rewards:     Tensor|None = None
+        self._next_states: Tensor|None = None
+        self._dones:       Tensor|None = None
+        self._next_masks:  Tensor|None = None
 
-    def load(self) -> None:
-        """ 讀取二進位訓練資料 """
-        if os.path.exists(self.file_path):
-            with open(self.file_path, mode="rb") as file:
-                self.buffer = pickle.load(file=file)
-            print(f"已成功從 {self.file_path} 讀取 ReplayBuffer")
-        else: print(f"無法從 {self.file_path} 讀取 ReplayBuffer ")
+    def _alloc(self, state_dim: int) -> None:
+        c: int = self.capacity
+        self._states      = torch.zeros((c, state_dim), dtype=torch.float32)
+        self._next_states = torch.zeros((c, state_dim), dtype=torch.float32)
+        self._actions     = torch.zeros(c, dtype=torch.int64)
+        self._rewards     = torch.zeros(c, dtype=torch.float32)
+        self._dones       = torch.zeros(c, dtype=torch.float32)
+        self._next_masks  = torch.ones((c, NUM_ACTIONS), dtype=torch.bool)
+
+    def size(self) -> int: return self._size
+
+    def push(
+        self, 
+        state: Tensor, 
+        card: Card|None, 
+        reward: float, 
+        next_state: Tensor, 
+        done: bool, 
+        next_mask: Tensor|None = None
+    ) -> None:
+        """ 將一步遊戲經驗存入記憶庫 (FIFO)。next_mask 是「下一個決策點」的合法動作遮罩 """
+        if (self._states is None): self._alloc(state.shape[0])
+        assert (self._actions is not None and self._rewards is not None and self._dones is not None)
+        assert (self._next_states is not None and self._next_masks is not None)
+        i: int = self._pos
+        self._states[i]      = state
+        self._actions[i]     = (60 if card is None else card.id)
+        self._rewards[i]     = reward
+        self._next_states[i] = next_state
+        self._dones[i]       = float(done)
+        self._next_masks[i]  = (True if next_mask is None else next_mask)
+        self._pos  = (i + 1) % self.capacity
+        self._size = min(self._size + 1, self.capacity)
+
+    def sample(self, batch_size: int) -> tuple[Tensor, ...]:
+        """ 隨機抽樣一個批次進行訓練: (states, actions, rewards, next_states, dones, next_masks) """
+        assert (self._states is not None and self._actions is not None and self._rewards is not None)
+        assert (self._next_states is not None and self._dones is not None and self._next_masks is not None)
+        idx: Tensor = torch.randint(self._size, (batch_size,))
+        return (
+            self._states[idx], self._actions[idx], self._rewards[idx], 
+            self._next_states[idx], self._dones[idx], self._next_masks[idx]
+        )
 
     def save(self) -> None:
         """ 儲存二進位訓練資料 """ 
-        with open(self.file_path, mode="wb") as file:
-            pickle.dump(self.buffer, file=file)
-        print(f"ReplayBuffer 已成功儲存至: {self.file_path}")
+        if (self._states is None or self._size == 0):
+            print(f"ReplayBuffer 是空的，略過儲存: {self.file_path}")
+            return
+        assert (self._actions is not None and self._rewards is not None and self._dones is not None)
+        assert (self._next_states is not None and self._next_masks is not None)
+        n: int = self._size
+        torch.save({
+            "states": self._states[:n], "actions": self._actions[:n], "rewards": self._rewards[:n],
+            "next_states": self._next_states[:n], "dones": self._dones[:n], "next_masks": self._next_masks[:n],
+        }, self.file_path)
+        print(f"ReplayBuffer 已成功儲存至: {self.file_path} ({n} 筆)")
 
-    def size(self) -> int: return len(self.buffer)
-
-    def push(self, state: Tensor, card: Card|None, reward: float, next_state: Tensor, done: bool) -> None:
-        """ 將一步遊戲經驗存入記憶庫 (FIFO) """
-        action: int = (60 if card is None else card.id)
-        self.buffer.append((state, action, reward, next_state, done))
-
-    def sample(self, batch_size: int) -> tuple[Tensor, ...]:
-        """ 隨機抽樣一個批次進行訓練 """
-        batch: list[tuple[Tensor, int, float, Tensor, bool]]
-        batch = random.sample(self.buffer, batch_size)
-        states:         tuple[Tensor, ...]
-        actions:        tuple[int, ...]
-        rewards:        tuple[float, ...]
-        next_states:    tuple[Tensor, ...]
-        dones:          tuple[bool, ...]
-        states, actions, rewards, next_states, dones = zip(*batch)
-        return (
-            torch.stack (states),
-            torch.tensor(actions, dtype=torch.int64),
-            torch.tensor(rewards, dtype=torch.float32),
-            torch.stack (next_states),
-            torch.tensor(dones, dtype=torch.float32)
-        )
+    def load(self) -> bool:
+        """ 讀取二進位訓練資料 (格式不符的舊檔會被略過) """
+        if (not os.path.exists(self.file_path)): 
+            print(f"無法從 {self.file_path} 讀取 ReplayBuffer ")
+            return False
+        try:
+            data: dict[str, Tensor] = torch.load(self.file_path, map_location="cpu", weights_only=True)
+            n: int = min(int(data["states"].shape[0]), self.capacity)
+            self._alloc(int(data["states"].shape[1]))
+            assert (self._states is not None and self._actions is not None and self._rewards is not None)
+            assert (self._next_states is not None and self._dones is not None and self._next_masks is not None)
+            self._states[:n]      = data["states"][-n:]
+            self._actions[:n]     = data["actions"][-n:]
+            self._rewards[:n]     = data["rewards"][-n:]
+            self._next_states[:n] = data["next_states"][-n:]
+            self._dones[:n]       = data["dones"][-n:]
+            self._next_masks[:n]  = data["next_masks"][-n:]
+        except Exception as error:
+            print(f"無法讀取 {self.file_path} (舊版格式?)，略過: {str(error).splitlines()[0]}")
+            self._states = None
+            self._size = self._pos = 0
+            return False
+        self._size = n
+        self._pos  = n % self.capacity
+        print(f"已成功從 {self.file_path} 讀取 ReplayBuffer ({n} 筆)")
+        return True
 
 class DQNTrainer:
     def __init__(
         self, 
         state_dim: int, 
-        lr: float = 0.001, 
+        lr: float = 1e-3, 
         gamma: float = 0.99, 
         batch_size: int = 64, 
         network_path: str = "q_network_v1.bin", 
-        memory_path: str = "ReplayBuffer_v1.bin"
+        memory_path: str = "ReplayBuffer_v1.bin",
+        update_every: int = 8,
+        warmup: int = 1000,
     ) -> None:
-        """ Deep Q-Network Trainer """
+        """ Deep Q-Network Trainer
+        update_every: 每新增幾筆資料做一次梯度更新
+        warmup: 記憶庫至少要有幾筆才開始訓練
+        """
         self.gamma: float = gamma
         self.batch_size: int = batch_size
+        self.update_every: int = update_every
+        self.warmup: int = max(warmup, batch_size)
         self.memory: ReplayBuffer = ReplayBuffer(file_path=memory_path)
         self.q_net: QNetwork = QNetwork(state_dim, file_path=network_path)
         # 設定目標網路避免球員兼裁判
         self.target_net: QNetwork = QNetwork(state_dim)
         self.target_net.load_state_dict(self.q_net.state_dict())
         self.optimizer: optim.Adam = optim.Adam(self.q_net.parameters(), lr)
-        self.criterion: nn.MSELoss = nn.MSELoss()  # 均方誤差損失
         # 用來計算增加多少筆資料的計數器
         self.target_update_count: int = 0
         self.steps_since_update: int = 0
         self.target_net.eval()
 
-    def push(self, state: Tensor, card: Card|None, reward: float, next_state: Tensor, done: bool) -> float|None:
-        """ 存入記憶庫，並檢查是否達到 batch_size 觸發 update """
+    def push(
+        self, 
+        state: Tensor, 
+        card: Card|None, 
+        reward: float, 
+        next_state: Tensor, 
+        done: bool, 
+        next_mask: Tensor|None = None
+    ) -> float|None:
+        """ 存入記憶庫，並檢查是否該觸發 update。有更新時回傳 loss """
         self.steps_since_update += 1
-        self.memory.push(state, card, reward, next_state, done)
-        # 當累積新增的資料量達到 batch_size 且記憶庫有足夠資料時觸發訓練
-        if (self.steps_since_update >= self.batch_size and self.memory.size() >= self.batch_size):
-            self.steps_since_update = 0  # 重置計數器
+        self.memory.push(state, card, reward, next_state, done, next_mask)
+        if (self.steps_since_update >= self.update_every and self.memory.size() >= self.warmup):
+            self.steps_since_update = 0
             return self.update()
         return None
 
     def update(self) -> float:
         """ 執行一次 DQN 梯度下降更新 """
-        states:         Tensor
-        actions:        Tensor
-        rewards:        Tensor
-        next_states:    Tensor
-        dones:          Tensor
-        states, actions, rewards, next_states, dones = to_device(*self.memory.sample(self.batch_size))
+        states, actions, rewards, next_states, dones, next_masks = to_device(*self.memory.sample(self.batch_size))
         # 計算當前狀態的 Q 值
         q_values: Tensor = self.q_net(states).gather(1, actions.unsqueeze(1)).squeeze(1)
         # 計算目標 Q 值 (Bellman Equation)
         with torch.no_grad():
-            # max(1)[0] 取得下一個狀態中所有動作的最大 Q 值
-            next_q_values: Tensor = self.target_net(next_states).max(1)[0]
-            # 若 done 為 True，則沒有未來回報 (1 - dones)
-            target_q_values: Tensor = rewards + self.gamma*next_q_values*(1.0-dones)
-        # 計算 Loss
-        loss: Tensor = self.criterion(q_values, target_q_values)
+            # 只在「下一個決策點的合法動作」中取最大 Q 值，非法動作的 Q 從未被訓練，不能參與 max
+            next_q: Tensor = self.target_net(next_states).masked_fill(~next_masks, float("-inf")).max(1).values
+            # 終局沒有未來回報 (用 where 避免 -inf * 0 = nan)
+            next_q = torch.where(dones > 0.5, torch.zeros_like(next_q), next_q)
+            target_q_values: Tensor = rewards + self.gamma*next_q
+        # 計算 Loss (Huber 對離群值比 MSE 穩定)
+        loss: Tensor = F.smooth_l1_loss(q_values, target_q_values)
         # 反向傳播與優化更新
         self.optimizer.zero_grad()
         loss.backward()       # pyright: ignore[reportUnknownMemberType]

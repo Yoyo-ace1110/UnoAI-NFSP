@@ -5,7 +5,7 @@ from agents import Agent, RandomAgent, ClassicAgent # pyright: ignore[reportUnus
 
 agents: list[Agent] = [ClassicAgent(), ClassicAgent()]
 uno_game: UnoGame = UnoGame(agents=agents)
-state_dim: int = uno_game.get_tensor().shape[0]
+state_dim: int = uno_game.state_dim
 
 q_trainer: DQNTrainer    = DQNTrainer   (state_dim)
 p_trainer: PolicyTrainer = PolicyTrainer(state_dim)
@@ -13,9 +13,11 @@ q_trainer.load()
 p_trainer.load()
 
 uno_game.crossplay(
-    num_episodes=32768, 
+    num_episodes=16384, 
     q_trainer=q_trainer, 
-    p_trainer=p_trainer
+    p_trainer=p_trainer,
+    target_player_idx=None,   # 兩個座位都是 ClassicAgent，兩邊的經驗都拿來學
+    max_steps=500
 )
 
 q_trainer.save()

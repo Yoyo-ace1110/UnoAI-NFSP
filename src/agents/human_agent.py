@@ -23,16 +23,21 @@ class HumanAgent(Agent):
     
     def get_prob_vector(self) -> tuple[float, ...]:
         """ 讓人類輸入要打的牌 """
-        text: str = input("請輸入要打的牌(如: R|+4): ").strip()
-        # 解析使用者輸入
-        if (text == "draw"): return tuple(float(i==60) for i in range(61))
-        else:
-            color_str, value_str = (text.split("|"))
-            color: Color = Color.from_str(color_str)
-            value: Value = Value.from_str(value_str)
-            id_: int = Card(color, value).id
-        # 檢查輸入是否合法]
-        if (not self.can_play(Card.from_id(id_))):
-            print("\nThis card is not playable")
-            return self.get_prob_vector()
-        return tuple(float(i==id_) for i in range(61))
+        while True:
+            text: str = input("請輸入要打的牌(如: R|+4，或 draw): ").strip()
+            # 解析使用者輸入
+            if (text == "draw"):
+                if (self.draw_allowed()): return tuple(float(i==60) for i in range(61))
+                print("\nYou have a playable card, you can not draw")
+                continue
+            try:
+                color_str, value_str = (text.split("|"))
+                id_: int = Card(Color.from_str(color_str), Value.from_str(value_str)).id
+            except ValueError:
+                print("\nUnable to parse the card")
+                continue
+            # 檢查輸入是否合法
+            if (not self.can_play(Card.from_id(id_))):
+                print("\nThis card is not playable")
+                continue
+            return tuple(float(i==id_) for i in range(61))
