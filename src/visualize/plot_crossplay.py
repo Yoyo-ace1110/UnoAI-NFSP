@@ -55,7 +55,7 @@ def main() -> None:
     ax_spd.grid(True, linestyle='--', alpha=0.6)
 
     plt.tight_layout()
-    plt.savefig("crossplay_result.png", dpi=300)
-    print("圖表已成功儲存至 crossplay_result.png")
+    plt.savefig("src\\visualize\\crossplay_result_smoothed.png", dpi=300)
+    print("圖表已成功儲存至 src\\visualize\\crossplay_result_smoothed.png")
 
 if __name__ == "__main__": main()

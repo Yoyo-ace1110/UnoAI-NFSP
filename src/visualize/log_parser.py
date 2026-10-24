@@ -24,10 +24,12 @@ def smooth_data(values: list[float], window: int = 15) -> list[float]:
     """計算指定視窗大小的移動平均，使圖表平滑"""
     smoothed: list[float] = []
     n: int = len(values)
+    half_w: int = window // 2
     i: int
     for i in range(n):
-        start: int = max(0, i - window + 1)
-        chunk: list[float] = values[start : i + 1]
+        start: int = max(0, i - half_w)
+        end: int = min(n, i + half_w + 1)
+        chunk: list[float] = values[start : end]
         avg: float = sum(chunk) / float(len(chunk))
         smoothed.append(avg)
     return smoothed
@@ -60,12 +62,12 @@ def parse_selfplay_file(filepath: str) -> SelfPlayData:
     except FileNotFoundError: print(f"找不到檔案: {filepath}")
     
     if (data.steps):
-        data.steps      = smooth_data(data.steps, 15)
-        data.draw_rates = smooth_data(data.draw_rates, 15)
-        data.win_rates  = smooth_data(data.win_rates, 15)
+        data.steps      = smooth_data(data.steps, 32)
+        data.draw_rates = smooth_data(data.draw_rates, 32)
+        data.win_rates  = smooth_data(data.win_rates, 20)
         data.q_losses   = smooth_data(data.q_losses, 15)
         data.p_losses   = smooth_data(data.p_losses, 15)
-        data.speeds     = smooth_data(data.speeds, 15)
+        data.speeds     = data.speeds
     return data
 
 def parse_crossplay_file(filepath: str) -> CrossPlayData:
@@ -94,9 +96,9 @@ def parse_crossplay_file(filepath: str) -> CrossPlayData:
     except FileNotFoundError: print(f"找不到檔案: {filepath}")
     
     if (data.steps):
-        data.steps      = smooth_data(data.steps, 15)
-        data.win_rates  = smooth_data(data.win_rates, 15)
-        data.q_losses   = smooth_data(data.q_losses, 15)
-        data.p_losses   = smooth_data(data.p_losses, 15)
-        data.speeds     = smooth_data(data.speeds, 15)
+        data.steps      = smooth_data(data.steps    , 32)
+        data.win_rates  = smooth_data(data.win_rates, 20)
+        data.q_losses   = data.q_losses
+        data.p_losses   = data.p_losses
+        data.speeds     = data.speeds
     return data
