@@ -596,6 +596,44 @@ class UnoGame:
         # 儲存成人類可讀的形式
         self.elo_table.save()
 
+    def test_winrate(self, num_episodes: int = 100, max_steps: int = 500) -> dict[int, float]:
+        """ 對戰勝率測試 """
+        winrates: dict[int, float] = {}
+        num_agents: int = len(self.agents)
+        if (num_agents == 0): return winrates
+        for agent in self._unique_agents(): agent.eval()
+        offset: int
+        winner: int
+        draw_count: int = 0
+        current_agents: list[Agent]
+        win_counts: list[int] = [0]*num_agents
+        for episode in range(1, num_episodes+1):
+            # 依序順序輪流換位
+            offset = (episode-1) % num_agents
+            current_agents = [self.agents[(i-offset)%num_agents] for i in range(num_agents)]
+            try: self._setup_players(current_agents)
+            except RuntimeError as error:
+                print(f"設定玩家失敗: {error}")
+                continue
+            # 對局並記錄勝利者
+            winner = self.game_loop(False, max_steps)
+            # 和局/到達max_steps
+            if (winner == -1):
+                draw_count += 1
+                continue
+            # 還原贏家的真實索引
+            actual_index: int = (winner+offset) % num_agents
+            win_counts[actual_index] += 1
+        total: float = float(num_episodes)
+        draw_rate: float = float(draw_count)/total
+        print(f"=== 勝率測試結果 ({num_episodes} 局) ===")
+        for index, agent in enumerate(self.agents):
+            winrate: float = float(win_counts[index])/total
+            winrates[index] = winrate
+            print(f"Agent {index} 勝率: {winrate:.1%} ({win_counts[index]} 勝)")
+        print(f"平手/截斷率: {draw_rate:.1%} ({draw_count} 和)")
+        return winrates
+
     def scan_networks_info(self, networks_dir: str = "./networks") -> dict[str, ModelInfo]: 
         """ 掃描 networks 目錄尋找各模型的 4 個 bin 檔案與計算大小 """
         discovered_models: dict[str, ModelInfo] = {}
