@@ -111,8 +111,6 @@ Agent 是包裝了 Q-Network、Policy Network 以及記憶庫的控制器，對�
 * **以機率 $1-\eta$(90%)**: 使用 **Policy Network** 選牌。
 * *目的*: 使用混淆對手的平均策略，維護賽局的納許均衡(Nash Equilibrium)。
 
-
-
 #### 2. Agent 的內部訓練迴圈(Training Loop)
 
 在每回合對局結束時，Agent 會自動呼叫訓練步驟: 

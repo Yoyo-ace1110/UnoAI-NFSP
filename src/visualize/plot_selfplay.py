@@ -7,7 +7,7 @@ from log_parser import parse_selfplay_file, SelfPlayData
 
 def main() -> None:
     """主程式: 繪製自我對戰圖表"""
-    data: SelfPlayData = parse_selfplay_file("selfplay.log")
+    data: SelfPlayData = parse_selfplay_file("src\\visualize\\selfplay.log")
     if not data.episodes:
         print("無自我對戰資料可供繪製")
         return

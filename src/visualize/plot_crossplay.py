@@ -7,7 +7,7 @@ from log_parser import parse_crossplay_file, CrossPlayData
 
 def main() -> None:
     """主程式: 繪製交叉對戰圖表"""
-    data: CrossPlayData = parse_crossplay_file("crossplay.log")
+    data: CrossPlayData = parse_crossplay_file("src\\visualize\\crossplay.log")
     if not data.episodes:
         print("無交叉對戰資料可供繪製")
         return
