@@ -55,6 +55,7 @@ def main() -> None:
     ax_draw.grid(True, linestyle='--', alpha=0.6)
 
     plt.tight_layout()
-    plt.show()
+    plt.savefig("selfplay_result.png", dpi=300)
+    print("圖表已成功儲存至 selfplay_result.png")
 
 if __name__ == "__main__": main()
