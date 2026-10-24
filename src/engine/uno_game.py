@@ -192,7 +192,7 @@ class UnoGame:
             player.deal_hand(self.deck.draw(Rule.hand_size))
 
     def game_over(self, winner_index: int) -> None:
-        """ 遊戲結束 """
+        """ 遊戲結束的輸出 """
         print(f"Game Over! The Winner is Player{winner_index}")
 
     def get_tensor(self) -> Tensor:
@@ -270,7 +270,7 @@ class UnoGame:
             if (out): print(f"Player{self.turn} Uno!")
     
     def selfplay(self, num_episodes: int) -> None:
-        """ 模型自我對戰訓練（含決策點對齊的 next_state） """
+        """ 模型自我對戰訓練 (含決策點對齊的 next_state) """
         self.deck.out = False   # 避免不必要的輸出
         print_device_info()     # 輸出一次使用裝置
         for agent in self.agents: agent.train()
@@ -347,7 +347,8 @@ class UnoGame:
                     agent.push_q(step["state"], step["card"], reward, aligned_next_state, done_flag)  # type: ignore
                     agent.push_p(step["state"], step["card"])  # type: ignore
             # 每 n 局輸出進度提示
-            if (episode%1 == 0): print(f"已完成第 {episode} 局") 
+            if (episode%1 == 0): print(f"已完成第 {episode} 局{' '*4}", end="\r") 
+        print(f"已完成共 {num_episodes} 局交叉對戰")
 
     def crossplay(self, num_episodes: int, q_trainer: DQNTrainer, p_trainer: PolicyTrainer) -> None:
         """ 模型交叉對戰訓練 """
@@ -378,7 +379,6 @@ class UnoGame:
                 next_state: Tensor = self.get_tensor()
                 # 檢查是否遊戲結束
                 done: bool = self.curr_player.is_winner()
-                print(self.curr_player.hand_size())
                 trajectory.append({
                     "player_idx": self.turn,
                     "state": state,
@@ -418,7 +418,8 @@ class UnoGame:
                 q_trainer.push(step["state"], step["card"], reward, aligned_next_state, done_flag)  # type: ignore
                 p_trainer.push(step["state"], step["card"])  # type: ignore
             # 每 n 局輸出進度提示
-            if (episode%1 == 0): print(f"已完成第 {episode} 局")
+            if (episode%1 == 0): print(f"已完成第 {episode} 局{' '*4}", end="\r")
+        print(f"已完成共 {num_episodes} 局交叉對戰")
 
     def game_loop(self, out: bool = True) -> int:
         """ 遊戲主迴圈，回傳贏家 """
@@ -438,7 +439,7 @@ class UnoGame:
             else: self.play_as_normal(played, out=out)
             # 判斷是否贏了
             if (self.curr_player.is_winner()): 
-                self.game_over(self.turn)
+                if (out): self.game_over(self.turn)
                 return self.turn
             # 換下一回合
             self.turn_next()
@@ -494,7 +495,7 @@ class UnoGame:
                 replay_buffer_path=(info.q_memory or None),
                 reservior_memory_path=(info.p_memory or None)
             )
-            for _ in range(games_to_play):
+            for game_count in range(games_to_play):
                 # 建立待測模型與 RandomAgent
                 if (random.random() > 0.5):
                     self.agents = [tested_agent, RandomAgent()]
@@ -527,6 +528,8 @@ class UnoGame:
                 # 更新模型 ELO
                 self.elo_table[model_name].elo = ra + k_val*(score_a-expected_a)
                 self.elo_table[model_name].matches = int(self.elo_table[model_name].matches) + 1
+                print(f"已完成第 {game_count} 局評分對戰{' '*4}", end="\r")
+            print(f"已完成共 {games_to_play} 局評分對戰")
         # 儲存成人類可讀的形式
         self.elo_table.save()
 
@@ -537,6 +540,7 @@ class UnoGame:
         for entry in os.listdir(networks_dir):
             folder_path: str = os.path.join(networks_dir, entry)
             if (not os.path.isdir(folder_path)): continue
+            if (not os.listdir(folder_path)): continue
             model_name: str = entry
             p_net: str = os.path.join(folder_path, "p_network_v1.bin")
             q_net: str = os.path.join(folder_path, "q_network_v1.bin")

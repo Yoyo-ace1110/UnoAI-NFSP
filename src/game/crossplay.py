@@ -13,7 +13,7 @@ q_trainer.load()
 p_trainer.load()
 
 uno_game.crossplay(
-    num_episodes=16384, 
+    num_episodes=32768, 
     q_trainer=q_trainer, 
     p_trainer=p_trainer
 )

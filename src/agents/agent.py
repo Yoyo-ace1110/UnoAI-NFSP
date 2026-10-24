@@ -44,7 +44,7 @@ class Agent(ABC):
             prob_sum = 0
             for prob in prob_vec: prob_sum += prob
         # 總和為零 -> Error
-        if (prob_sum <= 0): raise ValueError("prob_sum==0 in Agent::softmax")
+        if (prob_sum <= 0): raise ValueError("prob_sum <= 0 in Agent::softmax")
         # 真正的 softmax
         for i in range(len(prob_vec)): prob_vec[i] /= prob_sum
         return prob_vec
@@ -56,7 +56,7 @@ class Agent(ABC):
         return (in_hand and playable)
 
     def legal_ids(self) -> list[int]:
-        """ 高效率取得當前手牌中所有合法出牌的 ID 列表 """
+        """ 取得手牌中所有合法的 ID """
         ids: list[int] = []
         deck = self.game.deck
         seen_color: set[int] = set()

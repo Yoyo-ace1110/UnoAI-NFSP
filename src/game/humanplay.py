@@ -2,6 +2,6 @@ import forward # type: ignore
 from engine import UnoGame
 from agents import * # pyright: ignore[reportUnusedImport]
 
-agents: list[Agent] = [AIAgent(), HumanAgent()]
+agents: list[Agent] = [AIAgent(), AIAgent()]
 uno_game: UnoGame = UnoGame(agents=agents)
 uno_game.game_loop()

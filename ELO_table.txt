@@ -1,0 +1,5 @@
+=== UnoAI ELO 排行 ===
+Model Name                    |p_net                         |q_net                         |p_memory                      |q_memory                      |Size      |ELO Rating|Matches 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1_crossplay_1024              |networks\1_crossplay_1024\p_network_v1.bin|networks\1_crossplay_1024\q_network_v1.bin|networks\1_crossplay_1024\ReservoirMemory_v1.bin|networks\1_crossplay_1024\ReplayBuffer_v1.bin|47059920  |-784.59   |256     
+2_mixed_crossplay_32768+      |networks\2_mixed_crossplay_32768+\p_network_v1.bin|networks\2_mixed_crossplay_32768+\q_network_v1.bin|networks\2_mixed_crossplay_32768+\ReservoirMemory_v1.bin|networks\2_mixed_crossplay_32768+\ReplayBuffer_v1.bin|161467801 |-784.59   |256     
