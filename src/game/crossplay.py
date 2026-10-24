@@ -16,7 +16,8 @@ uno_game.crossplay(
     num_episodes=16384, 
     q_trainer=q_trainer, 
     p_trainer=p_trainer,
-    target_player_idx=None,   # 兩個座位都是 ClassicAgent，兩邊的經驗都拿來學
+    # 兩個ClassicAgent的經驗都拿來學
+    target_player_idx=None,
     max_steps=500
 )
 
