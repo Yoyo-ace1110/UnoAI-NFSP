@@ -1,6 +1,6 @@
 from __future__ import annotations
 from .agent import Agent
-from core import Value, Color
+from core import Value
 
 _TURN, _SKIP  = Value.turn.value, Value.skip.value
 _PLUS2, _WILD, _PLUS4 = Value.plus2.value, Value.wild.value, Value.plus4.value

@@ -24,9 +24,9 @@ class HumanAgent(Agent):
     def get_prob_vector(self) -> tuple[float, ...]:
         """ 讓人類輸入要打的牌 """
         while True:
-            text: str = input("請輸入要打的牌(如: R|+4，或 draw): ").strip()
+            text: str = input("請輸入要打的牌 (如: R|+4 or draw): ").strip()
             # 解析使用者輸入
-            if (text == "draw"):
+            if (text in ["draw", "Draw", "d", "D"]):
                 if (self.draw_allowed()): return tuple(float(i==60) for i in range(61))
                 print("\nYou have a playable card, you can not draw")
                 continue
