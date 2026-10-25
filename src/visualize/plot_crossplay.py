@@ -7,7 +7,7 @@ from log_parser import parse_crossplay_file, CrossPlayData
 
 def main() -> None:
     """主程式: 繪製交叉對戰圖表"""
-    data: CrossPlayData = parse_crossplay_file("src\\visualize\\crossplay.log")
+    data: CrossPlayData = parse_crossplay_file("src/visualize/crossplay.log")
     if not data.episodes:
         print("無交叉對戰資料可供繪製")
         return
@@ -55,7 +55,7 @@ def main() -> None:
     ax_spd.grid(True, linestyle='--', alpha=0.6)
 
     plt.tight_layout()
-    plt.savefig("src\\visualize\\crossplay_result_smoothed.png", dpi=300)
-    print("圖表已成功儲存至 src\\visualize\\crossplay_result_smoothed.png")
+    plt.savefig("src/visualize/crossplay_result_smoothed.png", dpi=300)
+    print("圖表已成功儲存至 src/visualize/crossplay_result_smoothed.png")
 
 if __name__ == "__main__": main()

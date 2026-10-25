@@ -117,6 +117,9 @@ LOSE_REWARD:  float = -1.0   # 輸牌
 PLAY_REWARD:  float = +0.025 # 打出手牌
 DRAW_PENALTY: float = -0.025 # 主動抽牌
 
+# PLAY_REWARD:  float = +0.01  # 打出手牌
+# DRAW_PENALTY: float = -0.01  # 主動抽牌
+
 # 狀態向量: [牌堆張數(1)|廢牌(60)|手牌(60)|牌頂顏色(4)|牌頂牌面(15)|牌頂效果(1)|累加張數(1)|方向(1)|各家張數(玩家數量)]
 STATE_BASE: int = 1 + 60 + 60 + 4 + 15 + 1 + 1 + 1
 HAND_NORM:  float = 20.0
@@ -351,11 +354,11 @@ class UnoGame:
         return list({id(agent): agent for agent in self.agents}.values())
 
     def _play_episode(self, max_steps: int) -> tuple[list[Step], int]:
-        """ 玩一整局，回傳 (所有決策點, 贏家編號)。超過 max_steps 仍未結束則贏家為 -1 (截斷) """
+        """ 玩一整局，回傳 (所有決策點, 贏家編號), 截斷贏家則為-1 """
         self.reset()
         steps: list[Step] = []
         while (len(steps) < max_steps):
-            p_idx: int = self.turn
+            p_index: int = self.turn
             agent: Agent = self.curr_agent
             # 這兩個值會被快取，Agent 選動作時直接重複使用，不會重算
             state: Tensor = self.get_tensor()
@@ -371,10 +374,10 @@ class UnoGame:
             else:
                 reward = PLAY_REWARD
                 self.play_as_normal(played_card, out=False)
-            steps.append(Step(p_idx, agent, state, mask, played_card, reward, agent.last_step_is_br))
-            if (self.curr_player.is_winner()): return steps, p_idx
+            steps.append(Step(p_index, agent, state, mask, played_card, reward, agent.last_step_is_br))
+            if (self.curr_player.is_winner()): return steps, p_index
             self.turn_next()
-        return steps, -1
+        return (steps, -1)
 
     @staticmethod
     def _build_transitions(
@@ -432,7 +435,7 @@ class UnoGame:
                     reward, next_state, next_mask, done = transition
                     q_loss: float|None = step.agent.push_q(step.state, step.card, reward, next_state, done, next_mask)
                     if (q_loss is not None): q_losses.append(q_loss)
-                # NFSP: 只有「最佳回應」模式的動作才存入 SL 記憶庫，否則 Policy 只是在模仿自己
+                # NFSP: 只有最佳回應模式的動作才存入 SL 記憶庫
                 if (step.is_br):
                     p_loss: float|None = step.agent.push_p(step.state, step.card, step.mask)
                     if (p_loss is not None): p_losses.append(p_loss)

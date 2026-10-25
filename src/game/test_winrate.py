@@ -4,7 +4,7 @@ from agents import * # pyright: ignore[reportUnusedImport]
 
 selfplayed_path: str = "networks\\3_selfplay_only_32768\\"
 selfplayed_AI: AIAgent = AIAgent(
-    eta=1.0, 
+    eta=0.0, 
     p_network_path=       f"{selfplayed_path}p_network_v1.bin", 
     q_network_path=       f"{selfplayed_path}q_network_v1.bin", 
     replay_buffer_path=   f"{selfplayed_path}ReplayBuffer_v1.bin", 
@@ -12,7 +12,7 @@ selfplayed_AI: AIAgent = AIAgent(
 )
 mix_played_path: str = "networks\\2_selfplay_after_16384+\\"
 mix_played_AI: AIAgent = AIAgent(
-    eta=1.0, 
+    eta=0.0, 
     p_network_path=       f"{mix_played_path}p_network_v1.bin", 
     q_network_path=       f"{mix_played_path}q_network_v1.bin", 
     replay_buffer_path=   f"{mix_played_path}ReplayBuffer_v1.bin", 

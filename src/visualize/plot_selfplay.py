@@ -7,7 +7,7 @@ from log_parser import parse_selfplay_file, SelfPlayData
 
 def main() -> None:
     """主程式: 繪製自我對戰圖表"""
-    data: SelfPlayData = parse_selfplay_file("src\\visualize\\selfplay.log")
+    data: SelfPlayData = parse_selfplay_file("src/visualize/selfplay.log")
     if not data.episodes:
         print("無自我對戰資料可供繪製")
         return
@@ -55,7 +55,7 @@ def main() -> None:
     ax_draw.grid(True, linestyle='--', alpha=0.6)
 
     plt.tight_layout()
-    plt.savefig("src\\visualize\\selfplay_result_smoothed.png", dpi=300)
-    print("圖表已成功儲存至 src\\visualize\\selfplay_result_smoothed.png")
+    plt.savefig("src/visualize/selfplay_result_smoothed.png", dpi=300)
+    print("圖表已成功儲存至 src/visualize/selfplay_result_smoothed.png")
 
 if __name__ == "__main__": main()
