@@ -44,7 +44,8 @@ class Agent(ABC):
         reward: float, 
         next_state: Tensor, 
         done: bool, 
-        next_mask: Tensor|None = None
+        next_mask: Tensor|None = None,
+        mask: Tensor|None = None
     ) -> float|None: pass
     
     def reload(self, batch_size: int = 64, gamma: float = 0.99, lr: float = 1e-3) -> None: pass

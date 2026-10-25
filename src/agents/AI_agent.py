@@ -20,6 +20,7 @@ class AIAgent(Agent):
         epsilon_decay_steps: int = 100000,
         update_every: int = 8,
         warmup: int = 1000,
+        cql_alpha: float = 0.0,
     ) -> None:
         """ AI Agent --version 1
         eta: 使用 Q 網路(最佳回應)的機率，其餘使用 Policy 網路(平均策略)
@@ -43,6 +44,7 @@ class AIAgent(Agent):
         self.br_steps: int = 0      # 已經做過幾次「最佳回應」決策 (用來計算 ε)
         self.update_every: int = update_every
         self.warmup: int = warmup
+        self.cql_alpha: float = cql_alpha
         self._q_net: QNetwork|None = None   # 僅 inference_only 使用
         self._p_net: PNetwork|None = None
         # 「選動作」專用的網路 (放 CPU)：batch=1 的小網路在 GPU 上反而慢
@@ -96,7 +98,7 @@ class AIAgent(Agent):
             state_dim, lr, batch_size, self.p_net_path, self.p_memory_path, self.update_every, self.warmup
         )
         self.q_trainer: DQNTrainer = DQNTrainer(
-            state_dim, lr, gamma, batch_size, self.q_net_path, self.q_memory_path, self.update_every, self.warmup
+            state_dim, lr, gamma, batch_size, self.q_net_path, self.q_memory_path, self.update_every, self.warmup, cql_alpha=self.cql_alpha
         )
         self.q_trainer.load()
         self.p_trainer.load()
@@ -118,9 +120,10 @@ class AIAgent(Agent):
         reward: float, 
         next_state: Tensor, 
         done: bool, 
-        next_mask: Tensor|None = None
+        next_mask: Tensor|None = None,
+        mask: Tensor|None = None
     ) -> float|None: 
-        loss: float|None = self.q_trainer.push(state, card, reward, next_state, done, next_mask)
+        loss: float|None = self.q_trainer.push(state, card, reward, next_state, done, next_mask, mask)
         if (loss is not None and DEVICE.type != "cpu"): self._act_q.load_state_dict(self.q_net.state_dict())
         return loss
 
@@ -150,6 +153,8 @@ class AIAgent(Agent):
             ids: list[int] = list(self.game.legal_ids())
             if (self.game.draw_allowed()): ids.append(60)
             vector[choice(ids)] = 1.0
+            # 探索用的隨機動作只給 Q 學習，不存進 Policy 的 SL 記憶庫 (否則 Policy 會去模仿隨機噪音)
+            self.last_step_is_br = False
             return tuple(vector)
         mask: Tensor = self.game.legal_mask()
         q_values: Tensor = self._act_q(self.get_tensor().unsqueeze(0)).squeeze(0)

@@ -433,7 +433,7 @@ class UnoGame:
             for step, transition in self._build_transitions(steps, winner):
                 if (transition is not None):
                     reward, next_state, next_mask, done = transition
-                    q_loss: float|None = step.agent.push_q(step.state, step.card, reward, next_state, done, next_mask)
+                    q_loss: float|None = step.agent.push_q(step.state, step.card, reward, next_state, done, next_mask, step.mask)
                     if (q_loss is not None): q_losses.append(q_loss)
                 # NFSP: 只有最佳回應模式的動作才存入 SL 記憶庫
                 if (step.is_br):
@@ -461,9 +461,13 @@ class UnoGame:
         p_trainer: PolicyTrainer, 
         target_player_idx: int|None = 0, 
         max_steps: int = 500, 
-        log_every: int = 64
+        log_every: int = 64,
+        train_q: bool = True
     ) -> None:
-        """ 模型交叉對戰訓練 (向 self.agents 中的示範者學習：只收集 target_player_idx 的經驗，None 代表所有座位都是示範者) """
+        """ 模型交叉對戰訓練 (向 self.agents 中的示範者學習：只收集 target_player_idx 的經驗，None 代表所有座位都是示範者)
+        train_q: 是否也用示範資料訓練 Q 網路。示範者從不做的動作(如有牌可出卻抽牌)在資料裡沒有反例，
+                 Q 學習的 max 會引用這些「沒看過的動作」的外推值而發散 (離線 RL 的 OOD 動作問題)，建議 False，Q 交給 selfplay 學。
+        """
         self.deck.out = False   # 避免不必要的輸出
         print_device_info()     # 輸出一次使用裝置
         for agent in self._unique_agents(): agent.eval()
@@ -478,9 +482,9 @@ class UnoGame:
             truncated   += (winner == -1)
             target_wins += (winner == target_player_idx or (target_player_idx is None and winner == 0))
             for step, transition in self._build_transitions(steps, winner, only_player=target_player_idx):
-                if (transition is not None):
+                if (train_q and transition is not None):
                     reward, next_state, next_mask, done = transition
-                    q_loss: float|None = q_trainer.push(step.state, step.card, reward, next_state, done, next_mask)
+                    q_loss: float|None = q_trainer.push(step.state, step.card, reward, next_state, done, next_mask, step.mask)
                     if (q_loss is not None): q_losses.append(q_loss)
                 p_loss: float|None = p_trainer.push(step.state, step.card, step.mask)
                 if (p_loss is not None): p_losses.append(p_loss)
@@ -600,21 +604,21 @@ class UnoGame:
         self.elo_table.save()
 
     def test_winrate(self, num_episodes: int = 100, max_steps: int = 500) -> dict[int, float]:
-        """ 對戰勝率測試 """
+        """ 對戰勝率測試 (座位輪流換；勝者依「原始 agent 編號」計數) """
         winrates: dict[int, float] = {}
-        num_agents: int = len(self.agents)
+        # 注意: _setup_players() 會覆寫 self.agents，所以必須先備份原始順序
+        base_agents: list[Agent] = list(self.agents)
+        num_agents: int = len(base_agents)
         if (num_agents == 0): return winrates
         for agent in self._unique_agents(): agent.eval()
-        offset: int
         winner: int
         draw_count: int = 0
-        current_agents: list[Agent]
         win_counts: list[int] = [0]*num_agents
-        for episode in range(1, num_episodes+1):
-            # 依序順序輪流換位
-            offset = (episode-1) % num_agents
-            current_agents = [self.agents[(i-offset)%num_agents] for i in range(num_agents)]
-            try: self._setup_players(current_agents)
+        for episode in range(num_episodes):
+            # order[座位] = 原始 agent 編號；每局整體往後輪一格
+            offset: int = episode % num_agents
+            order: list[int] = [(i-offset) % num_agents for i in range(num_agents)]
+            try: self._setup_players([base_agents[k] for k in order])
             except RuntimeError as error:
                 print(f"設定玩家失敗: {error}")
                 continue
@@ -624,46 +628,14 @@ class UnoGame:
             if (winner == -1):
                 draw_count += 1
                 continue
-            # 還原贏家的真實索引
-            actual_index: int = (winner+offset) % num_agents
-            win_counts[actual_index] += 1
+            win_counts[order[winner]] += 1
+        self.agents = base_agents   # 還原
         total: float = float(num_episodes)
         draw_rate: float = float(draw_count)/total
         print(f"=== 勝率測試結果 ({num_episodes} 局) ===")
-        for index, agent in enumerate(self.agents):
+        for index in range(num_agents):
             winrate: float = float(win_counts[index])/total
             winrates[index] = winrate
             print(f"Agent {index} 勝率: {winrate:.1%} ({win_counts[index]} 勝)")
         print(f"平手/截斷率: {draw_rate:.1%} ({draw_count} 和)")
         return winrates
-
-    def scan_networks_info(self, networks_dir: str = "./networks") -> dict[str, ModelInfo]: 
-        """ 掃描 networks 目錄尋找各模型的 4 個 bin 檔案與計算大小 """
-        discovered_models: dict[str, ModelInfo] = {}
-        if (not os.path.exists(networks_dir)): return discovered_models
-        for entry in os.listdir(networks_dir):
-            folder_path: str = os.path.join(networks_dir, entry)
-            if (not os.path.isdir(folder_path)): continue
-            model_name: str = entry
-            p_net: str = os.path.join(folder_path, "p_network_v1.bin")
-            q_net: str = os.path.join(folder_path, "q_network_v1.bin")
-            p_mem: str = os.path.join(folder_path, "ReservoirMemory_v1.bin")
-            q_mem: str = os.path.join(folder_path, "ReplayBuffer_v1.bin")
-            
-            total_size: int = 0
-            for path in [p_net, q_net, p_mem, q_mem]:
-                if (os.path.exists(path)): total_size += os.path.getsize(path)
-
-            discovered_models[model_name] = ModelInfo(
-                name=model_name,
-                p_net=os.path.relpath(p_net, start=".") if os.path.exists(p_net) else "",
-                q_net=os.path.relpath(q_net, start=".") if os.path.exists(q_net) else "",
-                p_memory=os.path.relpath(p_mem, start=".") if os.path.exists(p_mem) else "",
-                q_memory=os.path.relpath(q_mem, start=".") if os.path.exists(q_mem) else "",
-                size=total_size
-            )
-        return discovered_models
-
-    def get_expected_score(self, rating_a: float, rating_b: float) -> float:
-        """ 期望勝率計算公式 """
-        return 1.0 / (1.0 + 10.0 ** ((rating_b-rating_a)/400.0))
