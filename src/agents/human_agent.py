@@ -31,6 +31,8 @@ class HumanAgent(Agent):
                 print("\nYou have a playable card, you can not draw")
                 continue
             try:
+                color_str: str
+                value_str: str
                 color_str, value_str = (text.split("|"))
                 id_: int = Card(Color.from_str(color_str), Value.from_str(value_str)).id
             except ValueError:

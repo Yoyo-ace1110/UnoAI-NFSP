@@ -1,5 +1,5 @@
 import random
-from .card import Card, Color, Value, _COLORS
+from .card import Card, Value, _COLORS
 
 # 標準 Uno 牌組張數
 DECK_SIZE: int = 108

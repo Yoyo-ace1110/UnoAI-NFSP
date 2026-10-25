@@ -107,7 +107,7 @@ class ReservoirMemory:
             print(f"無法從 {self.file_path} 讀取 ReservoirMemory")
             return False
         try:
-            data: dict[str, Tensor|int] = torch.load(self.file_path, map_location="cpu", weights_only=True)
+            data = torch.load(self.file_path, map_location="cpu", weights_only=True)  # type: ignore
             states: Tensor = data["states"]  # type: ignore
             n: int = min(int(states.shape[0]), self.capacity)
             self._alloc(int(states.shape[1]))
@@ -157,7 +157,7 @@ class PolicyTrainer:
 
     def update(self) -> float:
         """ 執行一次 Policy Network 的監督學習更新 """
-        states, actions, masks = to_device(*self.memory.sample(self.batch_size))
+        states, actions, masks = to_device(*self.memory.sample(self.batch_size))  # type: ignore
         # 只在合法動作上做 softmax (被選的動作必定合法)
         logits: Tensor = self.p_net(states).masked_fill(~masks, float("-inf"))  # shape: (batch_size, 61)
         loss: Tensor = F.cross_entropy(logits, actions)

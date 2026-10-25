@@ -114,8 +114,10 @@ class ELO_table:
 # 獎懲設定
 WIN_REWARD:   float = +1.0   # 贏牌
 LOSE_REWARD:  float = -1.0   # 輸牌
-PLAY_REWARD:  float = +0.025 # 打出手牌
-DRAW_PENALTY: float = -0.025 # 主動抽牌
+# 以下兩項為出牌/抽牌的小額回饋 (shaping)，0 代表關閉。離線示範資料(rule T/F，各 2 個 seed)測試，開關對勝率與 Q 值範圍沒有可見差異；
+# 它不是 potential-based，理論上可能改變最優策略，所以預設關閉，需要時再開。
+PLAY_REWARD:  float = 0.0     # 打出手牌 (舊值 +0.025)
+DRAW_PENALTY: float = 0.0     # 主動抽牌 (舊值 -0.025)
 
 # PLAY_REWARD:  float = +0.01  # 打出手牌
 # DRAW_PENALTY: float = -0.01  # 主動抽牌
@@ -419,10 +421,15 @@ class UnoGame:
         agents: list[Agent] = self._unique_agents()
         for agent in agents: agent.train()
         print(f"開始進行 {num_episodes} 局自我對戰")
-        total_steps = draw_steps = truncated = seat0_wins = 0
+        total_steps: int = 0
+        draw_steps: int = 0
+        truncated: int = 0
+        seat0_wins: int = 0
         q_losses: list[float] = []
         p_losses: list[float] = []
         start: float = time.time()
+        steps: list[Step]
+        winner: int
         for episode in range(1, num_episodes+1):
             steps, winner = self._play_episode(max_steps)
             total_steps += len(steps)
@@ -432,6 +439,10 @@ class UnoGame:
             # 存入雙記憶庫(Dual Memory Mechanism)並更新雙網路
             for step, transition in self._build_transitions(steps, winner):
                 if (transition is not None):
+                    reward: float
+                    next_state: Tensor
+                    next_mask: Tensor
+                    done: bool
                     reward, next_state, next_mask, done = transition
                     q_loss: float|None = step.agent.push_q(step.state, step.card, reward, next_state, done, next_mask, step.mask)
                     if (q_loss is not None): q_losses.append(q_loss)
@@ -472,10 +483,14 @@ class UnoGame:
         print_device_info()     # 輸出一次使用裝置
         for agent in self._unique_agents(): agent.eval()
         print(f"開始進行 {num_episodes} 局交叉對戰")
-        total_steps = truncated = target_wins = 0
+        total_steps: int = 0
+        truncated: int = 0
+        target_wins: int = 0
         q_losses: list[float] = []
         p_losses: list[float] = []
         start: float = time.time()
+        steps: list[Step]
+        winner: int
         for episode in range(1, num_episodes+1):
             steps, winner = self._play_episode(max_steps)
             total_steps += len(steps)
@@ -483,6 +498,10 @@ class UnoGame:
             target_wins += (winner == target_player_idx or (target_player_idx is None and winner == 0))
             for step, transition in self._build_transitions(steps, winner, only_player=target_player_idx):
                 if (train_q and transition is not None):
+                    reward: float
+                    next_state: Tensor
+                    next_mask: Tensor
+                    done: bool
                     reward, next_state, next_mask, done = transition
                     q_loss: float|None = q_trainer.push(step.state, step.card, reward, next_state, done, next_mask, step.mask)
                     if (q_loss is not None): q_losses.append(q_loss)
@@ -571,7 +590,7 @@ class UnoGame:
             games_to_play: int = matches - current_matches
             if (games_to_play <= 0): continue
             print(f"正在評估模型 {model_name}")
-            info = self.elo_table[model_name]
+            info: ModelInfo = self.elo_table[model_name]
             # 每個模型只建立、載入一次 (inference_only: 不建 trainer、不讀記憶庫)
             tested_agent: Agent = AIAgent(
                 eta,
@@ -639,3 +658,34 @@ class UnoGame:
             print(f"Agent {index} 勝率: {winrate:.1%} ({win_counts[index]} 勝)")
         print(f"平手/截斷率: {draw_rate:.1%} ({draw_count} 和)")
         return winrates
+
+    def scan_networks_info(self, networks_dir: str = "./networks") -> dict[str, ModelInfo]: 
+        """ 掃描 networks 目錄尋找各模型的 4 個 bin 檔案與計算大小 """
+        discovered_models: dict[str, ModelInfo] = {}
+        if (not os.path.exists(networks_dir)): return discovered_models
+        for entry in os.listdir(networks_dir):
+            folder_path: str = os.path.join(networks_dir, entry)
+            if (not os.path.isdir(folder_path)): continue
+            model_name: str = entry
+            p_net: str = os.path.join(folder_path, "p_network_v1.bin")
+            q_net: str = os.path.join(folder_path, "q_network_v1.bin")
+            p_mem: str = os.path.join(folder_path, "ReservoirMemory_v1.bin")
+            q_mem: str = os.path.join(folder_path, "ReplayBuffer_v1.bin")
+            
+            total_size: int = 0
+            for path in [p_net, q_net, p_mem, q_mem]:
+                if (os.path.exists(path)): total_size += os.path.getsize(path)
+
+            discovered_models[model_name] = ModelInfo(
+                name=model_name,
+                p_net=os.path.relpath(p_net, start=".") if os.path.exists(p_net) else "",
+                q_net=os.path.relpath(q_net, start=".") if os.path.exists(q_net) else "",
+                p_memory=os.path.relpath(p_mem, start=".") if os.path.exists(p_mem) else "",
+                q_memory=os.path.relpath(q_mem, start=".") if os.path.exists(q_mem) else "",
+                size=total_size
+            )
+        return discovered_models
+
+    def get_expected_score(self, rating_a: float, rating_b: float) -> float:
+        """ 期望勝率計算公式 """
+        return 1.0 / (1.0 + 10.0 ** ((rating_b-rating_a)/400.0))

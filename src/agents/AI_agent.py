@@ -20,7 +20,7 @@ class AIAgent(Agent):
         epsilon_decay_steps: int = 100000,
         update_every: int = 8,
         warmup: int = 1000,
-        cql_alpha: float = 0.0,
+        cql_alpha: float = 0.2,
     ) -> None:
         """ AI Agent --version 1
         eta: 使用 Q 網路(最佳回應)的機率，其餘使用 Policy 網路(平均策略)
@@ -167,4 +167,5 @@ class AIAgent(Agent):
         mask: Tensor = self.game.legal_mask()
         logits: Tensor = self._act_p(self.get_tensor().unsqueeze(0)).squeeze(0)
         # 先遮蔽非法動作再 softmax，輸出已是合法的機率分佈
-        return tuple(torch.softmax(logits.masked_fill(~mask, float("-inf")), dim=-1).tolist())
+        probs: list[float] = torch.softmax(logits.masked_fill(~mask, float("-inf")), dim=-1).tolist()  # type: ignore
+        return tuple(probs)

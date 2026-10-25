@@ -86,7 +86,7 @@ class ReplayBuffer:
     ) -> None:
         """ 將一步遊戲經驗存入記憶庫 (FIFO)。next_mask 是「下一個決策點」的合法動作遮罩，mask 是「這個狀態」的 """
         if (self._states is None): self._alloc(state.shape[0])
-        assert (self._actions is not None and self._rewards is not None and self._dones is not None)
+        assert (self._states is not None and self._actions is not None and self._rewards is not None and self._dones is not None)
         assert (self._next_states is not None and self._next_masks is not None and self._masks is not None)
         i: int = self._pos
         self._states[i]      = state
@@ -131,7 +131,7 @@ class ReplayBuffer:
             print(f"無法從 {self.file_path} 讀取 ReplayBuffer ")
             return False
         try:
-            data: dict[str, Tensor] = torch.load(self.file_path, map_location="cpu", weights_only=True)
+            data = torch.load(self.file_path, map_location="cpu", weights_only=True)  # type: ignore
             n: int = min(int(data["states"].shape[0]), self.capacity)
             self._alloc(int(data["states"].shape[1]))
             assert (self._states is not None and self._actions is not None and self._rewards is not None)
@@ -165,11 +165,12 @@ class DQNTrainer:
         update_every: int = 8,
         warmup: int = 1000,
         q_clip: float = 3.5,
-        cql_alpha: float = 0.0,
+        cql_alpha: float = 0.2,
     ) -> None:
         """ Deep Q-Network Trainer
         cql_alpha: 保守 Q 學習 (CQL) 的強度。loss 額外加上 α*(logsumexp_合法動作 Q − 實際動作 Q)，
                    把「資料裡沒做過的動作」(如示範者從不做的自發抽牌) 的 Q 往下壓，避免 max 引用它們的外推值而高估。0=關閉
+                   建議 0.1~0.3 (rule=True/False 的離線測試中，0.1~3.0 都穩定，0.03 太弱，0 會發散)
         q_clip: 目標 Q 值截斷範圍。終局 ±1 加上每步 ±0.025 的 shaping，折扣後回報不會超過約 ±3.5，
                 超出代表外推誤差在滾雪球，截斷可避免發散 (只是安全網，不能取代正確的資料)
         update_every: 每新增幾筆資料做一次梯度更新
@@ -212,7 +213,7 @@ class DQNTrainer:
 
     def update(self) -> float:
         """ 執行一次 DQN 梯度下降更新 """
-        states, actions, rewards, next_states, dones, next_masks, masks = to_device(*self.memory.sample(self.batch_size))
+        states, actions, rewards, next_states, dones, next_masks, masks = to_device(*self.memory.sample(self.batch_size))  # type: ignore
         # 計算當前狀態的 Q 值
         all_q: Tensor = self.q_net(states)
         q_values: Tensor = all_q.gather(1, actions.unsqueeze(1)).squeeze(1)
