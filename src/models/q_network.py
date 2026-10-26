@@ -53,6 +53,7 @@ class ReplayBuffer:
         """ Q-Network 記憶庫"""
         self._pos: int = 0
         self._size: int = 0
+        self._protect: int = 0   # 前 _protect 筆資料不會被覆蓋 (示範資料)
         self.capacity: int = capacity
         self.file_path: str = file_path
         self._states:      Tensor|None = None
@@ -75,6 +76,13 @@ class ReplayBuffer:
 
     def size(self) -> int: return self._size
 
+    def freeze(self, max_ratio: float = 0.3) -> None:
+        """ 把目前已有的資料 (示範資料) 保護起來, 之後環形緩衝區只覆蓋其後的資料。
+            否則記憶庫寫滿後, 最舊的示範資料會被自己產生的資料依序蓋掉, CQL 就失去示範者行為這個錨。
+            max_ratio: 受保護的資料最多占容量的比例, 避免新資料沒地方寫
+        """
+        self._protect = min(self._size, int(self.capacity*max_ratio))
+
     def push(
         self, 
         state: Tensor, 
@@ -85,7 +93,7 @@ class ReplayBuffer:
         next_mask: Tensor|None = None,
         mask: Tensor|None = None
     ) -> None:
-        """ 將一步遊戲經驗存入記憶庫 (FIFO) """
+        """ 將一步遊戲經驗存入記憶庫 (FIFO, 受保護的前 _protect 筆不會被覆蓋) """
         if (self._states is None): self._alloc(state.shape[0])
         assert (self._states is not None)
         assert (self._actions is not None)
@@ -102,7 +110,7 @@ class ReplayBuffer:
         self._dones[i]       = float(done)
         self._next_masks[i]  = (True if next_mask is None else next_mask)
         self._masks[i]       = (True if mask is None else mask)
-        self._pos  = (i + 1) % self.capacity
+        self._pos  = (i + 1) if (i + 1 < self.capacity) else self._protect
         self._size = min(self._size + 1, self.capacity)
 
     def sample(self, batch_size: int) -> tuple[Tensor, ...]:
@@ -147,6 +155,7 @@ class ReplayBuffer:
                 "dones": self._dones[:n], 
                 "next_masks": self._next_masks[:n],
                 "masks": self._masks[:n],
+                "protect": self._protect,
             }, 
             self.file_path
         )
@@ -175,10 +184,12 @@ class ReplayBuffer:
             self._states = None
             self._size = 0
             self._pos = 0
+            self._protect = 0
             return False
         self._size = n
-        self._pos  = n % self.capacity
-        print(f"已成功從 {self.file_path} 讀取 ReplayBuffer ({n} 筆)")
+        self._protect = (min(int(data["protect"]), n) if ("protect" in data) else 0)  # type: ignore
+        self._pos  = (n if (n < self.capacity) else self._protect)
+        print(f"已成功從 {self.file_path} 讀取 ReplayBuffer ({n} 筆, 其中 {self._protect} 筆受保護)")
         return True
 
 class DQNTrainer:

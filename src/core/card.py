@@ -109,8 +109,8 @@ class Card:
         return COLORS[self.id & 3]
     @color.setter
     def color(self, color: Color) -> None: 
-        # (self.id >> 2) << 2 消滅最低兩個位元
-        self.id = color.value + (self.id >> 2) << 2
+        # 清掉最低兩個位元(顏色)後，再放入新顏色。注意: << 的優先順序比 + 低，所以不能寫成 a + b << 2
+        self.id = (self.id & ~0b11) | color.value
 
     @property
     def sort_key(self) -> int:

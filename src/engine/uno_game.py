@@ -116,6 +116,9 @@ WIN_REWARD:   float = +1.0 # 贏牌
 LOSE_REWARD:  float = -1.0 # 輸牌
 PLAY_REWARD:  float = 0.0  # 打出手牌
 DRAW_PENALTY: float = 0.0  # 主動抽牌
+# 超過 max_steps 仍未分勝負(截斷)時，每位玩家最後一步的獎勵。None 代表舊行為: 丟棄，不給任何訊號。
+# 若丟棄，rule=True 下「一直抽牌拖到截斷」就能避開 -1，變成最安全的策略 (selfplay2.log 的發散就是這個形狀)。
+TIMEOUT_REWARD: float|None = LOSE_REWARD
 # PLAY_REWARD:  float = +0.01  # 打出手牌
 # DRAW_PENALTY: float = -0.01  # 主動抽牌
 
@@ -388,7 +391,7 @@ class UnoGame:
         steps: list[Step], winner: int, only_player: int|None = None
     ) -> list[tuple[Step, tuple[float, Tensor, Tensor, bool]|None]]:
         """ 將軌跡轉成 (Step, (reward, next_state, next_mask, done))
-            被截斷的局每位玩家最後一步沒有 next_state, Q 不使用, 但 SL 仍可使用
+            被截斷的局: TIMEOUT_REWARD 不是 None 就視為終局 (預設當作輸); 是 None 則最後一步沒有 next_state, Q 不使用, 但 SL 仍可使用
         """
         by_player: dict[int, list[Step]] = {}
         for step in steps: by_player.setdefault(step.player, []).append(step)
@@ -404,6 +407,9 @@ class UnoGame:
                 elif (winner != -1):
                     final: float = (WIN_REWARD if p_idx == winner else LOSE_REWARD)
                     result.append((step, (step.reward + final, step.state, ones, True)))
+                elif (TIMEOUT_REWARD is not None):
+                    # 截斷也當作失敗: 拖延沒有好處; done=True 不再 bootstrap
+                    result.append((step, (step.reward + TIMEOUT_REWARD, step.state, ones, True)))
                 else:
                     result.append((step, None))
         return result
