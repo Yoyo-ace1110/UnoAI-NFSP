@@ -1,6 +1,7 @@
 test/
-test.py
 *.spec
 build/
+test.py
+archive/
 .vscode/
 **/__pycache__/
