@@ -50,7 +50,7 @@ class PNetwork(nn.Module):
         return True
 
 class ReservoirMemory:
-    def __init__(self, file_path: str = "ReservoirMemory_v1.bin", capacity: int = 640000) -> None:
+    def __init__(self, file_path: str = "ReservoirMemory_v1.bin", capacity: int = 64000) -> None:
         """ 蓄水池記憶庫 """
         self.file_path: str = file_path
         self.capacity: int = capacity   # 單純目前記憶庫容量

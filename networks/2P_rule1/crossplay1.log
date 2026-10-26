@@ -1,0 +1,37 @@
+random vs classic
+已完成第 32 局 | 62.8 步/局 | 截斷 0 | 示範者勝率 62% | Q-loss 0.0000 | P-loss 0.0000 | 0.01 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (989 筆)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (989 筆)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+classic vs random
+已成功載入 Q-Network 權重: q_network_v1.bin
+已成功從 ReplayBuffer_v1.bin 讀取 ReplayBuffer (989 筆, 其中 0 筆受保護)
+已成功從 ReservoirMemory_v1.bin 讀取 ReservoirMemory (989 筆)
+已成功載入 Policy-Network 權重: p_network_v1.bin
+使用裝置: GPU (NVIDIA GeForce RTX 3050 Laptop GPU)
+開始進行 32 局交叉對戰
+已完成第 32 局 | 53.1 步/局 | 截斷 0 | 示範者勝率 47% | Q-loss 0.1045 | P-loss 0.2820 | 0.09 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (1852 筆)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (1852 筆)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+classic vs classic
+已成功載入 Q-Network 權重: q_network_v1.bin
+已成功從 ReplayBuffer_v1.bin 讀取 ReplayBuffer (1852 筆, 其中 0 筆受保護)
+已成功從 ReservoirMemory_v1.bin 讀取 ReservoirMemory (1852 筆)
+已成功載入 Policy-Network 權重: p_network_v1.bin
+使用裝置: GPU (NVIDIA GeForce RTX 3050 Laptop GPU)
+開始進行 512 局交叉對戰
+已完成第 64 局 | 48.5 步/局 | 截斷 0 | 示範者勝率 58% | Q-loss 0.0991 | P-loss 0.1792 | 0.07 秒/局
+已完成第 128 局 | 45.7 步/局 | 截斷 0 | 示範者勝率 56% | Q-loss 0.0968 | P-loss 0.1460 | 0.05 秒/局
+已完成第 192 局 | 41.4 步/局 | 截斷 0 | 示範者勝率 47% | Q-loss 0.0982 | P-loss 0.1300 | 0.05 秒/局
+已完成第 256 局 | 43.4 步/局 | 截斷 0 | 示範者勝率 50% | Q-loss 0.0983 | P-loss 0.1282 | 0.05 秒/局
+已完成第 320 局 | 44.2 步/局 | 截斷 0 | 示範者勝率 47% | Q-loss 0.0968 | P-loss 0.1192 | 0.05 秒/局
+已完成第 384 局 | 46.2 步/局 | 截斷 0 | 示範者勝率 48% | Q-loss 0.0951 | P-loss 0.1232 | 0.05 秒/局
+已完成第 448 局 | 46.6 步/局 | 截斷 0 | 示範者勝率 47% | Q-loss 0.0969 | P-loss 0.1191 | 0.05 秒/局
+已完成第 512 局 | 45.5 步/局 | 截斷 0 | 示範者勝率 52% | Q-loss 0.0947 | P-loss 0.1187 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (24977 筆)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (24977 筆)
+Policy-Network 權重已成功儲存至: p_network_v1.bin

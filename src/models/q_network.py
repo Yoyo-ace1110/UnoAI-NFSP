@@ -49,7 +49,7 @@ class QNetwork(nn.Module):
         return True
 
 class ReplayBuffer:
-    def __init__(self, file_path: str = "ReplayBuffer_v1.bin", capacity: int = 100000) -> None:
+    def __init__(self, file_path: str = "ReplayBuffer_v1.bin", capacity: int = 64000) -> None:
         """ Q-Network 記憶庫"""
         self._pos: int = 0
         self._size: int = 0
