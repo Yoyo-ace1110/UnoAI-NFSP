@@ -21,6 +21,7 @@ class AIAgent(Agent):
         update_every: int = 8,
         warmup: int = 1000,
         cql_alpha: float = 0.2,
+        double_dqn: bool = True,
     ) -> None:
         """ AI Agent --version 1
             eta: 使用 Q-Network 的機率, 其餘使用 Policy Network
@@ -46,6 +47,7 @@ class AIAgent(Agent):
         self.update_every: int = update_every
         self.warmup: int = warmup
         self.cql_alpha: float = cql_alpha
+        self.double_dqn: bool = double_dqn
         self._q_net: QNetwork|None = None   # 僅 inference_only 使用
         self._p_net: PNetwork|None = None
         # 「選動作」專用的網路 (放 CPU): batch=1 的小網路在 GPU 上反而慢
@@ -113,7 +115,7 @@ class AIAgent(Agent):
             self.q_memory_path, 
             self.update_every, 
             self.warmup, 
-            cql_alpha=self.cql_alpha
+            cql_alpha=self.cql_alpha, double_dqn=self.double_dqn
         )
         self.q_trainer.load()
         self.p_trainer.load()

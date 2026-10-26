@@ -205,12 +205,16 @@ class DQNTrainer:
         warmup: int = 1000,
         q_clip: float = 3.5,
         cql_alpha: float = 0.2,
+        double_dqn: bool = True,
     ) -> None:
         """ Deep Q-Network Trainer
             cql_alpha: 
                 保守 Q 學習 (CQL) 的強度。loss 額外加上 alpha*(logsumexp_合法動作 Q - 實際動作 Q), 
                 把資料裡沒有的動作(如示範者從不主動抽牌) 的 Q 往下壓, 避免 max 引用它們的外推值而高估。
                 測試值 0.1~0.3 (rule=True/False 的離線測試中, 0.1~0.3 都穩定, 0.03 太弱, 0 會發散)
+            double_dqn: 
+                用線上網路選動作、目標網路評價。rule=True 的 selfplay(eta=0.85) 不加時約 1200 局發散(抽牌率 95%、全部截斷),
+                加上後 2 個 seed 在 1800/2400 局都穩定 (縮小規模的重現)。
             q_clip: 目標 Q 值截斷範圍。終局 ±1 加上每步 ±0.025 的 shaping, 折扣後回報不會超過約 ±3.5, 
                 超出代表外推誤差在滾雪球, 截斷可避免發散 (只是安全機制)
             update_every: 每新增幾筆資料做一次梯度更新
@@ -219,6 +223,7 @@ class DQNTrainer:
         self.gamma: float = gamma
         self.q_clip: float = q_clip
         self.cql_alpha: float = cql_alpha
+        self.double_dqn: bool = double_dqn   # True: Double DQN (見 update)
         self.batch_size: int = batch_size
         self.update_every: int = update_every
         self.warmup: int = max(warmup, batch_size)
@@ -261,7 +266,13 @@ class DQNTrainer:
         # 計算目標 Q 值 (Bellman Equation)
         with torch.no_grad():
             # 只在「下一個決策點的合法動作」中取最大 Q 值, 非法動作的 Q 從未被訓練, 不參與 max
-            next_q: Tensor = self.target_net(next_states).masked_fill(~next_masks, float("-inf")).max(1).values
+            target_all: Tensor = self.target_net(next_states).masked_fill(~next_masks, float("-inf"))
+            if (self.double_dqn):
+                # Double DQN: 用「線上網路」選動作、「目標網路」評價，避免 max 操作把估計噪音系統性地往上選 (過度樂觀)
+                best_actions: Tensor = self.q_net(next_states).masked_fill(~next_masks, float("-inf")).argmax(1, keepdim=True)
+                next_q: Tensor = target_all.gather(1, best_actions).squeeze(1)
+            else:
+                next_q = target_all.max(1).values
             # 終局沒有未來回報 (用 where 避免 -inf * 0 = nan)
             next_q = torch.where(dones > 0.5, torch.zeros_like(next_q), next_q)
             target_q_values: Tensor = (rewards + self.gamma*next_q).clamp(-self.q_clip, self.q_clip)

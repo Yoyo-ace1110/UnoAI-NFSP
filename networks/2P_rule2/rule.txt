@@ -5,4 +5,4 @@ stack_plus4:          bool = True
 stack_all_plus:       bool = False
 black_finisher:       bool = False
 color_retention:      bool = False
-allow_voluntary_draw: bool = False
+allow_voluntary_draw: bool = True
