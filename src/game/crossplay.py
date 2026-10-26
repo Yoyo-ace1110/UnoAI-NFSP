@@ -13,11 +13,10 @@ q_trainer.load()
 p_trainer.load()
 
 uno_game.crossplay(
-    num_episodes=16384-4096, 
+    num_episodes=512, 
     q_trainer=q_trainer, 
     p_trainer=p_trainer,
-    # 雙方的的對局經驗都拿來學
-    target_player_idx=None,
+    target_player_index=None,
     max_steps=800
 )
 

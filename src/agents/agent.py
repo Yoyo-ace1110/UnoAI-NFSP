@@ -26,7 +26,7 @@ class Agent(ABC):
         self.inference_only: bool = inference_only
         self.training: bool = False
         # NFSP: 上一個動作是否由「最佳回應(Q 網路)」模式產生。只有這種動作才該存進 SL 記憶庫。
-        # 非 NFSP 的 Agent (Classic / Random / Human) 視為示範者，一律為 True。
+        # 非 NFSP 的 Agent (Classic / Random / Human) 視為示範者, 一律為 True。
         self.last_step_is_br: bool = True
 
     def save(self) -> None: pass
@@ -51,7 +51,7 @@ class Agent(ABC):
     def reload(self, batch_size: int = 64, gamma: float = 0.99, lr: float = 1e-3) -> None: pass
     
     def softmax(self, prob_vec: list[float], prob_sum: float|None = None) -> list[float]:
-        """ 將 61 維度的權重向量正規化成機率 """
+        """ 將 61 維度的向量正規化為機率 """
         # 自己計算總和
         if (prob_sum is None): prob_sum = sum(prob_vec)
         # 總和為零 -> Error
@@ -60,7 +60,7 @@ class Agent(ABC):
         return prob_vec
 
     def legal_ids(self) -> list[int]:
-        """ 目前所有合法的牌 id (已快取；只掃手牌，不掃 60 個 id) """
+        """ 目前所有合法的牌 id """
         return self.game.legal_ids()
 
     def draw_allowed(self) -> bool:

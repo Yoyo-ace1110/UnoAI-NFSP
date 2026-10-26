@@ -32,7 +32,7 @@ class ClassicAgent(Agent):
         return tuple(prob_vector)
     
     def get_prob_vector(self) -> tuple[float, ...]:
-        """ 根據經典規則輸出出牌機率向量 (只掃一次合法牌，依優先級挑選) """
+        """ 根據經典規則輸出出牌機率向量 """
         ids: list[int] = self.legal_ids()
         # 沒有合法牌 -> 抽牌 (索引 60)
         if (not ids): return self._pick([60])
@@ -42,7 +42,7 @@ class ClassicAgent(Agent):
         # 優先級 2: 迴轉 (turn) 或 禁止 (skip)
         tier = [i for i in ids if (i >> 2) in (_TURN, _SKIP)]
         if (tier): return self._pick(tier)
-        # 優先級 3: 變色牌 (wild)，優先選擇自己手上有的顏色
+        # 優先級 3: 變色牌 (wild), 優先選擇自己手上有的顏色
         tier = [i for i in ids if (i >> 2) == _WILD]
         if (tier):
             hand_colors: set[int] = {c.id & 3 for c in self.game.curr_player.hand if c.is_color()}

@@ -1,0 +1,43 @@
+classic vs random
+找不到權重檔 q_network_v1.bin。
+無法從 ReplayBuffer_v1.bin 讀取 ReplayBuffer 
+無法從 ReservoirMemory_v1.bin 讀取 ReservoirMemory
+找不到權重檔 p_network_v1.bin。
+使用裝置: GPU (NVIDIA GeForce RTX 3050 Laptop GPU)
+開始進行 32 局交叉對戰
+已完成第 32 局 | 86.2 步/局 | 截斷 0 | 示範者勝率 100% | Q-loss 0.1442 | P-loss 0.3292 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (1399 筆)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (1399 筆)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+random vs classic
+已成功載入 Q-Network 權重: q_network_v1.bin
+已成功從 ReplayBuffer_v1.bin 讀取 ReplayBuffer (1399 筆)
+已成功從 ReservoirMemory_v1.bin 讀取 ReservoirMemory (1399 筆)
+已成功載入 Policy-Network 權重: p_network_v1.bin
+使用裝置: GPU (NVIDIA GeForce RTX 3050 Laptop GPU)
+開始進行 32 局交叉對戰
+已完成第 32 局 | 94.4 步/局 | 截斷 0 | 示範者勝率 97% | Q-loss 0.1375 | P-loss 0.2002 | 0.08 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (2911 筆)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (2911 筆)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+classic vs classic
+已成功載入 Q-Network 權重: q_network_v1.bin
+已成功從 ReplayBuffer_v1.bin 讀取 ReplayBuffer (2911 筆)
+已成功從 ReservoirMemory_v1.bin 讀取 ReservoirMemory (2911 筆)
+已成功載入 Policy-Network 權重: p_network_v1.bin
+使用裝置: GPU (NVIDIA GeForce RTX 3050 Laptop GPU)
+開始進行 512 局交叉對戰
+已完成第 64 局 | 38.1 步/局 | 截斷 0 | 示範者勝率 48% | Q-loss 0.1437 | P-loss 0.1626 | 0.05 秒/局
+已完成第 128 局 | 50.1 步/局 | 截斷 0 | 示範者勝率 44% | Q-loss 0.1477 | P-loss 0.1419 | 0.05 秒/局
+已完成第 192 局 | 44.8 步/局 | 截斷 0 | 示範者勝率 42% | Q-loss 0.1423 | P-loss 0.1278 | 0.05 秒/局
+已完成第 256 局 | 40.2 步/局 | 截斷 0 | 示範者勝率 53% | Q-loss 0.1415 | P-loss 0.1376 | 0.05 秒/局
+已完成第 320 局 | 49.9 步/局 | 截斷 0 | 示範者勝率 47% | Q-loss 0.1336 | P-loss 0.1334 | 0.05 秒/局
+已完成第 384 局 | 47.1 步/局 | 截斷 0 | 示範者勝率 47% | Q-loss 0.1216 | P-loss 0.1325 | 0.05 秒/局
+已完成第 448 局 | 50.8 步/局 | 截斷 0 | 示範者勝率 44% | Q-loss 0.1140 | P-loss 0.1259 | 0.05 秒/局
+已完成第 512 局 | 38.7 步/局 | 截斷 0 | 示範者勝率 47% | Q-loss 0.1094 | P-loss 0.1189 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (25934 筆)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (25934 筆)
+Policy-Network 權重已成功儲存至: p_network_v1.bin

@@ -21,7 +21,7 @@ class CrossPlayData:
         self.speeds:        list[float] = []
 
 def smooth_data(values: list[float], window: int = 15) -> list[float]:
-    """計算指定視窗大小的移動平均，使圖表平滑"""
+    """計算指定視窗大小的移動平均, 使圖表平滑"""
     smoothed: list[float] = []
     n: int = len(values)
     half_w: int = window // 2

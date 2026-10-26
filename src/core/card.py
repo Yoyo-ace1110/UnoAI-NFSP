@@ -72,48 +72,57 @@ class Value(Enum):
 
     def __repr__(self) -> str: return self.__str__()
 
-# 列舉表：用 tuple 索引取代 Enum(x) 呼叫（Enum 建構在 Python 裡很慢，是原本的主要熱點）
-_COLORS: tuple[Color, ...] = tuple(Color)
-_VALUES: tuple[Value, ...] = tuple(Value)
-_TURN:  int = Value.turn.value
-_SKIP:  int = Value.skip.value
-_PLUS2: int = Value.plus2.value
-_WILD:  int = Value.wild.value
-_PLUS4: int = Value.plus4.value
+# 列舉表: 使用 tuple 索引取代 Enum(x) 呼叫 (加速)
+COLORS: tuple[Color, ...] = tuple(Color)
+VALUES: tuple[Value, ...] = tuple(Value)
+TURN:  int = Value.turn .value
+SKIP:  int = Value.skip .value
+PLUS2: int = Value.plus2.value
+WILD:  int = Value.wild .value
+PLUS4: int = Value.plus4.value
 
 # 牌張
 class Card:
     __slots__ = ("id",)
 
     def __init__(self, color: Color, value: Value) -> None:
-        """ 初始化牌張 """
-        self.id: int = color.value + value.value*4
+        """ 初始化牌張 id[value(4bits)|color(2bits)] """
+        self.id: int = color.value + (value.value << 2)
 
     @classmethod
     def from_id(cls, id: int) -> Card:
-        """ 使用 id 初始化牌張 (不經過 Enum，速度快) """
+        """ 使用 id 初始化牌張 """
         card: Card = cls.__new__(cls)
         card.id = id
         return card
 
     @property
-    def value(self) -> Value: return _VALUES[self.id >> 2]
+    def value(self) -> Value: 
+        return VALUES[self.id >> 2]
     @value.setter
-    def value(self, value: Value) -> None: self.id = (self.id & 3) + value.value*4
+    def value(self, value: Value) -> None: 
+        # (self.id & 0b11) + (value << 2)
+        self.id = (self.id & 3) + (value.value << 2)
 
     @property
-    def color(self) -> Color: return _COLORS[self.id & 3]
+    def color(self) -> Color: 
+        return COLORS[self.id & 3]
     @color.setter
-    def color(self, color: Color) -> None: self.id = color.value + (self.id >> 2)*4
+    def color(self, color: Color) -> None: 
+        # (self.id >> 2) << 2 消滅最低兩個位元
+        self.id = color.value + (self.id >> 2) << 2
 
     @property
     def sort_key(self) -> int:
-        """ 排序用鍵值: 顏色牌依 (顏色, 牌面)，黑牌一律排在最後 (Player.is_all_black 依賴此性質) """
-        value: int = self.id >> 2
-        if (value >= _WILD): return 1000 + self.id
+        """ 排序用鍵值 """
+        value: int = (self.id >> 2)
+        # 黑色牌直接把它設為最大 (加上1000)
+        if (value >= WILD): return (1000 + self.id)
         return (self.id & 3)*100 + value
 
-    def __lt__(self, other: Card) -> bool: return self.sort_key < other.sort_key
+    def __lt__(self, other: Card) -> bool: 
+        """ 排序根據 sort_key """
+        return self.sort_key < other.sort_key
 
     def __eq__(self, other: object) -> bool:
         """ 透過卡片 id 判斷兩張牌是否相等 """
@@ -141,11 +150,11 @@ class Card:
 
     def is_black(self) -> bool:
         """ 判斷是否為黑色牌 """
-        return (self.id >> 2) >= _WILD
+        return (self.id >> 2) >= WILD
 
     def is_color(self) -> bool:
         """ 判斷是否為顏色牌 """
-        return (self.id >> 2) < _WILD
+        return (self.id >> 2) < WILD
 
     def is_number(self) -> bool:
         """ 判斷是否為數字牌 """
@@ -157,19 +166,19 @@ class Card:
         top_value: int = deck_top.id >> 2
         if (has_effect):
             # 連續禁止
-            if (top_value == _SKIP):
-                return (Rule.stack_skip and value == _SKIP)
+            if (top_value == SKIP):
+                return (Rule.stack_skip and value == SKIP)
             # +2, +4
-            if (top_value == _PLUS2):
-                if (Rule.stack_plus2 and value == _PLUS2): return True
-                if (Rule.stack_all_plus and value == _PLUS4): return True
+            if (top_value == PLUS2):
+                if (Rule.stack_plus2 and value == PLUS2): return True
+                if (Rule.stack_all_plus and value == PLUS4): return True
                 return False
-            if (top_value == _PLUS4):
-                if (Rule.stack_plus4 and value == _PLUS4): return True
-                if (Rule.stack_all_plus and value == _PLUS2 and (self.id & 3) == (deck_top.id & 3)): return True
+            if (top_value == PLUS4):
+                if (Rule.stack_plus4 and value == PLUS4): return True
+                if (Rule.stack_all_plus and value == PLUS2 and (self.id & 3) == (deck_top.id & 3)): return True
                 return False
         # 隨時可打
-        if (value >= _WILD): return True
+        if (value >= WILD): return True
         # 其他的牌
         return ((self.id & 3) == (deck_top.id & 3) or value == top_value)
 

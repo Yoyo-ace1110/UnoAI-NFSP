@@ -112,13 +112,10 @@ class ELO_table:
     def __contains__(self, key: str) -> bool: return key in self.table
 
 # 獎懲設定
-WIN_REWARD:   float = +1.0   # 贏牌
-LOSE_REWARD:  float = -1.0   # 輸牌
-# 以下兩項為出牌/抽牌的小額回饋 (shaping)，0 代表關閉。離線示範資料(rule T/F，各 2 個 seed)測試，開關對勝率與 Q 值範圍沒有可見差異；
-# 它不是 potential-based，理論上可能改變最優策略，所以預設關閉，需要時再開。
-PLAY_REWARD:  float = 0.0     # 打出手牌 (舊值 +0.025)
-DRAW_PENALTY: float = 0.0     # 主動抽牌 (舊值 -0.025)
-
+WIN_REWARD:   float = +1.0 # 贏牌
+LOSE_REWARD:  float = -1.0 # 輸牌
+PLAY_REWARD:  float = 0.0  # 打出手牌
+DRAW_PENALTY: float = 0.0  # 主動抽牌
 # PLAY_REWARD:  float = +0.01  # 打出手牌
 # DRAW_PENALTY: float = -0.01  # 主動抽牌
 
@@ -140,9 +137,8 @@ class Step:
 class UnoGame:
     def __init__(self, agents: list[Agent]) -> None:
         """ 初始化整個遊戲 """
-        if (not Rule.is_valid()):
-            raise ValueError("Invalid Rule") 
-        if (len(agents)*Rule.hand_size > DECK_SIZE - 1):
+        if (not Rule.is_valid()): raise ValueError("Invalid Rule") 
+        if (len(agents)*Rule.hand_size > DECK_SIZE-1):
             raise ValueError("Too much player or initial hand size is too big")
         self.turn : int = 0
         self.direc: int = 1
@@ -153,14 +149,15 @@ class UnoGame:
         self.players: list[Player] = []
         # 快取 (每次遊戲狀態改變時 invalidate)
         self._state: Tensor|None = None
-        self._legal_ids: list[int]|None = None
         self._legal_mask: Tensor|None = None
+        self._legal_ids: list[int]|None = None
         # 建立玩家並發牌
         self._setup_players(agents)
 
     def _setup_players(self, agents: list[Agent]) -> None:
-        """ 以新的 agents 重建玩家並發牌。舊玩家的手牌會先歸還牌堆，避免牌越用越少 """
-        for player in self.players: player.reset(self.deck)
+        """ 以新的 agents 重建玩家並發牌 """
+        for player in self.players:
+            player.reset(self.deck)
         self.agents = agents
         self.players = []
         self.turn  = 0
@@ -169,8 +166,8 @@ class UnoGame:
         self.deck.reset()
         for i, agent in enumerate(agents):
             player: Player = Player(agent)
-            self.players.append(player)
             player.deal_hand(self.deck.draw(Rule.hand_size))
+            self.players.append(player)
             player.set_index(i)
         self.invalidate()
         # 事後設定以避免輸入層的維度不同
@@ -189,7 +186,7 @@ class UnoGame:
     def state_dim(self) -> int: return STATE_BASE + self.players_size
 
     def invalidate(self) -> None:
-        """ 遊戲狀態改變後，清除快取 """
+        """ 清除遊戲狀態快取 """
         self._state = None
         self._legal_ids = None
         self._legal_mask = None
@@ -209,8 +206,7 @@ class UnoGame:
         if (self.players_size == 2): 
             # 兩人玩時 迴轉==禁止
             self.direc = 0
-        else: 
-            self.direc *= -1
+        else: self.direc *= -1
 
     def log(self) -> None:
         """ 輸出遊戲狀態 """
@@ -241,28 +237,30 @@ class UnoGame:
         print(f"Game Over! The Winner is Player{winner_index}")
 
     def get_tensor(self) -> Tensor:
-        """ 根據目前玩家將遊戲轉為向量 (快取：狀態沒變時直接回傳同一個張量，請勿原地修改) """
+        """ 根據目前玩家將遊戲轉為向量 """
         if (self._state is not None): return self._state
+        array: list[float]
         n: int = self.players_size
-        array: list[float] = [0.0] * (STATE_BASE + n)
+        array = [0.0]*(STATE_BASE+n)
         array[0] = self.deck.size() / DECK_SIZE
         for card in self.deck.played: array[1 + card.id] += 1.0
         for card in self.curr_player.hand: array[61 + card.id] += 1.0
-        # 牌頂 (含黑牌被指定的顏色)、效果、累加張數、方向 —— 這是判斷「哪些牌能出」最關鍵的資訊
+        # 牌頂/效果/累加張數/方向
         top: Card = self.deck.top
         array[121 + (top.id & 3)] = 1.0
         array[125 + (top.id >> 2)] = 1.0
         array[140] = 1.0 if (self.deck.has_effect) else 0.0
         array[141] = min(self.plus_sum / 8.0, 4.0)
         array[142] = 1.0 if (self.direc >= 0) else 0.0
-        # 各家張數：由自己開始依出牌順序排列 (視角旋轉)，同一個網路坐哪個位置都適用
+        # 各家張數: 由自己開始依出牌順序排列 (視角旋轉)
         for k in range(n): 
-            array[STATE_BASE + k] = self.players[(self.turn + k) % n].hand_size() / HAND_NORM
+            player: Player = self.players[(self.turn+k)%n]
+            array[STATE_BASE+k] = player.hand_size()/HAND_NORM
         self._state = torch.tensor(array, dtype=torch.float32)
         return self._state
 
     def legal_ids(self) -> list[int]:
-        """ 目前玩家所有可以打的牌 id (只掃手牌並去重，黑牌展開成 4 種顏色) """
+        """ 目前玩家所有可以打的牌 id (只掃手牌並去重, 黑牌展開成 4 種顏色) """
         if (self._legal_ids is not None): return self._legal_ids
         deck: Deck = self.deck
         ids: list[int] = []
@@ -283,11 +281,15 @@ class UnoGame:
         return ids
 
     def draw_allowed(self) -> bool:
-        """ 目前玩家可否選擇抽牌: 沒牌可出、被加牌/禁止時必須能抽；否則依 Rule.allow_voluntary_draw """
+        """ 
+            目前玩家可否選擇抽牌: 
+            沒牌可出/被加牌/禁止時必須能抽
+            否則依據 Rule.allow_voluntary_draw 
+        """
         return (Rule.allow_voluntary_draw or self.deck.has_effect or not self.legal_ids())
 
     def legal_mask(self) -> Tensor:
-        """ 61 維布林遮罩 (快取)，True 代表合法動作 """
+        """ 61 維布林遮罩 (快取), True 代表合法動作 """
         if (self._legal_mask is not None): return self._legal_mask
         mask: Tensor = torch.zeros(61, dtype=torch.bool)
         ids: list[int] = self.legal_ids()
@@ -356,13 +358,13 @@ class UnoGame:
         return list({id(agent): agent for agent in self.agents}.values())
 
     def _play_episode(self, max_steps: int) -> tuple[list[Step], int]:
-        """ 玩一整局，回傳 (所有決策點, 贏家編號), 截斷贏家則為-1 """
+        """ 玩一整局, 回傳 (所有決策點, 贏家編號), 截斷贏家則為-1 """
         self.reset()
         steps: list[Step] = []
         while (len(steps) < max_steps):
             p_index: int = self.turn
             agent: Agent = self.curr_agent
-            # 這兩個值會被快取，Agent 選動作時直接重複使用，不會重算
+            # 這兩個值會被快取, Agent 選動作時直接重複使用, 不會重算
             state: Tensor = self.get_tensor()
             mask: Tensor = self.legal_mask()
             forced: bool = (self.deck.has_effect or not self.legal_ids())
@@ -383,14 +385,10 @@ class UnoGame:
 
     @staticmethod
     def _build_transitions(
-        steps: list[Step], 
-        winner: int, 
-        only_player: int|None = None
+        steps: list[Step], winner: int, only_player: int|None = None
     ) -> list[tuple[Step, tuple[float, Tensor, Tensor, bool]|None]]:
-        """ 將軌跡轉成 (Step, (reward, next_state, next_mask, done)) 
-        - next_state / next_mask 是「同一位玩家下一次要做決策時」的狀態，這樣才符合 Bellman 方程式
-        - 終局 ±1 只加在每位玩家的最後一步，done=True；不再把終局獎勵灑在每一步 (折扣交給 gamma)
-        - 被截斷的局，每位玩家最後一步沒有 next_state，Q 不使用 (None)，但 SL 仍可使用
+        """ 將軌跡轉成 (Step, (reward, next_state, next_mask, done))
+            被截斷的局每位玩家最後一步沒有 next_state, Q 不使用, 但 SL 仍可使用
         """
         by_player: dict[int, list[Step]] = {}
         for step in steps: by_player.setdefault(step.player, []).append(step)
@@ -412,7 +410,7 @@ class UnoGame:
 
     def selfplay(self, num_episodes: int, max_steps: int = 500, log_every: int = 16, save_every: int = 0) -> None:
         """ 模型自我對戰訓練 (NFSP)
-        max_steps: 單局步數上限，超過視為截斷
+        max_steps: 單局步數上限, 超過視為截斷
         log_every: 每幾局輸出一次統計
         save_every: 每幾局存檔一次 (0 代表不中途存檔)
         """
@@ -470,14 +468,17 @@ class UnoGame:
         num_episodes: int, 
         q_trainer: DQNTrainer, 
         p_trainer: PolicyTrainer, 
-        target_player_idx: int|None = 0, 
+        target_player_index: int|None = 0, 
         max_steps: int = 500, 
         log_every: int = 64,
         train_q: bool = True
     ) -> None:
-        """ 模型交叉對戰訓練 (向 self.agents 中的示範者學習：只收集 target_player_idx 的經驗，None 代表所有座位都是示範者)
-        train_q: 是否也用示範資料訓練 Q 網路。示範者從不做的動作(如有牌可出卻抽牌)在資料裡沒有反例，
-                 Q 學習的 max 會引用這些「沒看過的動作」的外推值而發散 (離線 RL 的 OOD 動作問題)，建議 False，Q 交給 selfplay 學。
+        """ 模型交叉對戰訓練 
+            None 代表所有玩家都是 target_player
+            train_q: 是否也用示範資料訓練 Q 網路
+            示範者從不做的動作(如有牌可出卻抽牌)在資料裡沒有反例
+            Q 學習的 max 會引用這些沒看過的動作的外推值而發散 (離線 RL 的 OOD 動作問題)
+            通常把 Q 的訓練交給 selfplay 函數
         """
         self.deck.out = False   # 避免不必要的輸出
         print_device_info()     # 輸出一次使用裝置
@@ -495,8 +496,8 @@ class UnoGame:
             steps, winner = self._play_episode(max_steps)
             total_steps += len(steps)
             truncated   += (winner == -1)
-            target_wins += (winner == target_player_idx or (target_player_idx is None and winner == 0))
-            for step, transition in self._build_transitions(steps, winner, only_player=target_player_idx):
+            target_wins += (winner == target_player_index or (target_player_index is None and winner == 0))
+            for step, transition in self._build_transitions(steps, winner, only_player=target_player_index):
                 if (train_q and transition is not None):
                     reward: float
                     next_state: Tensor
@@ -520,10 +521,10 @@ class UnoGame:
                 q_losses.clear(); p_losses.clear()
     
     def game_loop(self, out: bool = True, max_steps: int|None = None) -> int:
-        """ 遊戲主迴圈，回傳贏家；若超過 max_steps 仍未分出勝負則回傳 -1 """
+        """ 遊戲主迴圈 (回傳贏家索引 or 截斷 == -1) """
+        steps: int = 0
         self.deck.out = out
         for agent in self._unique_agents(): agent.eval()
-        steps: int = 0
         # 主迴圈
         while True:
             if (max_steps is not None and steps >= max_steps): return -1
@@ -555,13 +556,13 @@ class UnoGame:
         table_path: str = "./ELO_table.txt",
         max_steps: int = 500
     ) -> None:
-        """ 掃描 networks 資料夾底下的模型後，做成 ELO 排名表儲存到 table_path
-        eta: 評估時使用 Q 網路的機率。NFSP 通常評估「平均策略」(Policy 網路)，所以預設 0
+        """ 掃描 networks 中的模型後做成 ELO table 儲存到 table_path
+            NFSP 通常評估 Policy Network, 所以預設 eta=0
         """
         discovered_models: dict[str, ModelInfo]
         discovered_models = self.scan_networks_info(networks_dir)
         self.elo_table = ELO_table(table_path)
-        # 同步更新模型資訊，並預設 ELO
+        # 同步更新模型資訊, 並預設 ELO
         for model_name, info in discovered_models.items():
             # 現有模型
             if (model_name in self.elo_table):
@@ -605,7 +606,7 @@ class UnoGame:
                 agents: list[Agent] = [RandomAgent(), RandomAgent()]
                 agents[ai_index] = tested_agent
                 try: 
-                    # 重建玩家前會先歸還手牌；tested_agent 已經載入過，不會再載入
+                    # 重建玩家前會先歸還手牌；tested_agent 已經載入過, 不會再載入
                     self._setup_players(agents)
                 except RuntimeError as error:
                     print(f"跳過模型 {model_name}: {error}")
@@ -623,9 +624,9 @@ class UnoGame:
         self.elo_table.save()
 
     def test_winrate(self, num_episodes: int = 100, max_steps: int = 500) -> dict[int, float]:
-        """ 對戰勝率測試 (座位輪流換；勝者依「原始 agent 編號」計數) """
+        """ 對戰勝率測試 (座位輪流換: 勝者依原始 agent 編號計數) """
         winrates: dict[int, float] = {}
-        # 注意: _setup_players() 會覆寫 self.agents，所以必須先備份原始順序
+        # _setup_players() 前先備份 self.agents 順序
         base_agents: list[Agent] = list(self.agents)
         num_agents: int = len(base_agents)
         if (num_agents == 0): return winrates

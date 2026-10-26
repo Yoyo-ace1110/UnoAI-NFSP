@@ -21,4 +21,3 @@ class Rule:
     # TODO
     # @staticmethod
     # def load_from(path: str) -> bool: ...
-    
