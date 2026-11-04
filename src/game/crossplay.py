@@ -16,7 +16,7 @@ uno_game.crossplay(
     num_episodes=512, 
     q_trainer=q_trainer, 
     p_trainer=p_trainer,
-    target_player_index=None,
+    target_player=None,
     max_steps=800
 )
 

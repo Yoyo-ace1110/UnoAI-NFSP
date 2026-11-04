@@ -486,7 +486,7 @@ class UnoGame:
         num_episodes: int, 
         q_trainer: DQNTrainer, 
         p_trainer: PolicyTrainer, 
-        target_player_index: int|None = 0, 
+        target_player: int|None = 0, 
         max_steps: int = 500, 
         log_every: int = 64,
         train_q: bool = True
@@ -514,8 +514,8 @@ class UnoGame:
             steps, winner = self._play_episode(max_steps)
             total_steps += len(steps)
             truncated   += (winner == -1)
-            target_wins += (winner == target_player_index or (target_player_index is None and winner == 0))
-            for step, transition in self._build_transitions(steps, winner, only_player=target_player_index):
+            target_wins += (winner == target_player or (target_player is None and winner == 0))
+            for step, transition in self._build_transitions(steps, winner, only_player=target_player):
                 if (train_q and transition is not None):
                     reward: float
                     next_state: Tensor

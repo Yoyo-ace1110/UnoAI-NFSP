@@ -1,607 +1,1182 @@
-已成功載入 Q-Network 權重: networks\2P_rule1\2_selfplay32768+\q_network_v1.bin
-已成功從 networks\2P_rule1\2_selfplay32768+\ReplayBuffer_v1.bin 讀取 ReplayBuffer (64000 筆, 其中 0 筆受保護)
-已成功從 networks\2P_rule1\2_selfplay32768+\ReservoirMemory_v1.bin 讀取 ReservoirMemory (64000 筆)
-已成功載入 Policy-Network 權重: networks\2P_rule1\2_selfplay32768+\p_network_v1.bin
-=== 勝率測試結果 (1000 局) ===
-Agent 0 勝率: 50.6% (506 勝)
-Agent 1 勝率: 49.4% (494 勝)
-平手/截斷率: 0.0% (0 和)
-
-C:\Users\katago\Desktop\Codes\UnoAI-NFSP>C:\Users\katago\AppData\Local\Programs\Python\Python313\python.exe c:/Users/katago/Desktop/Codes/UnoAI-NFSP/src/game/test_winrate.py
-找不到權重檔 networks\2P_rule1\1_crossplay512\q_network_v1.bin。
-無法從 networks\2P_rule1\1_crossplay512\ReplayBuffer_v1.bin 讀取 ReplayBuffer 
-無法從 networks\2P_rule1\1_crossplay512\ReservoirMemory_v1.bin 讀取 ReservoirMemory
-找不到權重檔 networks\2P_rule1\1_crossplay512\p_network_v1.bin
-Traceback (most recent call last):
-  File "c:\Users\katago\Desktop\Codes\UnoAI-NFSP\src\game\test_winrate.py", line 24, in <module>
-    uno_game.test_winrate(num_episodes=1000)
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
-  File "c:\Users\katago\Desktop\Codes\UnoAI-NFSP\src\engine\uno_game.py", line 652, in test_winrate
-    winner = self.game_loop(False, max_steps)
-  File "c:\Users\katago\Desktop\Codes\UnoAI-NFSP\src\engine\uno_game.py", line 540, in game_loop
-    played: Card|None = self.curr_player.genmove()
-                        ~~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "c:\Users\katago\Desktop\Codes\UnoAI-NFSP\src\engine\player.py", line 88, in genmove
-    prob_vec: tuple[float, ...] = self.agent.get_prob_vector()
-                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "c:\Users\katago\Desktop\Codes\UnoAI-NFSP\src\agents\AI_agent.py", line 158, in get_prob_vector
-    return self._policy()
-           ~~~~~~~~~~~~^^
-  File "c:\Users\katago\Desktop\Codes\UnoAI-NFSP\src\agents\AI_agent.py", line 185, in _policy
-    logits: Tensor = self._act_p(self.get_tensor().unsqueeze(0)).squeeze(0)
-                     ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\katago\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\nn\modules\module.py", line 1783, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
-  File "C:\Users\katago\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\nn\modules\module.py", line 1794, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "c:\Users\katago\Desktop\Codes\UnoAI-NFSP\src\models\p_network.py", line 30, in forward
-    x_ = F.relu(self.fc3(x_))
-                ~~~~~~~~^^^^
-  File "C:\Users\katago\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\nn\modules\module.py", line 1783, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
-  File "C:\Users\katago\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\nn\modules\module.py", line 1794, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "C:\Users\katago\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\nn\modules\linear.py", line 134, in forward
-    return F.linear(input, self.weight, self.bias)
-           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-KeyboardInterrupt
-^C
-C:\Users\katago\Desktop\Codes\UnoAI-NFSP>C:\Users\katago\AppData\Local\Programs\Python\Python313\python.exe c:/Users/katago/Desktop/Codes/UnoAI-NFSP/src/game/test_winrate.py
-已成功載入 Q-Network 權重: networks\2P_rule1\1_crossplay512+\q_network_v1.bin
-已成功從 networks\2P_rule1\1_crossplay512+\ReplayBuffer_v1.bin 讀取 ReplayBuffer (24977 筆, 其中 0 筆受保護)
-已成功從 networks\2P_rule1\1_crossplay512+\ReservoirMemory_v1.bin 讀取 ReservoirMemory (24977 筆)
-已成功載入 Policy-Network 權重: networks\2P_rule1\1_crossplay512+\p_network_v1.bin
-=== 勝率測試結果 (1000 局) ===
-Agent 0 勝率: 53.2% (532 勝)
-Agent 1 勝率: 46.8% (468 勝)
-平手/截斷率: 0.0% (0 和)
-
-C:\Users\katago\Desktop\Codes\UnoAI-NFSP>C:\Users\katago\AppData\Local\Programs\Python\Python313\python.exe c:/Users/katago/Desktop/Codes/UnoAI-NFSP/src/game/test_winrate.py
-已成功載入 Q-Network 權重: networks\2P_rule1\1_crossplay512+\q_network_v1.bin
-已成功從 networks\2P_rule1\1_crossplay512+\ReplayBuffer_v1.bin 讀取 ReplayBuffer (24977 筆, 其中 0 筆受保護)
-已成功從 networks\2P_rule1\1_crossplay512+\ReservoirMemory_v1.bin 讀取 ReservoirMemory (24977 筆)
-已成功載入 Policy-Network 權重: networks\2P_rule1\1_crossplay512+\p_network_v1.bin
-=== 勝率測試結果 (1000 局) ===
-Agent 0 勝率: 45.8% (458 勝)
-Agent 1 勝率: 54.2% (542 勝)
-平手/截斷率: 0.0% (0 和)
-
-C:\Users\katago\Desktop\Codes\UnoAI-NFSP>C:\Users\katago\AppData\Local\Programs\Python\Python313\python.exe c:/Users/katago/Desktop/Codes/UnoAI-NFSP/src/game/test_winrate.py
-已成功載入 Q-Network 權重: networks\2P_rule1\2_selfplay32768+\q_network_v1.bin
-已成功從 networks\2P_rule1\2_selfplay32768+\ReplayBuffer_v1.bin 讀取 ReplayBuffer (64000 筆, 其中 0 筆受保護)
-已成功從 networks\2P_rule1\2_selfplay32768+\ReservoirMemory_v1.bin 讀取 ReservoirMemory (64000 筆)
-已成功載入 Policy-Network 權重: networks\2P_rule1\2_selfplay32768+\p_network_v1.bin
-=== 勝率測試結果 (1000 局) ===
-Agent 0 勝率: 40.7% (407 勝)
-Agent 1 勝率: 59.3% (593 勝)
-平手/截斷率: 0.0% (0 和)
-
-C:\Users\katago\Desktop\Codes\UnoAI-NFSP>C:\Users\katago\AppData\Local\Programs\Python\Python313\python.exe c:/Users/katago/Desktop/Codes/UnoAI-NFSP/src/game/test_winrate.py
-已成功載入 Q-Network 權重: networks\2P_rule2\1_crossplay512+\q_network_v1.bin
-已成功從 networks\2P_rule2\1_crossplay512+\ReplayBuffer_v1.bin 讀取 ReplayBuffer (25934 筆, 其中 0 筆受保護)
-已成功從 networks\2P_rule2\1_crossplay512+\ReservoirMemory_v1.bin 讀取 ReservoirMemory (25934 筆)
-已成功載入 Policy-Network 權重: networks\2P_rule2\1_crossplay512+\p_network_v1.bin
-=== 勝率測試結果 (1000 局) ===
-Agent 0 勝率: 2.7% (27 勝)
-Agent 1 勝率: 96.7% (967 勝)
-平手/截斷率: 0.6% (6 和)
-
-C:\Users\katago\Desktop\Codes\UnoAI-NFSP>C:\Users\katago\AppData\Local\Programs\Python\Python313\python.exe c:/Users/katago/Desktop/Codes/UnoAI-NFSP/src/game/test_winrate.py
-已成功載入 Q-Network 權重: networks\2P_rule2\1_crossplay512+\q_network_v1.bin
-已成功從 networks\2P_rule2\1_crossplay512+\ReplayBuffer_v1.bin 讀取 ReplayBuffer (25934 筆, 其中 0 筆受保護)
-已成功從 networks\2P_rule2\1_crossplay512+\ReservoirMemory_v1.bin 讀取 ReservoirMemory (25934 筆)
-已成功載入 Policy-Network 權重: networks\2P_rule2\1_crossplay512+\p_network_v1.bin
-=== 勝率測試結果 (1000 局) ===
-Agent 0 勝率: 52.7% (527 勝)
-Agent 1 勝率: 47.3% (473 勝)
-平手/截斷率: 0.0% (0 和)
-
-C:\Users\katago\Desktop\Codes\UnoAI-NFSP>C:\Users\katago\AppData\Local\Programs\Python\Python313\python.exe c:/Users/katago/Desktop/Codes/UnoAI-NFSP/src/game/test_winrate.py
-已成功載入 Q-Network 權重: networks\2P_rule2\1_crossplay512+\q_network_v1.bin
-已成功從 networks\2P_rule2\1_crossplay512+\ReplayBuffer_v1.bin 讀取 ReplayBuffer (25934 筆, 其中 0 筆受保護)
-已成功從 networks\2P_rule2\1_crossplay512+\ReservoirMemory_v1.bin 讀取 ReservoirMemory (25934 筆)
-已成功載入 Policy-Network 權重: networks\2P_rule2\1_crossplay512+\p_network_v1.bin
-=== 勝率測試結果 (1000 局) ===
-Agent 0 勝率: 47.9% (479 勝)
-Agent 1 勝率: 52.1% (521 勝)
-平手/截斷率: 0.0% (0 和)
-
-C:\Users\katago\Desktop\Codes\UnoAI-NFSP>git add .
-
-C:\Users\katago\Desktop\Codes\UnoAI-NFSP>git commit -m "test winrate and train AI again with new code"
-[master 97fd781] test winrate and train AI again with new code
- 18 files changed, 1715 insertions(+), 10 deletions(-)
- create mode 100644 networks/2P_rule1/1_crossplay512+/ReplayBuffer_v1.bin
- create mode 100644 networks/2P_rule1/1_crossplay512+/ReservoirMemory_v1.bin
- create mode 100644 networks/2P_rule1/1_crossplay512+/p_network_v1.bin
- create mode 100644 networks/2P_rule1/1_crossplay512+/q_network_v1.bin
- create mode 100644 networks/2P_rule1/2_selfplay32768+/ReplayBuffer_v1.bin
- create mode 100644 networks/2P_rule1/2_selfplay32768+/ReservoirMemory_v1.bin
- create mode 100644 networks/2P_rule1/2_selfplay32768+/p_network_v1.bin
- create mode 100644 networks/2P_rule1/2_selfplay32768+/q_network_v1.bin
- create mode 100644 networks/2P_rule1/Winrate_table.txt
- create mode 100644 networks/2P_rule1/crossplay1.log
- create mode 100644 networks/2P_rule1/rule.txt
- create mode 100644 networks/2P_rule1/selfplay2.log
- create mode 100644 networks/2P_rule1/test_winrate.py
- create mode 100644 networks/2P_rule2/test_winrate.py
-
-C:\Users\katago\Desktop\Codes\UnoAI-NFSP>git push
-Enumerating objects: 34, done./8), 673 MB | 5.5 MB/s                                                                        
-Counting objects: 100% (34/34), done.
-Delta compression using up to 12 threads
-Compressing objects: 100% (26/26), done.
-Writing objects: 100% (26/26), 19.20 KiB | 1.75 MiB/s, done.
-Total 26 (delta 8), reused 0 (delta 0), pack-reused 0 (from 0)
-remote: Resolving deltas: 100% (8/8), completed with 6 local objects.
-To https://github.com/Yoyo-ace1110/UnoAI-NFSP
-   57f51bb..97fd781  master -> master
-
-C:\Users\katago\Desktop\Codes\UnoAI-NFSP>git pull
-remote: Enumerating objects: 10, done.
-remote: Counting objects: 100% (10/10), done.
-remote: Compressing objects: 100% (2/2), done.
-remote: Total 10 (delta 8), reused 10 (delta 8), pack-reused 0 (from 0)
-Unpacking objects: 100% (10/10), 1.30 KiB | 21.00 KiB/s, done.
-From https://github.com/Yoyo-ace1110/UnoAI-NFSP
-   97fd781..2de11f2  master     -> origin/master
-Updating 97fd781..2de11f2
-Fast-forward
- networks/2P_rule2/rule.txt |  2 +-
- src/agents/AI_agent.py     |  4 +++-
- src/models/q_network.py    | 13 ++++++++++++-
- 3 files changed, 16 insertions(+), 3 deletions(-)
-
-C:\Users\katago\Desktop\Codes\UnoAI-NFSP>C:\Users\katago\AppData\Local\Programs\Python\Python313\python.exe c:/Users/katago/Desktop/Codes/UnoAI-NFSP/src/game/selfplay.py
 已成功載入 Q-Network 權重: q_network_v1.bin
-已成功從 ReplayBuffer_v1.bin 讀取 ReplayBuffer (25934 筆, 其中 0 筆受保護)
-已成功從 ReservoirMemory_v1.bin 讀取 ReservoirMemory (25934 筆)
+已成功從 ReplayBuffer_v1.bin 讀取 ReplayBuffer (25328 筆, 其中 0 筆受保護)
+已成功從 ReservoirMemory_v1.bin 讀取 ReservoirMemory (25328 筆)
 已成功載入 Policy-Network 權重: p_network_v1.bin
 使用裝置: GPU (NVIDIA GeForce RTX 3050 Laptop GPU)
 開始進行 8192 局自我對戰
-已完成第 32 局 | 86.7 步/局 | 抽牌率 41.1% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1139 | P-loss 0.1199 | 0.14 秒/局
-已完成第 64 局 | 86.4 步/局 | 抽牌率 39.5% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1231 | P-loss 0.1304 | 0.10 秒/局
-已完成第 96 局 | 90.2 步/局 | 抽牌率 41.1% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1271 | P-loss 0.1320 | 0.10 秒/局
-已完成第 128 局 | 73.2 步/局 | 抽牌率 39.1% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1254 | P-loss 0.1372 | 0.09 秒/局
-已完成第 160 局 | 61.0 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1319 | P-loss 0.1379 | 0.09 秒/局
-已完成第 192 局 | 89.8 步/局 | 抽牌率 40.4% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1336 | P-loss 0.1385 | 0.09 秒/局
-已完成第 224 局 | 94.6 步/局 | 抽牌率 41.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1277 | P-loss 0.1394 | 0.09 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (46762 筆)
+已完成第 32 局 | 42.5 步/局 | 抽牌率 34.2% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1464 | P-loss 0.1780 | 0.13 秒/局
+已完成第 64 局 | 59.7 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1447 | P-loss 0.1865 | 0.10 秒/局
+已完成第 96 局 | 62.5 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1438 | P-loss 0.1966 | 0.09 秒/局
+已完成第 128 局 | 66.6 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1410 | P-loss 0.1877 | 0.08 秒/局
+已完成第 160 局 | 65.6 步/局 | 抽牌率 38.8% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1415 | P-loss 0.1438 | 0.08 秒/局
+已完成第 192 局 | 59.1 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1393 | P-loss 0.1689 | 0.08 秒/局
+已完成第 224 局 | 53.8 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1397 | P-loss 0.1880 | 0.08 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (40577 筆, 2.7 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (38732 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (26917 筆, 16.7 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 256 局 | 69.1 步/局 | 抽牌率 38.8% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1346 | P-loss 0.1397 | 0.08 秒/局
-已完成第 288 局 | 56.5 步/局 | 抽牌率 38.7% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1359 | P-loss 0.1377 | 0.08 秒/局
-已完成第 320 局 | 69.0 步/局 | 抽牌率 39.4% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1328 | P-loss 0.1324 | 0.08 秒/局
-已完成第 352 局 | 79.8 步/局 | 抽牌率 39.9% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1348 | P-loss 0.1400 | 0.08 秒/局
-已完成第 384 局 | 56.2 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1369 | P-loss 0.1343 | 0.08 秒/局
-已完成第 416 局 | 69.8 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1354 | P-loss 0.1448 | 0.08 秒/局
-已完成第 448 局 | 71.2 步/局 | 抽牌率 39.4% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1393 | P-loss 0.1412 | 0.08 秒/局
-已完成第 480 局 | 77.9 步/局 | 抽牌率 40.2% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1346 | P-loss 0.1370 | 0.08 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 256 局 | 66.8 步/局 | 抽牌率 38.5% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1369 | P-loss 0.1580 | 0.08 秒/局
+已完成第 288 局 | 55.9 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1360 | P-loss 0.1749 | 0.08 秒/局
+已完成第 320 局 | 56.8 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1372 | P-loss 0.1628 | 0.08 秒/局
+已完成第 352 局 | 55.8 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1364 | P-loss 0.1515 | 0.07 秒/局
+已完成第 384 局 | 66.6 步/局 | 抽牌率 39.2% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1345 | P-loss 0.1587 | 0.07 秒/局
+已完成第 416 局 | 58.0 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1349 | P-loss 0.1807 | 0.07 秒/局
+已完成第 448 局 | 78.8 步/局 | 抽牌率 39.7% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1310 | P-loss 0.1657 | 0.07 秒/局
+已完成第 480 局 | 55.8 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1293 | P-loss 0.1925 | 0.07 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (56886 筆, 3.8 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (50090 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (28664 筆, 17.7 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 512 局 | 68.0 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1364 | P-loss 0.1522 | 0.08 秒/局
-已完成第 544 局 | 76.9 步/局 | 抽牌率 39.2% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1355 | P-loss 0.1436 | 0.08 秒/局
-已完成第 576 局 | 63.1 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1381 | P-loss 0.1528 | 0.08 秒/局
-已完成第 608 局 | 74.7 步/局 | 抽牌率 39.4% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1385 | P-loss 0.1558 | 0.08 秒/局
-已完成第 640 局 | 68.1 步/局 | 抽牌率 39.2% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1437 | P-loss 0.1426 | 0.08 秒/局
-已完成第 672 局 | 60.7 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1417 | P-loss 0.1475 | 0.08 秒/局
-已完成第 704 局 | 54.3 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1437 | P-loss 0.1522 | 0.08 秒/局
-已完成第 736 局 | 71.3 步/局 | 抽牌率 38.5% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1420 | P-loss 0.1570 | 0.08 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 512 局 | 82.0 步/局 | 抽牌率 40.6% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1314 | P-loss 0.1813 | 0.07 秒/局
+已完成第 544 局 | 58.3 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1347 | P-loss 0.1729 | 0.07 秒/局
+已完成第 576 局 | 59.8 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1338 | P-loss 0.1675 | 0.07 秒/局
+已完成第 608 局 | 49.0 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1358 | P-loss 0.2006 | 0.07 秒/局
+已完成第 640 局 | 64.9 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1299 | P-loss 0.1734 | 0.07 秒/局
+已完成第 672 局 | 50.4 步/局 | 抽牌率 35.7% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1311 | P-loss 0.1810 | 0.07 秒/局
+已完成第 704 局 | 53.9 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1327 | P-loss 0.1748 | 0.07 秒/局
+已完成第 736 局 | 50.2 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1273 | P-loss 0.1512 | 0.07 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 4.6 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (61833 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (30206 筆, 18.7 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 768 局 | 71.8 步/局 | 抽牌率 38.7% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1436 | P-loss 0.1547 | 0.08 秒/局
-已完成第 800 局 | 61.1 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1464 | P-loss 0.1481 | 0.08 秒/局
-已完成第 832 局 | 64.2 步/局 | 抽牌率 38.6% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1440 | P-loss 0.1679 | 0.08 秒/局
-已完成第 864 局 | 75.2 步/局 | 抽牌率 39.3% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1427 | P-loss 0.1558 | 0.08 秒/局
-已完成第 896 局 | 65.2 步/局 | 抽牌率 38.9% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1407 | P-loss 0.1610 | 0.08 秒/局
-已完成第 928 局 | 79.6 步/局 | 抽牌率 39.1% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1457 | P-loss 0.1550 | 0.08 秒/局
-已完成第 960 局 | 45.8 步/局 | 抽牌率 35.2% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1448 | P-loss 0.1648 | 0.08 秒/局
-已完成第 992 局 | 63.4 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1455 | P-loss 0.1477 | 0.08 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 768 局 | 54.0 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1331 | P-loss 0.1623 | 0.07 秒/局
+已完成第 800 局 | 50.5 步/局 | 抽牌率 36.1% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1292 | P-loss 0.1707 | 0.07 秒/局
+已完成第 832 局 | 50.4 步/局 | 抽牌率 36.2% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1312 | P-loss 0.1734 | 0.07 秒/局
+已完成第 864 局 | 49.9 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1316 | P-loss 0.1731 | 0.07 秒/局
+已完成第 896 局 | 52.3 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1318 | P-loss 0.1874 | 0.07 秒/局
+已完成第 928 局 | 71.6 步/局 | 抽牌率 38.8% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1301 | P-loss 0.2073 | 0.07 秒/局
+已完成第 960 局 | 70.1 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1294 | P-loss 0.1788 | 0.07 秒/局
+已完成第 992 局 | 44.4 步/局 | 抽牌率 33.9% | 截斷 0 | 0號位勝率 28% | Q-loss 0.1310 | P-loss 0.1598 | 0.07 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 5.1 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (31674 筆, 19.6 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 1024 局 | 88.1 步/局 | 抽牌率 39.6% | 截斷 0 | 0號位勝率 84% | Q-loss 0.1418 | P-loss 0.1536 | 0.08 秒/局
-已完成第 1056 局 | 58.2 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1471 | P-loss 0.1528 | 0.08 秒/局
-已完成第 1088 局 | 58.7 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1417 | P-loss 0.1622 | 0.08 秒/局
-已完成第 1120 局 | 64.3 步/局 | 抽牌率 38.9% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1408 | P-loss 0.1491 | 0.08 秒/局
-已完成第 1152 局 | 66.1 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1443 | P-loss 0.1596 | 0.08 秒/局
-已完成第 1184 局 | 61.9 步/局 | 抽牌率 38.7% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1398 | P-loss 0.1570 | 0.08 秒/局
-已完成第 1216 局 | 48.9 步/局 | 抽牌率 35.7% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1433 | P-loss 0.1369 | 0.08 秒/局
-已完成第 1248 局 | 50.2 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1402 | P-loss 0.1487 | 0.08 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 1024 局 | 48.9 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 72% | Q-loss 0.1294 | P-loss 0.1570 | 0.07 秒/局
+已完成第 1056 局 | 63.6 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1281 | P-loss 0.1832 | 0.07 秒/局
+已完成第 1088 局 | 58.8 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1282 | P-loss 0.1823 | 0.07 秒/局
+已完成第 1120 局 | 91.9 步/局 | 抽牌率 40.5% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1304 | P-loss 0.1872 | 0.07 秒/局
+已完成第 1152 局 | 55.1 步/局 | 抽牌率 35.7% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1267 | P-loss 0.1744 | 0.07 秒/局
+已完成第 1184 局 | 58.8 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1248 | P-loss 0.1543 | 0.07 秒/局
+已完成第 1216 局 | 54.3 步/局 | 抽牌率 36.2% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1259 | P-loss 0.1627 | 0.07 秒/局
+已完成第 1248 局 | 60.2 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1250 | P-loss 0.1704 | 0.07 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 5.5 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (33413 筆, 20.7 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 1280 局 | 71.0 步/局 | 抽牌率 39.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1452 | P-loss 0.1514 | 0.08 秒/局
-已完成第 1312 局 | 56.9 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 34% | Q-loss 0.1406 | P-loss 0.1601 | 0.08 秒/局
-已完成第 1344 局 | 54.4 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1415 | P-loss 0.1468 | 0.08 秒/局
-已完成第 1376 局 | 58.1 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1412 | P-loss 0.1510 | 0.08 秒/局
-已完成第 1408 局 | 63.4 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1430 | P-loss 0.1484 | 0.07 秒/局
-已完成第 1440 局 | 76.1 步/局 | 抽牌率 39.7% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1387 | P-loss 0.1476 | 0.08 秒/局
-已完成第 1472 局 | 61.2 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1407 | P-loss 0.1410 | 0.08 秒/局
-已完成第 1504 局 | 58.7 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1366 | P-loss 0.1350 | 0.07 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 1280 局 | 61.8 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1262 | P-loss 0.1734 | 0.07 秒/局
+已完成第 1312 局 | 58.9 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1226 | P-loss 0.1552 | 0.07 秒/局
+已完成第 1344 局 | 51.0 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1288 | P-loss 0.1524 | 0.07 秒/局
+已完成第 1376 局 | 58.4 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1251 | P-loss 0.1732 | 0.07 秒/局
+已完成第 1408 局 | 51.9 步/局 | 抽牌率 35.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1272 | P-loss 0.1685 | 0.07 秒/局
+已完成第 1440 局 | 61.4 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1244 | P-loss 0.1560 | 0.07 秒/局
+已完成第 1472 局 | 68.2 步/局 | 抽牌率 39.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1213 | P-loss 0.1939 | 0.07 秒/局
+已完成第 1504 局 | 61.1 步/局 | 抽牌率 38.6% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1235 | P-loss 0.1635 | 0.07 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 5.7 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (35018 筆, 21.7 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 1536 局 | 69.9 步/局 | 抽牌率 38.5% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1357 | P-loss 0.1532 | 0.08 秒/局
-已完成第 1568 局 | 54.4 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1399 | P-loss 0.1307 | 0.08 秒/局
-已完成第 1600 局 | 66.7 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1343 | P-loss 0.1398 | 0.08 秒/局
-已完成第 1632 局 | 52.3 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 75% | Q-loss 0.1363 | P-loss 0.1437 | 0.07 秒/局
-已完成第 1664 局 | 58.4 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1383 | P-loss 0.1340 | 0.07 秒/局
-已完成第 1696 局 | 67.5 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1343 | P-loss 0.1271 | 0.07 秒/局
-已完成第 1728 局 | 53.6 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1346 | P-loss 0.1143 | 0.07 秒/局
-已完成第 1760 局 | 47.8 步/局 | 抽牌率 36.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1357 | P-loss 0.1345 | 0.07 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 1536 局 | 55.3 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1250 | P-loss 0.1648 | 0.07 秒/局
+已完成第 1568 局 | 81.2 步/局 | 抽牌率 39.8% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1245 | P-loss 0.1554 | 0.07 秒/局
+已完成第 1600 局 | 55.5 步/局 | 抽牌率 36.8% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1224 | P-loss 0.1589 | 0.07 秒/局
+已完成第 1632 局 | 58.8 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1247 | P-loss 0.1580 | 0.07 秒/局
+已完成第 1664 局 | 50.0 步/局 | 抽牌率 35.4% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1231 | P-loss 0.1618 | 0.07 秒/局
+已完成第 1696 局 | 49.4 步/局 | 抽牌率 35.7% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1200 | P-loss 0.1906 | 0.07 秒/局
+已完成第 1728 局 | 67.1 步/局 | 抽牌率 38.8% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1215 | P-loss 0.1609 | 0.07 秒/局
+已完成第 1760 局 | 56.2 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1195 | P-loss 0.1550 | 0.07 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 5.8 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (36680 筆, 22.7 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 1792 局 | 47.2 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1349 | P-loss 0.1264 | 0.07 秒/局
-已完成第 1824 局 | 63.8 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1320 | P-loss 0.1308 | 0.07 秒/局
-已完成第 1856 局 | 50.5 步/局 | 抽牌率 35.4% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1306 | P-loss 0.1194 | 0.07 秒/局
-已完成第 1888 局 | 51.4 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1279 | P-loss 0.1288 | 0.07 秒/局
-已完成第 1920 局 | 48.6 步/局 | 抽牌率 35.4% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1257 | P-loss 0.1137 | 0.07 秒/局
-已完成第 1952 局 | 39.9 步/局 | 抽牌率 33.0% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1306 | P-loss 0.1273 | 0.07 秒/局
-已完成第 1984 局 | 54.8 步/局 | 抽牌率 35.8% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1316 | P-loss 0.1153 | 0.07 秒/局
-已完成第 2016 局 | 47.9 步/局 | 抽牌率 34.6% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1254 | P-loss 0.1298 | 0.07 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 1792 局 | 49.8 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1221 | P-loss 0.1603 | 0.07 秒/局
+已完成第 1824 局 | 46.7 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1205 | P-loss 0.1681 | 0.07 秒/局
+已完成第 1856 局 | 66.4 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1191 | P-loss 0.1853 | 0.07 秒/局
+已完成第 1888 局 | 67.0 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1189 | P-loss 0.1658 | 0.07 秒/局
+已完成第 1920 局 | 38.8 步/局 | 抽牌率 33.7% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1191 | P-loss 0.1726 | 0.07 秒/局
+已完成第 1952 局 | 49.8 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1209 | P-loss 0.1527 | 0.07 秒/局
+已完成第 1984 局 | 61.2 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1194 | P-loss 0.1879 | 0.07 秒/局
+已完成第 2016 局 | 58.0 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1234 | P-loss 0.1741 | 0.07 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 5.9 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (38165 筆, 23.6 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 2048 局 | 62.8 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1280 | P-loss 0.1243 | 0.07 秒/局
-已完成第 2080 局 | 72.1 步/局 | 抽牌率 38.9% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1288 | P-loss 0.1172 | 0.07 秒/局
-已完成第 2112 局 | 51.2 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1233 | P-loss 0.1174 | 0.07 秒/局
-已完成第 2144 局 | 65.7 步/局 | 抽牌率 38.6% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1263 | P-loss 0.1150 | 0.07 秒/局
-已完成第 2176 局 | 64.6 步/局 | 抽牌率 39.2% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1197 | P-loss 0.1115 | 0.07 秒/局
-已完成第 2208 局 | 55.2 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1260 | P-loss 0.1024 | 0.07 秒/局
-已完成第 2240 局 | 50.4 步/局 | 抽牌率 35.8% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1276 | P-loss 0.1126 | 0.07 秒/局
-已完成第 2272 局 | 53.4 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1225 | P-loss 0.1117 | 0.07 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 2048 局 | 51.3 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1191 | P-loss 0.1765 | 0.07 秒/局
+已完成第 2080 局 | 42.6 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1201 | P-loss 0.1969 | 0.07 秒/局
+已完成第 2112 局 | 68.6 步/局 | 抽牌率 39.1% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1168 | P-loss 0.1684 | 0.07 秒/局
+已完成第 2144 局 | 52.8 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1146 | P-loss 0.1695 | 0.07 秒/局
+已完成第 2176 局 | 43.1 步/局 | 抽牌率 34.7% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1182 | P-loss 0.1628 | 0.07 秒/局
+已完成第 2208 局 | 40.2 步/局 | 抽牌率 33.8% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1204 | P-loss 0.1814 | 0.07 秒/局
+已完成第 2240 局 | 67.6 步/局 | 抽牌率 38.7% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1165 | P-loss 0.1770 | 0.07 秒/局
+已完成第 2272 局 | 66.7 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1175 | P-loss 0.1530 | 0.07 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.0 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (39773 筆, 24.6 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 2304 局 | 55.0 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1242 | P-loss 0.1030 | 0.07 秒/局
-已完成第 2336 局 | 59.4 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1254 | P-loss 0.1019 | 0.07 秒/局
-已完成第 2368 局 | 62.8 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 72% | Q-loss 0.1201 | P-loss 0.1115 | 0.07 秒/局
-已完成第 2400 局 | 48.5 步/局 | 抽牌率 35.4% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1216 | P-loss 0.1173 | 0.07 秒/局
-已完成第 2432 局 | 46.8 步/局 | 抽牌率 34.2% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1183 | P-loss 0.1003 | 0.07 秒/局
-已完成第 2464 局 | 45.8 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1210 | P-loss 0.1007 | 0.07 秒/局
-已完成第 2496 局 | 56.2 步/局 | 抽牌率 36.8% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1232 | P-loss 0.0949 | 0.07 秒/局
-已完成第 2528 局 | 61.3 步/局 | 抽牌率 39.0% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1179 | P-loss 0.1051 | 0.07 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 2304 局 | 51.8 步/局 | 抽牌率 36.2% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1185 | P-loss 0.1799 | 0.07 秒/局
+已完成第 2336 局 | 60.8 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1152 | P-loss 0.1658 | 0.07 秒/局
+已完成第 2368 局 | 46.3 步/局 | 抽牌率 35.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1154 | P-loss 0.1959 | 0.07 秒/局
+已完成第 2400 局 | 49.5 步/局 | 抽牌率 35.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1150 | P-loss 0.1541 | 0.07 秒/局
+已完成第 2432 局 | 55.6 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1137 | P-loss 0.1480 | 0.07 秒/局
+已完成第 2464 局 | 57.4 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1138 | P-loss 0.1397 | 0.07 秒/局
+已完成第 2496 局 | 53.8 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1164 | P-loss 0.1780 | 0.06 秒/局
+已完成第 2528 局 | 57.8 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1142 | P-loss 0.1570 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.1 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (41348 筆, 25.6 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 2560 局 | 66.1 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1197 | P-loss 0.0993 | 0.07 秒/局
-已完成第 2592 局 | 60.6 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1201 | P-loss 0.0858 | 0.07 秒/局
-已完成第 2624 局 | 53.2 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1249 | P-loss 0.0985 | 0.07 秒/局
-已完成第 2656 局 | 40.8 步/局 | 抽牌率 34.3% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1197 | P-loss 0.1006 | 0.07 秒/局
-已完成第 2688 局 | 53.0 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1213 | P-loss 0.1001 | 0.07 秒/局
-已完成第 2720 局 | 67.2 步/局 | 抽牌率 38.8% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1174 | P-loss 0.0908 | 0.07 秒/局
-已完成第 2752 局 | 53.4 步/局 | 抽牌率 36.8% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1136 | P-loss 0.0908 | 0.07 秒/局
-已完成第 2784 局 | 47.7 步/局 | 抽牌率 35.5% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1129 | P-loss 0.0855 | 0.07 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 2560 局 | 54.1 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1177 | P-loss 0.1480 | 0.07 秒/局
+已完成第 2592 局 | 55.5 步/局 | 抽牌率 36.2% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1188 | P-loss 0.1630 | 0.07 秒/局
+已完成第 2624 局 | 56.8 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1138 | P-loss 0.1647 | 0.07 秒/局
+已完成第 2656 局 | 46.2 步/局 | 抽牌率 35.1% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1164 | P-loss 0.1652 | 0.06 秒/局
+已完成第 2688 局 | 58.2 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1144 | P-loss 0.1556 | 0.06 秒/局
+已完成第 2720 局 | 64.8 步/局 | 抽牌率 38.9% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1148 | P-loss 0.2062 | 0.06 秒/局
+已完成第 2752 局 | 51.8 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1153 | P-loss 0.1635 | 0.06 秒/局
+已完成第 2784 局 | 51.1 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1142 | P-loss 0.1691 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.1 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (42933 筆, 26.6 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 2816 局 | 58.2 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1187 | P-loss 0.0921 | 0.07 秒/局
-已完成第 2848 局 | 47.1 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1151 | P-loss 0.0929 | 0.07 秒/局
-已完成第 2880 局 | 40.1 步/局 | 抽牌率 33.4% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1153 | P-loss 0.0897 | 0.07 秒/局
-已完成第 2912 局 | 58.1 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1168 | P-loss 0.0921 | 0.07 秒/局
-已完成第 2944 局 | 57.0 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1181 | P-loss 0.0929 | 0.07 秒/局
-已完成第 2976 局 | 64.1 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1165 | P-loss 0.0926 | 0.07 秒/局
-已完成第 3008 局 | 47.1 步/局 | 抽牌率 35.5% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1153 | P-loss 0.0895 | 0.07 秒/局
-已完成第 3040 局 | 56.1 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1188 | P-loss 0.0916 | 0.07 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 2816 局 | 62.2 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1132 | P-loss 0.1624 | 0.06 秒/局
+已完成第 2848 局 | 48.1 步/局 | 抽牌率 35.4% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1102 | P-loss 0.1619 | 0.06 秒/局
+已完成第 2880 局 | 46.7 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1135 | P-loss 0.1711 | 0.06 秒/局
+已完成第 2912 局 | 48.2 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1135 | P-loss 0.1375 | 0.06 秒/局
+已完成第 2944 局 | 65.6 步/局 | 抽牌率 38.6% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1132 | P-loss 0.1784 | 0.06 秒/局
+已完成第 2976 局 | 63.3 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1121 | P-loss 0.1678 | 0.06 秒/局
+已完成第 3008 局 | 63.8 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1122 | P-loss 0.1894 | 0.06 秒/局
+已完成第 3040 局 | 48.3 步/局 | 抽牌率 36.1% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1104 | P-loss 0.1460 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.2 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (44574 筆, 27.6 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 3072 局 | 52.6 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1159 | P-loss 0.0864 | 0.07 秒/局
-已完成第 3104 局 | 44.5 步/局 | 抽牌率 35.2% | 截斷 0 | 0號位勝率 72% | Q-loss 0.1158 | P-loss 0.0772 | 0.07 秒/局
-已完成第 3136 局 | 51.2 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1160 | P-loss 0.0898 | 0.07 秒/局
-已完成第 3168 局 | 57.1 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1199 | P-loss 0.0943 | 0.07 秒/局
-已完成第 3200 局 | 54.1 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1138 | P-loss 0.0822 | 0.07 秒/局
-已完成第 3232 局 | 56.8 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1184 | P-loss 0.0831 | 0.07 秒/局
-已完成第 3264 局 | 61.8 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1138 | P-loss 0.0785 | 0.07 秒/局
-已完成第 3296 局 | 43.4 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1137 | P-loss 0.0762 | 0.07 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 3072 局 | 58.1 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1153 | P-loss 0.1364 | 0.06 秒/局
+已完成第 3104 局 | 55.1 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1140 | P-loss 0.1631 | 0.06 秒/局
+已完成第 3136 局 | 60.4 步/局 | 抽牌率 36.8% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1119 | P-loss 0.1741 | 0.06 秒/局
+已完成第 3168 局 | 51.7 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1127 | P-loss 0.1978 | 0.06 秒/局
+已完成第 3200 局 | 60.7 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1110 | P-loss 0.1499 | 0.06 秒/局
+已完成第 3232 局 | 56.3 步/局 | 抽牌率 36.8% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1080 | P-loss 0.1677 | 0.06 秒/局
+已完成第 3264 局 | 60.9 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1121 | P-loss 0.1772 | 0.06 秒/局
+已完成第 3296 局 | 58.2 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1191 | P-loss 0.1707 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.2 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (46217 筆, 28.6 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 3328 局 | 58.7 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1144 | P-loss 0.0822 | 0.07 秒/局
-已完成第 3360 局 | 65.7 步/局 | 抽牌率 38.7% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1150 | P-loss 0.0743 | 0.07 秒/局
-已完成第 3392 局 | 59.6 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1123 | P-loss 0.0807 | 0.07 秒/局
-已完成第 3424 局 | 52.5 步/局 | 抽牌率 36.8% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1134 | P-loss 0.0740 | 0.07 秒/局
-已完成第 3456 局 | 49.9 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1153 | P-loss 0.0823 | 0.07 秒/局
-已完成第 3488 局 | 45.6 步/局 | 抽牌率 35.7% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1181 | P-loss 0.0690 | 0.07 秒/局
-已完成第 3520 局 | 55.9 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1138 | P-loss 0.0675 | 0.07 秒/局
-已完成第 3552 局 | 60.3 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1154 | P-loss 0.0721 | 0.07 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 3328 局 | 46.2 步/局 | 抽牌率 34.5% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1159 | P-loss 0.1425 | 0.06 秒/局
+已完成第 3360 局 | 65.3 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1144 | P-loss 0.1380 | 0.06 秒/局
+已完成第 3392 局 | 41.9 步/局 | 抽牌率 32.6% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1139 | P-loss 0.1827 | 0.06 秒/局
+已完成第 3424 局 | 46.5 步/局 | 抽牌率 34.6% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1145 | P-loss 0.1560 | 0.06 秒/局
+已完成第 3456 局 | 74.7 步/局 | 抽牌率 39.0% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1147 | P-loss 0.1850 | 0.06 秒/局
+已完成第 3488 局 | 59.4 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1114 | P-loss 0.1677 | 0.06 秒/局
+已完成第 3520 局 | 59.2 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1103 | P-loss 0.1764 | 0.06 秒/局
+已完成第 3552 局 | 51.9 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1118 | P-loss 0.1463 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.3 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (47950 筆, 29.7 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 3584 局 | 53.3 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1102 | P-loss 0.0769 | 0.07 秒/局
-已完成第 3616 局 | 51.8 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1106 | P-loss 0.0716 | 0.07 秒/局
-已完成第 3648 局 | 59.0 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1147 | P-loss 0.0737 | 0.07 秒/局
-已完成第 3680 局 | 68.9 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1142 | P-loss 0.0627 | 0.07 秒/局
-已完成第 3712 局 | 54.6 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1142 | P-loss 0.0774 | 0.07 秒/局
-已完成第 3744 局 | 60.6 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1138 | P-loss 0.0670 | 0.07 秒/局
-已完成第 3776 局 | 50.6 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1114 | P-loss 0.0734 | 0.07 秒/局
-已完成第 3808 局 | 56.9 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1095 | P-loss 0.0691 | 0.07 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 3584 局 | 60.6 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1120 | P-loss 0.1786 | 0.06 秒/局
+已完成第 3616 局 | 61.7 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1123 | P-loss 0.1833 | 0.06 秒/局
+已完成第 3648 局 | 58.7 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1147 | P-loss 0.1628 | 0.06 秒/局
+已完成第 3680 局 | 64.3 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 31% | Q-loss 0.1138 | P-loss 0.1823 | 0.06 秒/局
+已完成第 3712 局 | 66.5 步/局 | 抽牌率 39.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1117 | P-loss 0.1539 | 0.06 秒/局
+已完成第 3744 局 | 46.4 步/局 | 抽牌率 35.4% | 截斷 0 | 0號位勝率 72% | Q-loss 0.1120 | P-loss 0.1584 | 0.06 秒/局
+已完成第 3776 局 | 51.6 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1110 | P-loss 0.1534 | 0.06 秒/局
+已完成第 3808 局 | 50.3 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1138 | P-loss 0.1650 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.3 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (49624 筆, 30.7 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 3840 局 | 46.9 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1120 | P-loss 0.0692 | 0.07 秒/局
-已完成第 3872 局 | 49.9 步/局 | 抽牌率 35.7% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1153 | P-loss 0.0687 | 0.07 秒/局
-已完成第 3904 局 | 55.9 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1121 | P-loss 0.0670 | 0.07 秒/局
-已完成第 3936 局 | 45.5 步/局 | 抽牌率 34.5% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1150 | P-loss 0.0565 | 0.07 秒/局
-已完成第 3968 局 | 51.4 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1124 | P-loss 0.0615 | 0.06 秒/局
-已完成第 4000 局 | 56.8 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1118 | P-loss 0.0652 | 0.06 秒/局
-已完成第 4032 局 | 45.2 步/局 | 抽牌率 35.7% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1078 | P-loss 0.0597 | 0.06 秒/局
-已完成第 4064 局 | 50.7 步/局 | 抽牌率 35.7% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1106 | P-loss 0.0623 | 0.06 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 3840 局 | 57.0 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1112 | P-loss 0.1471 | 0.06 秒/局
+已完成第 3872 局 | 59.0 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1134 | P-loss 0.1512 | 0.06 秒/局
+已完成第 3904 局 | 46.2 步/局 | 抽牌率 35.1% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1089 | P-loss 0.1727 | 0.06 秒/局
+已完成第 3936 局 | 45.8 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1105 | P-loss 0.1726 | 0.06 秒/局
+已完成第 3968 局 | 71.0 步/局 | 抽牌率 39.7% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1126 | P-loss 0.1649 | 0.06 秒/局
+已完成第 4000 局 | 46.7 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1113 | P-loss 0.1572 | 0.06 秒/局
+已完成第 4032 局 | 68.4 步/局 | 抽牌率 39.4% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1105 | P-loss 0.1779 | 0.06 秒/局
+已完成第 4064 局 | 69.2 步/局 | 抽牌率 39.1% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1083 | P-loss 0.1850 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.3 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (51395 筆, 31.8 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 4096 局 | 41.6 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1113 | P-loss 0.0745 | 0.06 秒/局
-已完成第 4128 局 | 76.5 步/局 | 抽牌率 38.6% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1168 | P-loss 0.0686 | 0.06 秒/局
-已完成第 4160 局 | 52.0 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1136 | P-loss 0.0680 | 0.06 秒/局
-已完成第 4192 局 | 49.2 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1140 | P-loss 0.0622 | 0.06 秒/局
-已完成第 4224 局 | 49.2 步/局 | 抽牌率 35.3% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1124 | P-loss 0.0630 | 0.06 秒/局
-已完成第 4256 局 | 46.7 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1106 | P-loss 0.0598 | 0.06 秒/局
-已完成第 4288 局 | 60.4 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1131 | P-loss 0.0656 | 0.06 秒/局
-已完成第 4320 局 | 57.6 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1094 | P-loss 0.0674 | 0.06 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 4096 局 | 70.7 步/局 | 抽牌率 38.6% | 截斷 0 | 0號位勝率 75% | Q-loss 0.1091 | P-loss 0.1803 | 0.06 秒/局
+已完成第 4128 局 | 53.8 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1096 | P-loss 0.1789 | 0.06 秒/局
+已完成第 4160 局 | 47.0 步/局 | 抽牌率 35.7% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1062 | P-loss 0.1708 | 0.06 秒/局
+已完成第 4192 局 | 45.7 步/局 | 抽牌率 35.5% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1034 | P-loss 0.1716 | 0.06 秒/局
+已完成第 4224 局 | 55.0 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1096 | P-loss 0.1838 | 0.06 秒/局
+已完成第 4256 局 | 54.0 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1097 | P-loss 0.1811 | 0.06 秒/局
+已完成第 4288 局 | 50.1 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1115 | P-loss 0.1780 | 0.06 秒/局
+已完成第 4320 局 | 44.0 步/局 | 抽牌率 34.3% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1152 | P-loss 0.1669 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.3 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (52869 筆, 32.7 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 4352 局 | 55.2 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1078 | P-loss 0.0635 | 0.06 秒/局
-已完成第 4384 局 | 68.0 步/局 | 抽牌率 38.5% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1065 | P-loss 0.0544 | 0.06 秒/局
-已完成第 4416 局 | 59.0 步/局 | 抽牌率 38.5% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1130 | P-loss 0.0653 | 0.06 秒/局
-已完成第 4448 局 | 66.9 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1145 | P-loss 0.0525 | 0.06 秒/局
-已完成第 4480 局 | 41.7 步/局 | 抽牌率 33.9% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1125 | P-loss 0.0613 | 0.06 秒/局
-已完成第 4512 局 | 49.2 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1109 | P-loss 0.0618 | 0.06 秒/局
-已完成第 4544 局 | 51.7 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1160 | P-loss 0.0601 | 0.06 秒/局
-已完成第 4576 局 | 55.2 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1131 | P-loss 0.0627 | 0.06 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 4352 局 | 46.8 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1123 | P-loss 0.1670 | 0.06 秒/局
+已完成第 4384 局 | 53.5 步/局 | 抽牌率 36.8% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1073 | P-loss 0.1878 | 0.06 秒/局
+已完成第 4416 局 | 69.2 步/局 | 抽牌率 39.5% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1118 | P-loss 0.1859 | 0.06 秒/局
+已完成第 4448 局 | 58.9 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1071 | P-loss 0.2003 | 0.06 秒/局
+已完成第 4480 局 | 39.9 步/局 | 抽牌率 34.6% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1096 | P-loss 0.2074 | 0.06 秒/局
+已完成第 4512 局 | 52.1 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1039 | P-loss 0.1992 | 0.06 秒/局
+已完成第 4544 局 | 46.7 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1087 | P-loss 0.1630 | 0.06 秒/局
+已完成第 4576 局 | 63.8 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1118 | P-loss 0.1769 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.4 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (54540 筆, 33.8 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 4608 局 | 73.3 步/局 | 抽牌率 39.6% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1110 | P-loss 0.0562 | 0.06 秒/局
-已完成第 4640 局 | 58.8 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1098 | P-loss 0.0495 | 0.06 秒/局
-已完成第 4672 局 | 47.4 步/局 | 抽牌率 35.7% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1097 | P-loss 0.0576 | 0.06 秒/局
-已完成第 4704 局 | 54.1 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1138 | P-loss 0.0525 | 0.06 秒/局
-已完成第 4736 局 | 45.4 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1178 | P-loss 0.0508 | 0.06 秒/局
-已完成第 4768 局 | 51.9 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1137 | P-loss 0.0562 | 0.06 秒/局
-已完成第 4800 局 | 40.9 步/局 | 抽牌率 34.5% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1124 | P-loss 0.0464 | 0.06 秒/局
-已完成第 4832 局 | 47.8 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1139 | P-loss 0.0642 | 0.06 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 4608 局 | 55.7 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1058 | P-loss 0.1569 | 0.06 秒/局
+已完成第 4640 局 | 38.2 步/局 | 抽牌率 32.8% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1114 | P-loss 0.1510 | 0.06 秒/局
+已完成第 4672 局 | 57.0 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1132 | P-loss 0.1345 | 0.06 秒/局
+已完成第 4704 局 | 51.6 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1118 | P-loss 0.1813 | 0.06 秒/局
+已完成第 4736 局 | 53.7 步/局 | 抽牌率 36.1% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1082 | P-loss 0.1641 | 0.06 秒/局
+已完成第 4768 局 | 53.2 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1054 | P-loss 0.1749 | 0.06 秒/局
+已完成第 4800 局 | 53.9 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1073 | P-loss 0.1685 | 0.06 秒/局
+已完成第 4832 局 | 43.8 步/局 | 抽牌率 34.6% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1083 | P-loss 0.1874 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.4 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (56110 筆, 34.7 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 4864 局 | 52.3 步/局 | 抽牌率 36.1% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1142 | P-loss 0.0667 | 0.06 秒/局
-已完成第 4896 局 | 46.2 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1121 | P-loss 0.0484 | 0.06 秒/局
-已完成第 4928 局 | 64.7 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1124 | P-loss 0.0569 | 0.06 秒/局
-已完成第 4960 局 | 65.7 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1101 | P-loss 0.0656 | 0.06 秒/局
-已完成第 4992 局 | 60.6 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1099 | P-loss 0.0581 | 0.06 秒/局
-已完成第 5024 局 | 62.6 步/局 | 抽牌率 38.6% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1121 | P-loss 0.0637 | 0.06 秒/局
-已完成第 5056 局 | 60.3 步/局 | 抽牌率 38.7% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1097 | P-loss 0.0531 | 0.06 秒/局
-已完成第 5088 局 | 69.1 步/局 | 抽牌率 39.2% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1112 | P-loss 0.0509 | 0.06 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 4864 局 | 55.7 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1042 | P-loss 0.1583 | 0.06 秒/局
+已完成第 4896 局 | 55.1 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1065 | P-loss 0.1793 | 0.06 秒/局
+已完成第 4928 局 | 56.3 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 75% | Q-loss 0.1104 | P-loss 0.1785 | 0.06 秒/局
+已完成第 4960 局 | 55.0 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1104 | P-loss 0.1602 | 0.06 秒/局
+已完成第 4992 局 | 44.8 步/局 | 抽牌率 33.9% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1120 | P-loss 0.1872 | 0.06 秒/局
+已完成第 5024 局 | 43.7 步/局 | 抽牌率 34.6% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1121 | P-loss 0.1722 | 0.06 秒/局
+已完成第 5056 局 | 47.0 步/局 | 抽牌率 35.5% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1112 | P-loss 0.1384 | 0.06 秒/局
+已完成第 5088 局 | 56.4 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1082 | P-loss 0.1759 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.4 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (57675 筆, 35.7 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 5120 局 | 56.6 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1106 | P-loss 0.0497 | 0.06 秒/局
-已完成第 5152 局 | 52.8 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 72% | Q-loss 0.1080 | P-loss 0.0444 | 0.06 秒/局
-已完成第 5184 局 | 48.2 步/局 | 抽牌率 34.5% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1104 | P-loss 0.0586 | 0.06 秒/局
-已完成第 5216 局 | 43.7 步/局 | 抽牌率 35.8% | 截斷 0 | 0號位勝率 81% | Q-loss 0.1073 | P-loss 0.0540 | 0.06 秒/局
-已完成第 5248 局 | 68.7 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1107 | P-loss 0.0547 | 0.06 秒/局
-已完成第 5280 局 | 59.0 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1112 | P-loss 0.0517 | 0.06 秒/局
-已完成第 5312 局 | 56.0 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1098 | P-loss 0.0552 | 0.06 秒/局
-已完成第 5344 局 | 55.8 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1100 | P-loss 0.0474 | 0.06 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 5120 局 | 57.6 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 72% | Q-loss 0.1098 | P-loss 0.1676 | 0.06 秒/局
+已完成第 5152 局 | 60.9 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 34% | Q-loss 0.1091 | P-loss 0.1658 | 0.06 秒/局
+已完成第 5184 局 | 55.9 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1083 | P-loss 0.1699 | 0.06 秒/局
+已完成第 5216 局 | 58.6 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1084 | P-loss 0.1938 | 0.06 秒/局
+已完成第 5248 局 | 47.0 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1038 | P-loss 0.1644 | 0.06 秒/局
+已完成第 5280 局 | 51.6 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1079 | P-loss 0.1869 | 0.06 秒/局
+已完成第 5312 局 | 51.2 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1146 | P-loss 0.1549 | 0.06 秒/局
+已完成第 5344 局 | 54.4 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1056 | P-loss 0.1741 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.4 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (59371 筆, 36.7 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 5376 局 | 51.6 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1144 | P-loss 0.0473 | 0.06 秒/局
-已完成第 5408 局 | 60.9 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1114 | P-loss 0.0526 | 0.06 秒/局
-已完成第 5440 局 | 57.9 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1104 | P-loss 0.0549 | 0.06 秒/局
-已完成第 5472 局 | 53.1 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1092 | P-loss 0.0479 | 0.06 秒/局
-已完成第 5504 局 | 69.6 步/局 | 抽牌率 39.9% | 截斷 0 | 0號位勝率 34% | Q-loss 0.1099 | P-loss 0.0595 | 0.06 秒/局
-已完成第 5536 局 | 64.5 步/局 | 抽牌率 39.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1075 | P-loss 0.0526 | 0.06 秒/局
-已完成第 5568 局 | 69.1 步/局 | 抽牌率 39.4% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1085 | P-loss 0.0558 | 0.06 秒/局
-已完成第 5600 局 | 47.4 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1114 | P-loss 0.0527 | 0.06 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 5376 局 | 71.4 步/局 | 抽牌率 39.6% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1083 | P-loss 0.1773 | 0.06 秒/局
+已完成第 5408 局 | 55.9 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1117 | P-loss 0.1812 | 0.06 秒/局
+已完成第 5440 局 | 57.9 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1119 | P-loss 0.1583 | 0.06 秒/局
+已完成第 5472 局 | 37.9 步/局 | 抽牌率 33.3% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1068 | P-loss 0.1696 | 0.06 秒/局
+已完成第 5504 局 | 53.2 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1140 | P-loss 0.1749 | 0.06 秒/局
+已完成第 5536 局 | 44.5 步/局 | 抽牌率 33.8% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1065 | P-loss 0.1454 | 0.06 秒/局
+已完成第 5568 局 | 55.4 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1064 | P-loss 0.1906 | 0.06 秒/局
+已完成第 5600 局 | 59.8 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1092 | P-loss 0.1539 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.4 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (61078 筆, 37.8 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 5632 局 | 49.1 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1059 | P-loss 0.0449 | 0.06 秒/局
-已完成第 5664 局 | 71.0 步/局 | 抽牌率 38.9% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1088 | P-loss 0.0445 | 0.06 秒/局
-已完成第 5696 局 | 49.5 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 72% | Q-loss 0.1093 | P-loss 0.0468 | 0.06 秒/局
-已完成第 5728 局 | 62.9 步/局 | 抽牌率 38.7% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1062 | P-loss 0.0454 | 0.06 秒/局
-已完成第 5760 局 | 44.3 步/局 | 抽牌率 34.8% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1106 | P-loss 0.0468 | 0.06 秒/局
-已完成第 5792 局 | 53.4 步/局 | 抽牌率 36.2% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1093 | P-loss 0.0401 | 0.06 秒/局
-已完成第 5824 局 | 56.9 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1051 | P-loss 0.0587 | 0.06 秒/局
-已完成第 5856 局 | 48.1 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1077 | P-loss 0.0488 | 0.06 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 5632 局 | 50.1 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1034 | P-loss 0.1764 | 0.06 秒/局
+已完成第 5664 局 | 57.4 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1075 | P-loss 0.1506 | 0.06 秒/局
+已完成第 5696 局 | 49.3 步/局 | 抽牌率 34.5% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1097 | P-loss 0.1601 | 0.06 秒/局
+已完成第 5728 局 | 59.0 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 31% | Q-loss 0.1111 | P-loss 0.1746 | 0.06 秒/局
+已完成第 5760 局 | 45.0 步/局 | 抽牌率 33.9% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1086 | P-loss 0.1424 | 0.06 秒/局
+已完成第 5792 局 | 56.0 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 75% | Q-loss 0.1104 | P-loss 0.1569 | 0.06 秒/局
+已完成第 5824 局 | 60.5 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1065 | P-loss 0.1767 | 0.06 秒/局
+已完成第 5856 局 | 60.8 步/局 | 抽牌率 38.5% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1066 | P-loss 0.1700 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.4 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (62830 筆, 38.9 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 5888 局 | 50.7 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1089 | P-loss 0.0446 | 0.06 秒/局
-已完成第 5920 局 | 52.7 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1102 | P-loss 0.0478 | 0.06 秒/局
-已完成第 5952 局 | 38.2 步/局 | 抽牌率 32.9% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1090 | P-loss 0.0505 | 0.06 秒/局
-已完成第 5984 局 | 45.3 步/局 | 抽牌率 35.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1071 | P-loss 0.0599 | 0.06 秒/局
-已完成第 6016 局 | 51.3 步/局 | 抽牌率 35.7% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1163 | P-loss 0.0534 | 0.06 秒/局
-已完成第 6048 局 | 48.0 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1095 | P-loss 0.0548 | 0.06 秒/局
-已完成第 6080 局 | 51.6 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1066 | P-loss 0.0474 | 0.06 秒/局
-已完成第 6112 局 | 55.9 步/局 | 抽牌率 38.5% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1139 | P-loss 0.0504 | 0.06 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 5888 局 | 53.5 步/局 | 抽牌率 35.7% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1088 | P-loss 0.1359 | 0.06 秒/局
+已完成第 5920 局 | 39.0 步/局 | 抽牌率 33.5% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1108 | P-loss 0.1431 | 0.06 秒/局
+已完成第 5952 局 | 62.5 步/局 | 抽牌率 39.3% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1075 | P-loss 0.1564 | 0.06 秒/局
+已完成第 5984 局 | 38.9 步/局 | 抽牌率 34.5% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1066 | P-loss 0.1417 | 0.06 秒/局
+已完成第 6016 局 | 56.9 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1072 | P-loss 0.1520 | 0.06 秒/局
+已完成第 6048 局 | 55.8 步/局 | 抽牌率 36.2% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1070 | P-loss 0.1639 | 0.06 秒/局
+已完成第 6080 局 | 53.2 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1076 | P-loss 0.1715 | 0.06 秒/局
+已完成第 6112 局 | 70.9 步/局 | 抽牌率 39.4% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1087 | P-loss 0.1635 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.4 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64588 筆, 40.0 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 6144 局 | 51.1 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 34% | Q-loss 0.1094 | P-loss 0.0522 | 0.06 秒/局
-已完成第 6176 局 | 37.6 步/局 | 抽牌率 33.2% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1064 | P-loss 0.0431 | 0.06 秒/局
-已完成第 6208 局 | 51.7 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1060 | P-loss 0.0459 | 0.06 秒/局
-已完成第 6240 局 | 52.6 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1125 | P-loss 0.0488 | 0.06 秒/局
-已完成第 6272 局 | 55.9 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1096 | P-loss 0.0445 | 0.06 秒/局
-已完成第 6304 局 | 51.0 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1111 | P-loss 0.0487 | 0.06 秒/局
-已完成第 6336 局 | 64.9 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1115 | P-loss 0.0443 | 0.06 秒/局
-已完成第 6368 局 | 51.2 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1164 | P-loss 0.0455 | 0.06 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 6144 局 | 56.0 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1131 | P-loss 0.1814 | 0.06 秒/局
+已完成第 6176 局 | 48.4 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1064 | P-loss 0.1831 | 0.06 秒/局
+已完成第 6208 局 | 47.8 步/局 | 抽牌率 36.2% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1064 | P-loss 0.1780 | 0.06 秒/局
+已完成第 6240 局 | 42.1 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1049 | P-loss 0.1971 | 0.06 秒/局
+已完成第 6272 局 | 62.2 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1079 | P-loss 0.1739 | 0.06 秒/局
+已完成第 6304 局 | 61.2 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1143 | P-loss 0.1558 | 0.06 秒/局
+已完成第 6336 局 | 37.9 步/局 | 抽牌率 33.2% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1141 | P-loss 0.1883 | 0.06 秒/局
+已完成第 6368 局 | 57.2 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1088 | P-loss 0.1741 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.4 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (66209 筆, 41.0 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 6400 局 | 66.6 步/局 | 抽牌率 39.2% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1144 | P-loss 0.0418 | 0.06 秒/局
-已完成第 6432 局 | 45.8 步/局 | 抽牌率 35.4% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1102 | P-loss 0.0486 | 0.06 秒/局
-已完成第 6464 局 | 61.4 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1093 | P-loss 0.0402 | 0.06 秒/局
-已完成第 6496 局 | 51.4 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1121 | P-loss 0.0476 | 0.06 秒/局
-已完成第 6528 局 | 48.3 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1108 | P-loss 0.0368 | 0.06 秒/局
-已完成第 6560 局 | 45.5 步/局 | 抽牌率 35.3% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1112 | P-loss 0.0434 | 0.06 秒/局
-已完成第 6592 局 | 64.2 步/局 | 抽牌率 38.6% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1133 | P-loss 0.0381 | 0.06 秒/局
-已完成第 6624 局 | 60.3 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1082 | P-loss 0.0458 | 0.06 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 6400 局 | 49.9 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1123 | P-loss 0.1662 | 0.06 秒/局
+已完成第 6432 局 | 66.2 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1149 | P-loss 0.1652 | 0.06 秒/局
+已完成第 6464 局 | 51.8 步/局 | 抽牌率 36.1% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1158 | P-loss 0.1912 | 0.06 秒/局
+已完成第 6496 局 | 49.0 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1118 | P-loss 0.1606 | 0.06 秒/局
+已完成第 6528 局 | 63.2 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1090 | P-loss 0.1504 | 0.06 秒/局
+已完成第 6560 局 | 59.7 步/局 | 抽牌率 36.8% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1131 | P-loss 0.1605 | 0.06 秒/局
+已完成第 6592 局 | 58.7 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1075 | P-loss 0.1720 | 0.06 秒/局
+已完成第 6624 局 | 47.0 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1051 | P-loss 0.1646 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.4 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (68024 筆, 42.1 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 6656 局 | 47.6 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1090 | P-loss 0.0404 | 0.06 秒/局
-已完成第 6688 局 | 48.6 步/局 | 抽牌率 35.8% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1121 | P-loss 0.0569 | 0.06 秒/局
-已完成第 6720 局 | 60.5 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1077 | P-loss 0.0409 | 0.06 秒/局
-已完成第 6752 局 | 44.6 步/局 | 抽牌率 35.1% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1187 | P-loss 0.0381 | 0.06 秒/局
-已完成第 6784 局 | 52.1 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1140 | P-loss 0.0490 | 0.06 秒/局
-已完成第 6816 局 | 53.9 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1136 | P-loss 0.0487 | 0.06 秒/局
-已完成第 6848 局 | 67.8 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1067 | P-loss 0.0439 | 0.06 秒/局
-已完成第 6880 局 | 57.6 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1115 | P-loss 0.0414 | 0.06 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 6656 局 | 46.9 步/局 | 抽牌率 35.1% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1046 | P-loss 0.1699 | 0.06 秒/局
+已完成第 6688 局 | 54.9 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1022 | P-loss 0.1517 | 0.06 秒/局
+已完成第 6720 局 | 58.6 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1069 | P-loss 0.1646 | 0.06 秒/局
+已完成第 6752 局 | 61.9 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1067 | P-loss 0.1420 | 0.06 秒/局
+已完成第 6784 局 | 55.4 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1053 | P-loss 0.1562 | 0.06 秒/局
+已完成第 6816 局 | 42.8 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1015 | P-loss 0.1633 | 0.06 秒/局
+已完成第 6848 局 | 66.3 步/局 | 抽牌率 38.5% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1033 | P-loss 0.1708 | 0.06 秒/局
+已完成第 6880 局 | 49.0 步/局 | 抽牌率 36.2% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1090 | P-loss 0.1572 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.4 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (69752 筆, 43.2 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 6912 局 | 69.9 步/局 | 抽牌率 39.4% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1126 | P-loss 0.0388 | 0.06 秒/局
-已完成第 6944 局 | 41.0 步/局 | 抽牌率 33.6% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1145 | P-loss 0.0351 | 0.06 秒/局
-已完成第 6976 局 | 59.4 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1153 | P-loss 0.0504 | 0.06 秒/局
-已完成第 7008 局 | 57.1 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1109 | P-loss 0.0442 | 0.06 秒/局
-已完成第 7040 局 | 57.3 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1098 | P-loss 0.0401 | 0.06 秒/局
-已完成第 7072 局 | 54.7 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1104 | P-loss 0.0399 | 0.06 秒/局
-已完成第 7104 局 | 56.0 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1165 | P-loss 0.0425 | 0.06 秒/局
-已完成第 7136 局 | 53.1 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1132 | P-loss 0.0411 | 0.06 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 6912 局 | 51.9 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 34% | Q-loss 0.1030 | P-loss 0.1767 | 0.06 秒/局
+已完成第 6944 局 | 48.9 步/局 | 抽牌率 35.3% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1039 | P-loss 0.1670 | 0.06 秒/局
+已完成第 6976 局 | 52.2 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1082 | P-loss 0.1822 | 0.06 秒/局
+已完成第 7008 局 | 51.2 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1049 | P-loss 0.1849 | 0.06 秒/局
+已完成第 7040 局 | 61.3 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1129 | P-loss 0.1598 | 0.06 秒/局
+已完成第 7072 局 | 53.0 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1045 | P-loss 0.1692 | 0.06 秒/局
+已完成第 7104 局 | 70.2 步/局 | 抽牌率 40.0% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1134 | P-loss 0.1567 | 0.06 秒/局
+已完成第 7136 局 | 53.1 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1111 | P-loss 0.1900 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.4 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (71509 筆, 44.3 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 7168 局 | 54.5 步/局 | 抽牌率 35.7% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1101 | P-loss 0.0322 | 0.06 秒/局
-已完成第 7200 局 | 50.2 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1106 | P-loss 0.0333 | 0.06 秒/局
-已完成第 7232 局 | 47.1 步/局 | 抽牌率 35.5% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1096 | P-loss 0.0369 | 0.06 秒/局
-已完成第 7264 局 | 44.0 步/局 | 抽牌率 35.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1145 | P-loss 0.0439 | 0.06 秒/局
-已完成第 7296 局 | 51.3 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1127 | P-loss 0.0460 | 0.06 秒/局
-已完成第 7328 局 | 78.6 步/局 | 抽牌率 39.2% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1124 | P-loss 0.0466 | 0.06 秒/局
-已完成第 7360 局 | 40.0 步/局 | 抽牌率 33.6% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1164 | P-loss 0.0347 | 0.06 秒/局
-已完成第 7392 局 | 38.0 步/局 | 抽牌率 34.2% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1164 | P-loss 0.0401 | 0.06 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 7168 局 | 44.8 步/局 | 抽牌率 34.5% | 截斷 0 | 0號位勝率 75% | Q-loss 0.1148 | P-loss 0.1639 | 0.06 秒/局
+已完成第 7200 局 | 54.7 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 34% | Q-loss 0.1080 | P-loss 0.1806 | 0.06 秒/局
+已完成第 7232 局 | 53.3 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1116 | P-loss 0.1718 | 0.06 秒/局
+已完成第 7264 局 | 48.5 步/局 | 抽牌率 35.7% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1050 | P-loss 0.1907 | 0.06 秒/局
+已完成第 7296 局 | 51.0 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1135 | P-loss 0.1632 | 0.06 秒/局
+已完成第 7328 局 | 70.6 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1059 | P-loss 0.1653 | 0.06 秒/局
+已完成第 7360 局 | 46.9 步/局 | 抽牌率 34.5% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1089 | P-loss 0.1777 | 0.06 秒/局
+已完成第 7392 局 | 58.4 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1072 | P-loss 0.1471 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.4 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (73258 筆, 45.3 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 7424 局 | 52.3 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1123 | P-loss 0.0354 | 0.06 秒/局
-已完成第 7456 局 | 52.1 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1097 | P-loss 0.0372 | 0.06 秒/局
-已完成第 7488 局 | 46.6 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1097 | P-loss 0.0459 | 0.06 秒/局
-已完成第 7520 局 | 58.6 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1118 | P-loss 0.0349 | 0.06 秒/局
-已完成第 7552 局 | 57.9 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1159 | P-loss 0.0353 | 0.06 秒/局
-已完成第 7584 局 | 46.3 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1170 | P-loss 0.0504 | 0.06 秒/局
-已完成第 7616 局 | 49.9 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1145 | P-loss 0.0391 | 0.06 秒/局
-已完成第 7648 局 | 53.4 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1135 | P-loss 0.0372 | 0.06 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 7424 局 | 40.7 步/局 | 抽牌率 33.4% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1073 | P-loss 0.1679 | 0.06 秒/局
+已完成第 7456 局 | 62.9 步/局 | 抽牌率 36.8% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1088 | P-loss 0.1830 | 0.06 秒/局
+已完成第 7488 局 | 49.6 步/局 | 抽牌率 35.7% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1110 | P-loss 0.1704 | 0.06 秒/局
+已完成第 7520 局 | 49.3 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1095 | P-loss 0.1536 | 0.06 秒/局
+已完成第 7552 局 | 42.3 步/局 | 抽牌率 34.0% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1052 | P-loss 0.1719 | 0.06 秒/局
+已完成第 7584 局 | 51.1 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1134 | P-loss 0.1767 | 0.06 秒/局
+已完成第 7616 局 | 73.3 步/局 | 抽牌率 39.2% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1055 | P-loss 0.1694 | 0.06 秒/局
+已完成第 7648 局 | 66.2 步/局 | 抽牌率 39.3% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1065 | P-loss 0.1758 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.4 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (75115 筆, 46.5 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 7680 局 | 59.5 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1083 | P-loss 0.0414 | 0.06 秒/局
-已完成第 7712 局 | 48.8 步/局 | 抽牌率 36.2% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1102 | P-loss 0.0498 | 0.06 秒/局
-已完成第 7744 局 | 43.8 步/局 | 抽牌率 35.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1100 | P-loss 0.0349 | 0.06 秒/局
-已完成第 7776 局 | 53.4 步/局 | 抽牌率 36.1% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1141 | P-loss 0.0415 | 0.06 秒/局
-已完成第 7808 局 | 59.2 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1160 | P-loss 0.0396 | 0.06 秒/局
-已完成第 7840 局 | 53.9 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1142 | P-loss 0.0447 | 0.06 秒/局
-已完成第 7872 局 | 44.2 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1150 | P-loss 0.0437 | 0.06 秒/局
-已完成第 7904 局 | 46.3 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1117 | P-loss 0.0436 | 0.06 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 7680 局 | 53.4 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1055 | P-loss 0.1698 | 0.06 秒/局
+已完成第 7712 局 | 48.1 步/局 | 抽牌率 34.7% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1080 | P-loss 0.1833 | 0.06 秒/局
+已完成第 7744 局 | 54.9 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1101 | P-loss 0.1675 | 0.06 秒/局
+已完成第 7776 局 | 45.0 步/局 | 抽牌率 34.7% | 截斷 0 | 0號位勝率 34% | Q-loss 0.1098 | P-loss 0.1449 | 0.06 秒/局
+已完成第 7808 局 | 45.7 步/局 | 抽牌率 35.2% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1163 | P-loss 0.1690 | 0.06 秒/局
+已完成第 7840 局 | 54.4 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1134 | P-loss 0.1639 | 0.06 秒/局
+已完成第 7872 局 | 47.3 步/局 | 抽牌率 35.2% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1131 | P-loss 0.1824 | 0.06 秒/局
+已完成第 7904 局 | 50.7 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1149 | P-loss 0.1803 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.4 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (76749 筆, 47.5 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 7936 局 | 54.5 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1161 | P-loss 0.0404 | 0.06 秒/局
-已完成第 7968 局 | 45.5 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 75% | Q-loss 0.1141 | P-loss 0.0369 | 0.06 秒/局
-已完成第 8000 局 | 60.1 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1086 | P-loss 0.0437 | 0.06 秒/局
-已完成第 8032 局 | 71.0 步/局 | 抽牌率 39.8% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1125 | P-loss 0.0435 | 0.06 秒/局
-已完成第 8064 局 | 51.5 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1108 | P-loss 0.0391 | 0.06 秒/局
-已完成第 8096 局 | 61.4 步/局 | 抽牌率 38.5% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1142 | P-loss 0.0471 | 0.06 秒/局
-已完成第 8128 局 | 53.4 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1131 | P-loss 0.0477 | 0.06 秒/局
-已完成第 8160 局 | 54.0 步/局 | 抽牌率 36.8% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1108 | P-loss 0.0418 | 0.06 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 7936 局 | 56.0 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1138 | P-loss 0.1930 | 0.06 秒/局
+已完成第 7968 局 | 65.0 步/局 | 抽牌率 39.4% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1084 | P-loss 0.1578 | 0.06 秒/局
+已完成第 8000 局 | 50.8 步/局 | 抽牌率 36.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1061 | P-loss 0.1603 | 0.06 秒/局
+已完成第 8032 局 | 43.1 步/局 | 抽牌率 35.1% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1112 | P-loss 0.2117 | 0.06 秒/局
+已完成第 8064 局 | 59.5 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1079 | P-loss 0.1802 | 0.06 秒/局
+已完成第 8096 局 | 62.7 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1115 | P-loss 0.1488 | 0.06 秒/局
+已完成第 8128 局 | 53.8 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 31% | Q-loss 0.1097 | P-loss 0.1844 | 0.06 秒/局
+已完成第 8160 局 | 53.0 步/局 | 抽牌率 36.2% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1124 | P-loss 0.1912 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.4 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (78556 筆, 48.6 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 8192 局 | 53.0 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1163 | P-loss 0.0399 | 0.06 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 8192 局 | 44.2 步/局 | 抽牌率 35.2% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1066 | P-loss 0.1925 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.4 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (78556 筆, 48.6 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
 已成功載入 Q-Network 權重: q_network_v1.bin
 已成功從 ReplayBuffer_v1.bin 讀取 ReplayBuffer (64000 筆, 其中 0 筆受保護)
-已成功從 ReservoirMemory_v1.bin 讀取 ReservoirMemory (64000 筆)
+已成功從 ReservoirMemory_v1.bin 讀取 ReservoirMemory (78556 筆)
 已成功載入 Policy-Network 權重: p_network_v1.bin
 使用裝置: GPU (NVIDIA GeForce RTX 3050 Laptop GPU)
 開始進行 8192 局自我對戰
-已完成第 32 局 | 94.8 步/局 | 抽牌率 40.8% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1234 | P-loss 0.0469 | 0.13 秒/局
-已完成第 64 局 | 72.8 步/局 | 抽牌率 39.0% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1252 | P-loss 0.0401 | 0.10 秒/局
-已完成第 96 局 | 67.5 步/局 | 抽牌率 38.6% | 截斷 0 | 0號位勝率 34% | Q-loss 0.1345 | P-loss 0.0446 | 0.08 秒/局
-已完成第 128 局 | 64.5 步/局 | 抽牌率 39.1% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1281 | P-loss 0.0439 | 0.08 秒/局
-已完成第 160 局 | 86.9 步/局 | 抽牌率 40.2% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1357 | P-loss 0.0385 | 0.08 秒/局
-已完成第 192 局 | 77.3 步/局 | 抽牌率 40.3% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1363 | P-loss 0.0440 | 0.08 秒/局
-已完成第 224 局 | 67.2 步/局 | 抽牌率 38.9% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1375 | P-loss 0.0390 | 0.08 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 32 局 | 57.5 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1029 | P-loss 0.1516 | 0.10 秒/局
+已完成第 64 局 | 52.1 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1102 | P-loss 0.1777 | 0.07 秒/局
+已完成第 96 局 | 42.5 步/局 | 抽牌率 34.5% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1056 | P-loss 0.1773 | 0.06 秒/局
+已完成第 128 局 | 67.7 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1110 | P-loss 0.1673 | 0.06 秒/局
+已完成第 160 局 | 59.1 步/局 | 抽牌率 39.1% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1128 | P-loss 0.1819 | 0.06 秒/局
+已完成第 192 局 | 57.7 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1143 | P-loss 0.1548 | 0.06 秒/局
+已完成第 224 局 | 55.9 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1125 | P-loss 0.1552 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (80067 筆, 49.6 MB)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 256 局 | 107.9 步/局 | 抽牌率 41.0% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1377 | P-loss 0.0369 | 0.08 秒/局
-已完成第 288 局 | 82.7 步/局 | 抽牌率 39.5% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1390 | P-loss 0.0388 | 0.09 秒/局
-已完成第 320 局 | 76.5 步/局 | 抽牌率 38.9% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1440 | P-loss 0.0380 | 0.08 秒/局
-已完成第 352 局 | 83.2 步/局 | 抽牌率 40.1% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1427 | P-loss 0.0370 | 0.09 秒/局
-已完成第 384 局 | 77.0 步/局 | 抽牌率 39.7% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1471 | P-loss 0.0447 | 0.09 秒/局
-已完成第 416 局 | 69.2 步/局 | 抽牌率 38.8% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1470 | P-loss 0.0464 | 0.08 秒/局
-已完成第 448 局 | 92.6 步/局 | 抽牌率 41.1% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1507 | P-loss 0.0368 | 0.08 秒/局
-已完成第 480 局 | 113.2 步/局 | 抽牌率 41.5% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1495 | P-loss 0.0435 | 0.09 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 256 局 | 60.2 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1186 | P-loss 0.1577 | 0.06 秒/局
+已完成第 288 局 | 53.6 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 31% | Q-loss 0.1127 | P-loss 0.1726 | 0.06 秒/局
+已完成第 320 局 | 66.5 步/局 | 抽牌率 38.8% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1136 | P-loss 0.1599 | 0.06 秒/局
+已完成第 352 局 | 59.8 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1102 | P-loss 0.1583 | 0.06 秒/局
+已完成第 384 局 | 63.0 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1156 | P-loss 0.1935 | 0.06 秒/局
+已完成第 416 局 | 49.1 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1211 | P-loss 0.1767 | 0.06 秒/局
+已完成第 448 局 | 55.3 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1149 | P-loss 0.1492 | 0.06 秒/局
+已完成第 480 局 | 71.5 步/局 | 抽牌率 38.6% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1117 | P-loss 0.1760 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (81664 筆, 3.3 MB, 已壓縮)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 512 局 | 68.9 步/局 | 抽牌率 38.8% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1475 | P-loss 0.0463 | 0.09 秒/局
-已完成第 544 局 | 95.9 步/局 | 抽牌率 41.2% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1503 | P-loss 0.0369 | 0.09 秒/局
-已完成第 576 局 | 93.3 步/局 | 抽牌率 40.8% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1496 | P-loss 0.0546 | 0.09 秒/局
-已完成第 608 局 | 70.8 步/局 | 抽牌率 39.6% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1494 | P-loss 0.0504 | 0.09 秒/局
-已完成第 640 局 | 84.0 步/局 | 抽牌率 39.9% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1562 | P-loss 0.0460 | 0.08 秒/局
-已完成第 672 局 | 98.2 步/局 | 抽牌率 41.1% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1551 | P-loss 0.0498 | 0.09 秒/局
-已完成第 704 局 | 76.0 步/局 | 抽牌率 40.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1566 | P-loss 0.0472 | 0.08 秒/局
-已完成第 736 局 | 95.9 步/局 | 抽牌率 41.3% | 截斷 0 | 0號位勝率 34% | Q-loss 0.1568 | P-loss 0.0561 | 0.09 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 512 局 | 51.5 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1137 | P-loss 0.1713 | 0.06 秒/局
+已完成第 544 局 | 45.2 步/局 | 抽牌率 35.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1116 | P-loss 0.1722 | 0.06 秒/局
+已完成第 576 局 | 70.3 步/局 | 抽牌率 38.7% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1116 | P-loss 0.1728 | 0.06 秒/局
+已完成第 608 局 | 61.3 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1129 | P-loss 0.1708 | 0.06 秒/局
+已完成第 640 局 | 56.7 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1171 | P-loss 0.1778 | 0.06 秒/局
+已完成第 672 局 | 49.8 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1133 | P-loss 0.1992 | 0.06 秒/局
+已完成第 704 局 | 69.3 步/局 | 抽牌率 38.8% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1133 | P-loss 0.1752 | 0.06 秒/局
+已完成第 736 局 | 65.6 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1104 | P-loss 0.1536 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (83311 筆, 3.4 MB, 已壓縮)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 768 局 | 84.3 步/局 | 抽牌率 40.8% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1557 | P-loss 0.0457 | 0.09 秒/局
-已完成第 800 局 | 101.3 步/局 | 抽牌率 41.8% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1585 | P-loss 0.0467 | 0.09 秒/局
-已完成第 832 局 | 125.3 步/局 | 抽牌率 41.8% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1573 | P-loss 0.0512 | 0.09 秒/局
-已完成第 864 局 | 126.5 步/局 | 抽牌率 42.4% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1563 | P-loss 0.0490 | 0.09 秒/局
-已完成第 896 局 | 135.2 步/局 | 抽牌率 42.5% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1572 | P-loss 0.0501 | 0.09 秒/局
-已完成第 928 局 | 126.2 步/局 | 抽牌率 42.7% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1579 | P-loss 0.0569 | 0.09 秒/局
-已完成第 960 局 | 157.5 步/局 | 抽牌率 43.6% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1604 | P-loss 0.0580 | 0.09 秒/局
-已完成第 992 局 | 150.4 步/局 | 抽牌率 43.3% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1635 | P-loss 0.0625 | 0.09 秒/局
-ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆)
+已完成第 768 局 | 60.8 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1124 | P-loss 0.1588 | 0.06 秒/局
+已完成第 800 局 | 67.1 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1132 | P-loss 0.1923 | 0.06 秒/局
+已完成第 832 局 | 60.0 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1095 | P-loss 0.1995 | 0.06 秒/局
+已完成第 864 局 | 66.2 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1144 | P-loss 0.1845 | 0.06 秒/局
+已完成第 896 局 | 58.4 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1140 | P-loss 0.1753 | 0.06 秒/局
+已完成第 928 局 | 67.1 步/局 | 抽牌率 39.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1126 | P-loss 0.1692 | 0.06 秒/局
+已完成第 960 局 | 51.3 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1125 | P-loss 0.1768 | 0.06 秒/局
+已完成第 992 局 | 52.8 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1139 | P-loss 0.1859 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
 Q-Network 權重已成功儲存至: q_network_v1.bin
-ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (64000 筆)
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (84969 筆, 3.5 MB, 已壓縮)
 Policy-Network 權重已成功儲存至: p_network_v1.bin
-已完成第 1024 局 | 195.4 步/局 | 抽牌率 44.0% | 截斷 1 | 0號位勝率 47% | Q-loss 0.1629 | P-loss 0.0614 | 0.10 秒/局
-已完成第 1056 局 | 349.8 步/局 | 抽牌率 45.2% | 截斷 7 | 0號位勝率 44% | Q-loss 0.1765 | P-loss 0.0673 | 0.11 秒/局
-已完成第 1088 局 | 400.4 步/局 | 抽牌率 48.0% | 截斷 10 | 0號位勝率 31% | Q-loss 0.1978 | P-loss 0.0737 | 0.11 秒/局
+已完成第 1024 局 | 50.8 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1101 | P-loss 0.2094 | 0.06 秒/局
+已完成第 1056 局 | 45.0 步/局 | 抽牌率 35.4% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1168 | P-loss 0.1918 | 0.06 秒/局
+已完成第 1088 局 | 56.0 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1152 | P-loss 0.1656 | 0.06 秒/局
+已完成第 1120 局 | 61.8 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1082 | P-loss 0.1872 | 0.06 秒/局
+已完成第 1152 局 | 51.4 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1102 | P-loss 0.1507 | 0.06 秒/局
+已完成第 1184 局 | 60.2 步/局 | 抽牌率 38.7% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1096 | P-loss 0.1577 | 0.06 秒/局
+已完成第 1216 局 | 59.2 步/局 | 抽牌率 38.6% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1100 | P-loss 0.1586 | 0.06 秒/局
+已完成第 1248 局 | 76.5 步/局 | 抽牌率 39.0% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1138 | P-loss 0.1586 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (86569 筆, 3.6 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 1280 局 | 53.2 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1171 | P-loss 0.1757 | 0.06 秒/局
+已完成第 1312 局 | 68.5 步/局 | 抽牌率 39.3% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1124 | P-loss 0.1686 | 0.06 秒/局
+已完成第 1344 局 | 62.6 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 72% | Q-loss 0.1109 | P-loss 0.2084 | 0.06 秒/局
+已完成第 1376 局 | 64.0 步/局 | 抽牌率 38.7% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1111 | P-loss 0.1606 | 0.06 秒/局
+已完成第 1408 局 | 56.0 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1149 | P-loss 0.1721 | 0.06 秒/局
+已完成第 1440 局 | 45.5 步/局 | 抽牌率 34.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1150 | P-loss 0.1433 | 0.06 秒/局
+已完成第 1472 局 | 54.2 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1123 | P-loss 0.1559 | 0.06 秒/局
+已完成第 1504 局 | 51.9 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1166 | P-loss 0.1566 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (88153 筆, 3.6 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 1536 局 | 35.6 步/局 | 抽牌率 33.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1195 | P-loss 0.1712 | 0.06 秒/局
+已完成第 1568 局 | 55.4 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1180 | P-loss 0.1624 | 0.06 秒/局
+已完成第 1600 局 | 62.7 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1176 | P-loss 0.1521 | 0.06 秒/局
+已完成第 1632 局 | 61.3 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1092 | P-loss 0.1600 | 0.05 秒/局
+已完成第 1664 局 | 56.3 步/局 | 抽牌率 36.8% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1080 | P-loss 0.1647 | 0.05 秒/局
+已完成第 1696 局 | 86.2 步/局 | 抽牌率 39.9% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1116 | P-loss 0.1558 | 0.05 秒/局
+已完成第 1728 局 | 57.7 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1141 | P-loss 0.1691 | 0.05 秒/局
+已完成第 1760 局 | 61.3 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1160 | P-loss 0.1718 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (89981 筆, 3.7 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 1792 局 | 64.5 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1176 | P-loss 0.1605 | 0.06 秒/局
+已完成第 1824 局 | 48.8 步/局 | 抽牌率 34.1% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1147 | P-loss 0.1794 | 0.06 秒/局
+已完成第 1856 局 | 59.5 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1097 | P-loss 0.1730 | 0.06 秒/局
+已完成第 1888 局 | 43.7 步/局 | 抽牌率 34.7% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1153 | P-loss 0.1687 | 0.05 秒/局
+已完成第 1920 局 | 58.2 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1106 | P-loss 0.1528 | 0.05 秒/局
+已完成第 1952 局 | 59.1 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1141 | P-loss 0.1630 | 0.05 秒/局
+已完成第 1984 局 | 55.4 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1161 | P-loss 0.1655 | 0.05 秒/局
+已完成第 2016 局 | 55.3 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1127 | P-loss 0.1766 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (91469 筆, 3.8 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 2048 局 | 46.4 步/局 | 抽牌率 35.4% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1155 | P-loss 0.1425 | 0.05 秒/局
+已完成第 2080 局 | 56.6 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1136 | P-loss 0.1874 | 0.05 秒/局
+已完成第 2112 局 | 59.9 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1138 | P-loss 0.1862 | 0.05 秒/局
+已完成第 2144 局 | 45.5 步/局 | 抽牌率 34.0% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1190 | P-loss 0.1838 | 0.05 秒/局
+已完成第 2176 局 | 49.5 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1147 | P-loss 0.1907 | 0.05 秒/局
+已完成第 2208 局 | 48.5 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1131 | P-loss 0.1545 | 0.05 秒/局
+已完成第 2240 局 | 52.3 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1129 | P-loss 0.1611 | 0.05 秒/局
+已完成第 2272 局 | 44.8 步/局 | 抽牌率 35.7% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1090 | P-loss 0.1726 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (92944 筆, 3.8 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 2304 局 | 42.7 步/局 | 抽牌率 34.9% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1088 | P-loss 0.1804 | 0.05 秒/局
+已完成第 2336 局 | 59.2 步/局 | 抽牌率 38.7% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1093 | P-loss 0.1645 | 0.05 秒/局
+已完成第 2368 局 | 59.3 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1107 | P-loss 0.1741 | 0.05 秒/局
+已完成第 2400 局 | 54.4 步/局 | 抽牌率 36.1% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1125 | P-loss 0.1699 | 0.05 秒/局
+已完成第 2432 局 | 43.6 步/局 | 抽牌率 35.1% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1110 | P-loss 0.1555 | 0.05 秒/局
+已完成第 2464 局 | 59.8 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1150 | P-loss 0.1976 | 0.05 秒/局
+已完成第 2496 局 | 57.2 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1168 | P-loss 0.1646 | 0.05 秒/局
+已完成第 2528 局 | 49.6 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1124 | P-loss 0.1658 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (94513 筆, 3.9 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 2560 局 | 60.3 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1095 | P-loss 0.1653 | 0.05 秒/局
+已完成第 2592 局 | 48.2 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 28% | Q-loss 0.1092 | P-loss 0.1761 | 0.05 秒/局
+已完成第 2624 局 | 61.2 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1131 | P-loss 0.1850 | 0.05 秒/局
+已完成第 2656 局 | 65.2 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1159 | P-loss 0.1529 | 0.05 秒/局
+已完成第 2688 局 | 52.6 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1145 | P-loss 0.1577 | 0.05 秒/局
+已完成第 2720 局 | 41.2 步/局 | 抽牌率 34.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1182 | P-loss 0.1879 | 0.05 秒/局
+已完成第 2752 局 | 62.0 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1144 | P-loss 0.1852 | 0.05 秒/局
+已完成第 2784 局 | 44.5 步/局 | 抽牌率 34.6% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1117 | P-loss 0.1691 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (96042 筆, 4.0 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 2816 局 | 53.2 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1106 | P-loss 0.1613 | 0.05 秒/局
+已完成第 2848 局 | 44.2 步/局 | 抽牌率 34.1% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1117 | P-loss 0.1747 | 0.05 秒/局
+已完成第 2880 局 | 49.3 步/局 | 抽牌率 36.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1147 | P-loss 0.1366 | 0.05 秒/局
+已完成第 2912 局 | 74.9 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1114 | P-loss 0.1461 | 0.05 秒/局
+已完成第 2944 局 | 41.4 步/局 | 抽牌率 33.9% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1129 | P-loss 0.1811 | 0.05 秒/局
+已完成第 2976 局 | 43.7 步/局 | 抽牌率 34.2% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1129 | P-loss 0.1813 | 0.05 秒/局
+已完成第 3008 局 | 52.0 步/局 | 抽牌率 35.8% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1165 | P-loss 0.1647 | 0.05 秒/局
+已完成第 3040 局 | 49.5 步/局 | 抽牌率 35.2% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1144 | P-loss 0.1797 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (97537 筆, 4.0 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 3072 局 | 58.8 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1184 | P-loss 0.1635 | 0.05 秒/局
+已完成第 3104 局 | 54.1 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1185 | P-loss 0.2022 | 0.05 秒/局
+已完成第 3136 局 | 63.1 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 72% | Q-loss 0.1193 | P-loss 0.1703 | 0.05 秒/局
+已完成第 3168 局 | 50.0 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1194 | P-loss 0.1524 | 0.05 秒/局
+已完成第 3200 局 | 74.9 步/局 | 抽牌率 39.3% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1184 | P-loss 0.1858 | 0.05 秒/局
+已完成第 3232 局 | 52.4 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1211 | P-loss 0.1536 | 0.05 秒/局
+已完成第 3264 局 | 42.9 步/局 | 抽牌率 34.6% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1146 | P-loss 0.1544 | 0.05 秒/局
+已完成第 3296 局 | 62.9 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1137 | P-loss 0.1514 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (99181 筆, 4.1 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 3328 局 | 44.5 步/局 | 抽牌率 34.8% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1108 | P-loss 0.1701 | 0.05 秒/局
+已完成第 3360 局 | 62.1 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1095 | P-loss 0.1742 | 0.05 秒/局
+已完成第 3392 局 | 50.7 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1088 | P-loss 0.1494 | 0.05 秒/局
+已完成第 3424 局 | 57.7 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1144 | P-loss 0.1850 | 0.05 秒/局
+已完成第 3456 局 | 59.9 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1169 | P-loss 0.1606 | 0.05 秒/局
+已完成第 3488 局 | 46.4 步/局 | 抽牌率 36.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1182 | P-loss 0.1391 | 0.05 秒/局
+已完成第 3520 局 | 56.5 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1177 | P-loss 0.1683 | 0.05 秒/局
+已完成第 3552 局 | 53.1 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1156 | P-loss 0.1710 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (100803 筆, 4.2 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 3584 局 | 48.2 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1179 | P-loss 0.1562 | 0.05 秒/局
+已完成第 3616 局 | 62.1 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1115 | P-loss 0.1825 | 0.05 秒/局
+已完成第 3648 局 | 62.8 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1213 | P-loss 0.1787 | 0.05 秒/局
+已完成第 3680 局 | 58.8 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1182 | P-loss 0.1595 | 0.05 秒/局
+已完成第 3712 局 | 41.8 步/局 | 抽牌率 33.9% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1191 | P-loss 0.1702 | 0.05 秒/局
+已完成第 3744 局 | 52.8 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1194 | P-loss 0.1586 | 0.05 秒/局
+已完成第 3776 局 | 62.4 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1129 | P-loss 0.1561 | 0.05 秒/局
+已完成第 3808 局 | 59.4 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1123 | P-loss 0.1910 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (102514 筆, 4.3 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 3840 局 | 40.0 步/局 | 抽牌率 33.5% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1133 | P-loss 0.1886 | 0.05 秒/局
+已完成第 3872 局 | 61.9 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1140 | P-loss 0.1764 | 0.05 秒/局
+已完成第 3904 局 | 48.0 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1111 | P-loss 0.1594 | 0.05 秒/局
+已完成第 3936 局 | 66.7 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1118 | P-loss 0.1694 | 0.05 秒/局
+已完成第 3968 局 | 54.9 步/局 | 抽牌率 36.2% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1096 | P-loss 0.1913 | 0.05 秒/局
+已完成第 4000 局 | 41.9 步/局 | 抽牌率 33.0% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1081 | P-loss 0.1747 | 0.05 秒/局
+已完成第 4032 局 | 60.6 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1119 | P-loss 0.1753 | 0.05 秒/局
+已完成第 4064 局 | 52.2 步/局 | 抽牌率 35.7% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1180 | P-loss 0.2005 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (104162 筆, 4.3 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 4096 局 | 69.3 步/局 | 抽牌率 38.8% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1184 | P-loss 0.1678 | 0.05 秒/局
+已完成第 4128 局 | 45.6 步/局 | 抽牌率 35.5% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1259 | P-loss 0.1608 | 0.05 秒/局
+已完成第 4160 局 | 49.4 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1110 | P-loss 0.1709 | 0.05 秒/局
+已完成第 4192 局 | 65.8 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1145 | P-loss 0.1848 | 0.05 秒/局
+已完成第 4224 局 | 42.7 步/局 | 抽牌率 34.2% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1180 | P-loss 0.1728 | 0.05 秒/局
+已完成第 4256 局 | 56.7 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1156 | P-loss 0.1659 | 0.05 秒/局
+已完成第 4288 局 | 64.8 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1150 | P-loss 0.1538 | 0.05 秒/局
+已完成第 4320 局 | 38.3 步/局 | 抽牌率 33.2% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1210 | P-loss 0.1742 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (105869 筆, 4.4 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 4352 局 | 76.2 步/局 | 抽牌率 39.3% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1149 | P-loss 0.1734 | 0.05 秒/局
+已完成第 4384 局 | 55.9 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1161 | P-loss 0.1716 | 0.05 秒/局
+已完成第 4416 局 | 59.3 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1109 | P-loss 0.1870 | 0.05 秒/局
+已完成第 4448 局 | 58.0 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1108 | P-loss 0.1480 | 0.05 秒/局
+已完成第 4480 局 | 56.2 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1201 | P-loss 0.1716 | 0.05 秒/局
+已完成第 4512 局 | 52.6 步/局 | 抽牌率 36.8% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1203 | P-loss 0.1821 | 0.05 秒/局
+已完成第 4544 局 | 43.4 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1187 | P-loss 0.1646 | 0.05 秒/局
+已完成第 4576 局 | 66.4 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1259 | P-loss 0.1689 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (107591 筆, 4.5 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 4608 局 | 56.9 步/局 | 抽牌率 36.8% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1122 | P-loss 0.1676 | 0.05 秒/局
+已完成第 4640 局 | 50.7 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1170 | P-loss 0.1727 | 0.05 秒/局
+已完成第 4672 局 | 52.8 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1123 | P-loss 0.1772 | 0.05 秒/局
+已完成第 4704 局 | 61.8 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1148 | P-loss 0.1680 | 0.05 秒/局
+已完成第 4736 局 | 48.5 步/局 | 抽牌率 36.1% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1148 | P-loss 0.1658 | 0.05 秒/局
+已完成第 4768 局 | 54.1 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1158 | P-loss 0.1691 | 0.05 秒/局
+已完成第 4800 局 | 69.8 步/局 | 抽牌率 39.0% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1167 | P-loss 0.1790 | 0.05 秒/局
+已完成第 4832 局 | 45.1 步/局 | 抽牌率 34.0% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1212 | P-loss 0.1704 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (109280 筆, 4.6 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 4864 局 | 65.2 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1240 | P-loss 0.1648 | 0.05 秒/局
+已完成第 4896 局 | 50.7 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1206 | P-loss 0.1820 | 0.05 秒/局
+已完成第 4928 局 | 45.9 步/局 | 抽牌率 36.1% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1201 | P-loss 0.2063 | 0.05 秒/局
+已完成第 4960 局 | 50.8 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1177 | P-loss 0.1845 | 0.05 秒/局
+已完成第 4992 局 | 63.2 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1140 | P-loss 0.1720 | 0.05 秒/局
+已完成第 5024 局 | 65.4 步/局 | 抽牌率 38.7% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1237 | P-loss 0.1820 | 0.05 秒/局
+已完成第 5056 局 | 61.2 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1222 | P-loss 0.1613 | 0.05 秒/局
+已完成第 5088 局 | 64.3 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1181 | P-loss 0.1616 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (111107 筆, 4.6 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 5120 局 | 56.5 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1159 | P-loss 0.1862 | 0.05 秒/局
+已完成第 5152 局 | 54.4 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1157 | P-loss 0.1770 | 0.05 秒/局
+已完成第 5184 局 | 60.1 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1160 | P-loss 0.1518 | 0.05 秒/局
+已完成第 5216 局 | 51.6 步/局 | 抽牌率 36.2% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1155 | P-loss 0.1582 | 0.05 秒/局
+已完成第 5248 局 | 74.7 步/局 | 抽牌率 39.3% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1136 | P-loss 0.1952 | 0.05 秒/局
+已完成第 5280 局 | 56.6 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1139 | P-loss 0.1981 | 0.05 秒/局
+已完成第 5312 局 | 49.3 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1123 | P-loss 0.1627 | 0.05 秒/局
+已完成第 5344 局 | 55.5 步/局 | 抽牌率 36.8% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1229 | P-loss 0.1778 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (112964 筆, 4.7 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 5376 局 | 56.5 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1201 | P-loss 0.1816 | 0.05 秒/局
+已完成第 5408 局 | 64.9 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1219 | P-loss 0.1688 | 0.05 秒/局
+已完成第 5440 局 | 50.5 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1249 | P-loss 0.1660 | 0.05 秒/局
+已完成第 5472 局 | 44.1 步/局 | 抽牌率 35.1% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1161 | P-loss 0.1614 | 0.05 秒/局
+已完成第 5504 局 | 53.6 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1207 | P-loss 0.2127 | 0.05 秒/局
+已完成第 5536 局 | 70.6 步/局 | 抽牌率 38.6% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1164 | P-loss 0.1644 | 0.05 秒/局
+已完成第 5568 局 | 55.3 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1256 | P-loss 0.1772 | 0.05 秒/局
+已完成第 5600 局 | 59.8 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1221 | P-loss 0.1749 | 0.05 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (114704 筆, 4.8 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 5632 局 | 42.2 步/局 | 抽牌率 34.4% | 截斷 0 | 0號位勝率 75% | Q-loss 0.1230 | P-loss 0.1795 | 0.05 秒/局
+已完成第 5664 局 | 49.3 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1171 | P-loss 0.1726 | 0.05 秒/局
+已完成第 5696 局 | 44.1 步/局 | 抽牌率 33.8% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1154 | P-loss 0.1644 | 0.05 秒/局
+已完成第 5728 局 | 45.2 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1191 | P-loss 0.1723 | 0.05 秒/局
+已完成第 5760 局 | 55.6 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1163 | P-loss 0.1462 | 0.06 秒/局
+已完成第 5792 局 | 57.2 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1284 | P-loss 0.2076 | 0.06 秒/局
+已完成第 5824 局 | 49.5 步/局 | 抽牌率 36.8% | 截斷 0 | 0號位勝率 81% | Q-loss 0.1280 | P-loss 0.1764 | 0.06 秒/局
+已完成第 5856 局 | 55.0 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1187 | P-loss 0.1686 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (116353 筆, 4.9 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 5888 局 | 63.8 步/局 | 抽牌率 39.4% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1214 | P-loss 0.1656 | 0.06 秒/局
+已完成第 5920 局 | 52.6 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1152 | P-loss 0.1507 | 0.06 秒/局
+已完成第 5952 局 | 54.6 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1156 | P-loss 0.1731 | 0.06 秒/局
+已完成第 5984 局 | 46.2 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1125 | P-loss 0.1540 | 0.06 秒/局
+已完成第 6016 局 | 65.1 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1122 | P-loss 0.1819 | 0.06 秒/局
+已完成第 6048 局 | 51.0 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1140 | P-loss 0.1783 | 0.06 秒/局
+已完成第 6080 局 | 63.0 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1216 | P-loss 0.1852 | 0.06 秒/局
+已完成第 6112 局 | 61.8 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1172 | P-loss 0.1553 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (118061 筆, 4.9 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 6144 局 | 45.5 步/局 | 抽牌率 34.6% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1263 | P-loss 0.1724 | 0.06 秒/局
+已完成第 6176 局 | 59.5 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1199 | P-loss 0.1759 | 0.06 秒/局
+已完成第 6208 局 | 43.6 步/局 | 抽牌率 35.1% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1278 | P-loss 0.1701 | 0.06 秒/局
+已完成第 6240 局 | 42.5 步/局 | 抽牌率 34.0% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1269 | P-loss 0.1880 | 0.06 秒/局
+已完成第 6272 局 | 57.4 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1186 | P-loss 0.1711 | 0.06 秒/局
+已完成第 6304 局 | 45.4 步/局 | 抽牌率 35.2% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1183 | P-loss 0.1639 | 0.06 秒/局
+已完成第 6336 局 | 54.6 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 72% | Q-loss 0.1224 | P-loss 0.1677 | 0.06 秒/局
+已完成第 6368 局 | 69.1 步/局 | 抽牌率 38.8% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1219 | P-loss 0.1811 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (119857 筆, 5.0 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 6400 局 | 60.3 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1172 | P-loss 0.1883 | 0.06 秒/局
+已完成第 6432 局 | 58.3 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1219 | P-loss 0.1769 | 0.06 秒/局
+已完成第 6464 局 | 53.7 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1188 | P-loss 0.1609 | 0.06 秒/局
+已完成第 6496 局 | 53.8 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1193 | P-loss 0.1800 | 0.06 秒/局
+已完成第 6528 局 | 58.1 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1204 | P-loss 0.1791 | 0.06 秒/局
+已完成第 6560 局 | 40.3 步/局 | 抽牌率 34.4% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1145 | P-loss 0.1757 | 0.06 秒/局
+已完成第 6592 局 | 60.4 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1197 | P-loss 0.1782 | 0.06 秒/局
+已完成第 6624 局 | 62.7 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1256 | P-loss 0.1768 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (121570 筆, 5.1 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 6656 局 | 43.3 步/局 | 抽牌率 33.5% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1203 | P-loss 0.1972 | 0.06 秒/局
+已完成第 6688 局 | 67.9 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1246 | P-loss 0.1719 | 0.06 秒/局
+已完成第 6720 局 | 55.7 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1228 | P-loss 0.1651 | 0.06 秒/局
+已完成第 6752 局 | 47.7 步/局 | 抽牌率 35.2% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1159 | P-loss 0.1719 | 0.06 秒/局
+已完成第 6784 局 | 44.3 步/局 | 抽牌率 35.4% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1209 | P-loss 0.1912 | 0.06 秒/局
+已完成第 6816 局 | 66.4 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1221 | P-loss 0.1855 | 0.06 秒/局
+已完成第 6848 局 | 45.7 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1189 | P-loss 0.1672 | 0.06 秒/局
+已完成第 6880 局 | 64.2 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1166 | P-loss 0.1919 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (123372 筆, 5.2 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 6912 局 | 52.2 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1201 | P-loss 0.2076 | 0.06 秒/局
+已完成第 6944 局 | 46.9 步/局 | 抽牌率 35.5% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1152 | P-loss 0.1977 | 0.06 秒/局
+已完成第 6976 局 | 62.5 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1196 | P-loss 0.1536 | 0.06 秒/局
+已完成第 7008 局 | 52.8 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 34% | Q-loss 0.1261 | P-loss 0.1849 | 0.06 秒/局
+已完成第 7040 局 | 49.1 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1224 | P-loss 0.1684 | 0.06 秒/局
+已完成第 7072 局 | 37.3 步/局 | 抽牌率 32.4% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1215 | P-loss 0.1803 | 0.06 秒/局
+已完成第 7104 局 | 49.1 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1190 | P-loss 0.1572 | 0.06 秒/局
+已完成第 7136 局 | 61.9 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1154 | P-loss 0.1894 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (125007 筆, 5.2 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 7168 局 | 39.9 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1199 | P-loss 0.1669 | 0.06 秒/局
+已完成第 7200 局 | 46.7 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1176 | P-loss 0.1748 | 0.06 秒/局
+已完成第 7232 局 | 45.6 步/局 | 抽牌率 35.3% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1200 | P-loss 0.2005 | 0.06 秒/局
+已完成第 7264 局 | 52.7 步/局 | 抽牌率 36.2% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1176 | P-loss 0.1653 | 0.06 秒/局
+已完成第 7296 局 | 59.8 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1213 | P-loss 0.1617 | 0.06 秒/局
+已完成第 7328 局 | 48.8 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1242 | P-loss 0.1598 | 0.06 秒/局
+已完成第 7360 局 | 52.7 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1229 | P-loss 0.1646 | 0.06 秒/局
+已完成第 7392 局 | 56.2 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1218 | P-loss 0.1730 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (126735 筆, 5.3 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 7424 局 | 59.3 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1237 | P-loss 0.1779 | 0.06 秒/局
+已完成第 7456 局 | 62.4 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1270 | P-loss 0.1776 | 0.06 秒/局
+已完成第 7488 局 | 48.3 步/局 | 抽牌率 35.5% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1216 | P-loss 0.1677 | 0.06 秒/局
+已完成第 7520 局 | 42.7 步/局 | 抽牌率 34.9% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1225 | P-loss 0.1629 | 0.06 秒/局
+已完成第 7552 局 | 62.2 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1161 | P-loss 0.1829 | 0.06 秒/局
+已完成第 7584 局 | 44.2 步/局 | 抽牌率 35.4% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1223 | P-loss 0.1841 | 0.06 秒/局
+已完成第 7616 局 | 59.1 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1272 | P-loss 0.1668 | 0.06 秒/局
+已完成第 7648 局 | 72.8 步/局 | 抽牌率 39.4% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1163 | P-loss 0.1769 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (128513 筆, 5.4 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 7680 局 | 40.5 步/局 | 抽牌率 33.7% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1237 | P-loss 0.1664 | 0.06 秒/局
+已完成第 7712 局 | 50.0 步/局 | 抽牌率 35.3% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1235 | P-loss 0.1824 | 0.06 秒/局
+已完成第 7744 局 | 44.6 步/局 | 抽牌率 34.4% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1285 | P-loss 0.1843 | 0.06 秒/局
+已完成第 7776 局 | 45.1 步/局 | 抽牌率 34.5% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1254 | P-loss 0.1864 | 0.06 秒/局
+已完成第 7808 局 | 44.8 步/局 | 抽牌率 34.4% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1183 | P-loss 0.1786 | 0.06 秒/局
+已完成第 7840 局 | 57.5 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1209 | P-loss 0.1764 | 0.06 秒/局
+已完成第 7872 局 | 53.2 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1232 | P-loss 0.1580 | 0.06 秒/局
+已完成第 7904 局 | 49.4 步/局 | 抽牌率 34.4% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1261 | P-loss 0.1522 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (130090 筆, 5.5 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 7936 局 | 38.6 步/局 | 抽牌率 34.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1230 | P-loss 0.1471 | 0.06 秒/局
+已完成第 7968 局 | 49.7 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1275 | P-loss 0.1914 | 0.06 秒/局
+已完成第 8000 局 | 50.9 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1314 | P-loss 0.1762 | 0.06 秒/局
+已完成第 8032 局 | 56.7 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1254 | P-loss 0.1849 | 0.06 秒/局
+已完成第 8064 局 | 72.1 步/局 | 抽牌率 39.2% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1235 | P-loss 0.1981 | 0.06 秒/局
+已完成第 8096 局 | 50.6 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1236 | P-loss 0.1645 | 0.06 秒/局
+已完成第 8128 局 | 58.4 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1231 | P-loss 0.2038 | 0.06 秒/局
+已完成第 8160 局 | 46.8 步/局 | 抽牌率 35.1% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1277 | P-loss 0.1789 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (131927 筆, 5.5 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 8192 局 | 40.7 步/局 | 抽牌率 33.3% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1342 | P-loss 0.1793 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (131927 筆, 5.5 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已成功載入 Q-Network 權重: q_network_v1.bin
+已成功從 ReplayBuffer_v1.bin 讀取 ReplayBuffer (64000 筆, 其中 0 筆受保護)
+已成功從 ReservoirMemory_v1.bin 讀取 ReservoirMemory (131927 筆)
+已成功載入 Policy-Network 權重: p_network_v1.bin
+使用裝置: GPU (NVIDIA GeForce RTX 3050 Laptop GPU)
+開始進行 8192 局自我對戰
+已完成第 32 局 | 55.9 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1267 | P-loss 0.1620 | 0.11 秒/局
+已完成第 64 局 | 61.3 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1265 | P-loss 0.1694 | 0.08 秒/局
+已完成第 96 局 | 60.3 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1337 | P-loss 0.1497 | 0.07 秒/局
+已完成第 128 局 | 60.4 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1356 | P-loss 0.1753 | 0.06 秒/局
+已完成第 160 局 | 78.7 步/局 | 抽牌率 40.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1254 | P-loss 0.2058 | 0.06 秒/局
+已完成第 192 局 | 49.2 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1246 | P-loss 0.1582 | 0.06 秒/局
+已完成第 224 局 | 46.1 步/局 | 抽牌率 34.9% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1256 | P-loss 0.1553 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (133475 筆, 5.6 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 256 局 | 54.5 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1252 | P-loss 0.2008 | 0.06 秒/局
+已完成第 288 局 | 42.4 步/局 | 抽牌率 33.6% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1224 | P-loss 0.2236 | 0.06 秒/局
+已完成第 320 局 | 54.3 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1209 | P-loss 0.1797 | 0.06 秒/局
+已完成第 352 局 | 65.0 步/局 | 抽牌率 38.7% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1181 | P-loss 0.1791 | 0.06 秒/局
+已完成第 384 局 | 48.0 步/局 | 抽牌率 35.1% | 截斷 0 | 0號位勝率 34% | Q-loss 0.1221 | P-loss 0.1960 | 0.06 秒/局
+已完成第 416 局 | 54.4 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1258 | P-loss 0.1914 | 0.06 秒/局
+已完成第 448 局 | 44.7 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1337 | P-loss 0.1737 | 0.06 秒/局
+已完成第 480 局 | 61.4 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1332 | P-loss 0.1907 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (134922 筆, 5.7 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 512 局 | 53.0 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1268 | P-loss 0.2140 | 0.06 秒/局
+已完成第 544 局 | 56.7 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 28% | Q-loss 0.1176 | P-loss 0.1904 | 0.06 秒/局
+已完成第 576 局 | 59.0 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1287 | P-loss 0.2067 | 0.06 秒/局
+已完成第 608 局 | 61.1 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1265 | P-loss 0.1802 | 0.06 秒/局
+已完成第 640 局 | 57.8 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1265 | P-loss 0.1558 | 0.06 秒/局
+已完成第 672 局 | 44.4 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1360 | P-loss 0.1641 | 0.06 秒/局
+已完成第 704 局 | 57.2 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1293 | P-loss 0.1876 | 0.06 秒/局
+已完成第 736 局 | 44.9 步/局 | 抽牌率 34.7% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1209 | P-loss 0.1996 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (136477 筆, 5.7 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 768 局 | 72.0 步/局 | 抽牌率 38.8% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1262 | P-loss 0.1942 | 0.06 秒/局
+已完成第 800 局 | 51.4 步/局 | 抽牌率 36.1% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1370 | P-loss 0.1818 | 0.06 秒/局
+已完成第 832 局 | 56.8 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1303 | P-loss 0.1906 | 0.06 秒/局
+已完成第 864 局 | 71.3 步/局 | 抽牌率 39.5% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1309 | P-loss 0.1738 | 0.06 秒/局
+已完成第 896 局 | 55.2 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1254 | P-loss 0.1864 | 0.06 秒/局
+已完成第 928 局 | 77.4 步/局 | 抽牌率 39.4% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1282 | P-loss 0.1822 | 0.06 秒/局
+已完成第 960 局 | 56.2 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1297 | P-loss 0.1951 | 0.06 秒/局
+已完成第 992 局 | 51.7 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1195 | P-loss 0.1763 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (138028 筆, 5.8 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 1024 局 | 41.7 步/局 | 抽牌率 34.8% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1247 | P-loss 0.1542 | 0.06 秒/局
+已完成第 1056 局 | 61.0 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1244 | P-loss 0.1733 | 0.06 秒/局
+已完成第 1088 局 | 47.8 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1264 | P-loss 0.1686 | 0.06 秒/局
+已完成第 1120 局 | 66.2 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1267 | P-loss 0.1721 | 0.06 秒/局
+已完成第 1152 局 | 46.5 步/局 | 抽牌率 34.2% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1307 | P-loss 0.1697 | 0.06 秒/局
+已完成第 1184 局 | 55.6 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1255 | P-loss 0.1741 | 0.06 秒/局
+已完成第 1216 局 | 65.8 步/局 | 抽牌率 38.9% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1274 | P-loss 0.1619 | 0.06 秒/局
+已完成第 1248 局 | 61.7 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1250 | P-loss 0.2134 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (139647 筆, 5.9 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 1280 局 | 56.2 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1258 | P-loss 0.1470 | 0.06 秒/局
+已完成第 1312 局 | 58.9 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1348 | P-loss 0.1744 | 0.06 秒/局
+已完成第 1344 局 | 51.7 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1314 | P-loss 0.2081 | 0.06 秒/局
+已完成第 1376 局 | 51.3 步/局 | 抽牌率 35.7% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1295 | P-loss 0.1797 | 0.06 秒/局
+已完成第 1408 局 | 63.3 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1254 | P-loss 0.1846 | 0.06 秒/局
+已完成第 1440 局 | 51.9 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1288 | P-loss 0.1513 | 0.06 秒/局
+已完成第 1472 局 | 46.4 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1316 | P-loss 0.1908 | 0.06 秒/局
+已完成第 1504 局 | 52.8 步/局 | 抽牌率 35.8% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1198 | P-loss 0.1687 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (141280 筆, 6.0 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 1536 局 | 73.1 步/局 | 抽牌率 39.1% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1272 | P-loss 0.2015 | 0.06 秒/局
+已完成第 1568 局 | 58.0 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1383 | P-loss 0.1735 | 0.06 秒/局
+已完成第 1600 局 | 54.5 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1315 | P-loss 0.1578 | 0.06 秒/局
+已完成第 1632 局 | 50.4 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1242 | P-loss 0.1994 | 0.06 秒/局
+已完成第 1664 局 | 63.7 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1286 | P-loss 0.1886 | 0.06 秒/局
+已完成第 1696 局 | 61.2 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1220 | P-loss 0.1698 | 0.06 秒/局
+已完成第 1728 局 | 57.1 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1205 | P-loss 0.1825 | 0.06 秒/局
+已完成第 1760 局 | 58.7 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1202 | P-loss 0.1854 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (142852 筆, 6.0 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 1792 局 | 50.0 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1245 | P-loss 0.1837 | 0.06 秒/局
+已完成第 1824 局 | 63.3 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1280 | P-loss 0.1622 | 0.06 秒/局
+已完成第 1856 局 | 54.9 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1299 | P-loss 0.1803 | 0.06 秒/局
+已完成第 1888 局 | 53.3 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1305 | P-loss 0.1834 | 0.06 秒/局
+已完成第 1920 局 | 52.2 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1222 | P-loss 0.1684 | 0.06 秒/局
+已完成第 1952 局 | 56.0 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1288 | P-loss 0.1942 | 0.06 秒/局
+已完成第 1984 局 | 59.3 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1290 | P-loss 0.1442 | 0.06 秒/局
+已完成第 2016 局 | 54.1 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1246 | P-loss 0.1947 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (144432 筆, 6.1 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 2048 局 | 69.8 步/局 | 抽牌率 39.2% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1192 | P-loss 0.1796 | 0.06 秒/局
+已完成第 2080 局 | 52.8 步/局 | 抽牌率 34.9% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1320 | P-loss 0.1585 | 0.06 秒/局
+已完成第 2112 局 | 47.5 步/局 | 抽牌率 35.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1314 | P-loss 0.1800 | 0.06 秒/局
+已完成第 2144 局 | 55.8 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 34% | Q-loss 0.1292 | P-loss 0.1855 | 0.06 秒/局
+已完成第 2176 局 | 50.3 步/局 | 抽牌率 35.4% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1329 | P-loss 0.1616 | 0.06 秒/局
+已完成第 2208 局 | 65.9 步/局 | 抽牌率 39.3% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1325 | P-loss 0.1804 | 0.06 秒/局
+已完成第 2240 局 | 62.0 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1278 | P-loss 0.1815 | 0.06 秒/局
+已完成第 2272 局 | 63.1 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1278 | P-loss 0.1702 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (146148 筆, 6.2 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 2304 局 | 54.6 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1291 | P-loss 0.1668 | 0.06 秒/局
+已完成第 2336 局 | 52.8 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1294 | P-loss 0.1856 | 0.06 秒/局
+已完成第 2368 局 | 61.2 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1363 | P-loss 0.1865 | 0.06 秒/局
+已完成第 2400 局 | 54.8 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 34% | Q-loss 0.1270 | P-loss 0.1879 | 0.06 秒/局
+已完成第 2432 局 | 52.9 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1297 | P-loss 0.1720 | 0.06 秒/局
+已完成第 2464 局 | 61.1 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1249 | P-loss 0.1756 | 0.06 秒/局
+已完成第 2496 局 | 43.8 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1218 | P-loss 0.1779 | 0.06 秒/局
+已完成第 2528 局 | 47.1 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1199 | P-loss 0.2194 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (147646 筆, 6.2 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 2560 局 | 57.6 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1195 | P-loss 0.2002 | 0.06 秒/局
+已完成第 2592 局 | 50.1 步/局 | 抽牌率 35.2% | 截斷 0 | 0號位勝率 34% | Q-loss 0.1249 | P-loss 0.1793 | 0.06 秒/局
+已完成第 2624 局 | 77.5 步/局 | 抽牌率 39.0% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1249 | P-loss 0.1857 | 0.06 秒/局
+已完成第 2656 局 | 55.4 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1266 | P-loss 0.1711 | 0.06 秒/局
+已完成第 2688 局 | 69.6 步/局 | 抽牌率 39.7% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1239 | P-loss 0.1748 | 0.06 秒/局
+已完成第 2720 局 | 49.0 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1211 | P-loss 0.1700 | 0.06 秒/局
+已完成第 2752 局 | 67.0 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1276 | P-loss 0.1492 | 0.06 秒/局
+已完成第 2784 局 | 75.9 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1280 | P-loss 0.1662 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (149531 筆, 6.3 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 2816 局 | 55.4 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1249 | P-loss 0.2168 | 0.06 秒/局
+已完成第 2848 局 | 52.0 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1241 | P-loss 0.1718 | 0.06 秒/局
+已完成第 2880 局 | 54.3 步/局 | 抽牌率 36.8% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1300 | P-loss 0.2108 | 0.06 秒/局
+已完成第 2912 局 | 46.1 步/局 | 抽牌率 35.8% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1297 | P-loss 0.1870 | 0.06 秒/局
+已完成第 2944 局 | 68.9 步/局 | 抽牌率 38.9% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1265 | P-loss 0.1726 | 0.06 秒/局
+已完成第 2976 局 | 63.2 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1278 | P-loss 0.1694 | 0.06 秒/局
+已完成第 3008 局 | 60.5 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1320 | P-loss 0.1776 | 0.06 秒/局
+已完成第 3040 局 | 69.5 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1305 | P-loss 0.2024 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (151174 筆, 6.4 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 3072 局 | 56.2 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1320 | P-loss 0.1785 | 0.06 秒/局
+已完成第 3104 局 | 55.2 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1273 | P-loss 0.1895 | 0.06 秒/局
+已完成第 3136 局 | 44.2 步/局 | 抽牌率 34.4% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1235 | P-loss 0.2018 | 0.06 秒/局
+已完成第 3168 局 | 52.6 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1259 | P-loss 0.1733 | 0.06 秒/局
+已完成第 3200 局 | 62.0 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1255 | P-loss 0.1780 | 0.06 秒/局
+已完成第 3232 局 | 68.4 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1242 | P-loss 0.1712 | 0.06 秒/局
+已完成第 3264 局 | 50.6 步/局 | 抽牌率 36.2% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1211 | P-loss 0.1856 | 0.06 秒/局
+已完成第 3296 局 | 60.9 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1280 | P-loss 0.1812 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (152866 筆, 6.5 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 3328 局 | 57.2 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1269 | P-loss 0.1927 | 0.06 秒/局
+已完成第 3360 局 | 51.7 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1305 | P-loss 0.1924 | 0.06 秒/局
+已完成第 3392 局 | 58.4 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1312 | P-loss 0.2128 | 0.06 秒/局
+已完成第 3424 局 | 52.5 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1388 | P-loss 0.1588 | 0.06 秒/局
+已完成第 3456 局 | 54.0 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1321 | P-loss 0.1510 | 0.06 秒/局
+已完成第 3488 局 | 62.3 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1364 | P-loss 0.1861 | 0.06 秒/局
+已完成第 3520 局 | 56.2 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1241 | P-loss 0.1668 | 0.06 秒/局
+已完成第 3552 局 | 57.4 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1363 | P-loss 0.2032 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (154488 筆, 6.5 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 3584 局 | 46.2 步/局 | 抽牌率 35.5% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1296 | P-loss 0.1884 | 0.06 秒/局
+已完成第 3616 局 | 61.2 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1370 | P-loss 0.1838 | 0.06 秒/局
+已完成第 3648 局 | 50.0 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1314 | P-loss 0.1753 | 0.06 秒/局
+已完成第 3680 局 | 59.2 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1271 | P-loss 0.1770 | 0.06 秒/局
+已完成第 3712 局 | 36.4 步/局 | 抽牌率 31.8% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1307 | P-loss 0.1989 | 0.06 秒/局
+已完成第 3744 局 | 57.3 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1331 | P-loss 0.2037 | 0.06 秒/局
+已完成第 3776 局 | 60.2 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1288 | P-loss 0.2005 | 0.06 秒/局
+已完成第 3808 局 | 45.2 步/局 | 抽牌率 35.5% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1312 | P-loss 0.2160 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (156091 筆, 6.6 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 3840 局 | 48.4 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1313 | P-loss 0.1827 | 0.06 秒/局
+已完成第 3872 局 | 35.9 步/局 | 抽牌率 30.5% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1275 | P-loss 0.1898 | 0.06 秒/局
+已完成第 3904 局 | 52.0 步/局 | 抽牌率 35.8% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1293 | P-loss 0.1713 | 0.06 秒/局
+已完成第 3936 局 | 55.5 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1297 | P-loss 0.1755 | 0.06 秒/局
+已完成第 3968 局 | 52.0 步/局 | 抽牌率 36.1% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1278 | P-loss 0.1679 | 0.06 秒/局
+已完成第 4000 局 | 52.4 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1326 | P-loss 0.2039 | 0.06 秒/局
+已完成第 4032 局 | 54.2 步/局 | 抽牌率 36.2% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1340 | P-loss 0.1775 | 0.06 秒/局
+已完成第 4064 局 | 51.1 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 34% | Q-loss 0.1296 | P-loss 0.2078 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (157651 筆, 6.7 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 4096 局 | 47.9 步/局 | 抽牌率 36.2% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1305 | P-loss 0.1737 | 0.06 秒/局
+已完成第 4128 局 | 43.8 步/局 | 抽牌率 33.2% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1302 | P-loss 0.1862 | 0.06 秒/局
+已完成第 4160 局 | 59.5 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1282 | P-loss 0.1874 | 0.06 秒/局
+已完成第 4192 局 | 69.4 步/局 | 抽牌率 39.1% | 截斷 0 | 0號位勝率 34% | Q-loss 0.1318 | P-loss 0.1992 | 0.06 秒/局
+已完成第 4224 局 | 60.9 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1362 | P-loss 0.1721 | 0.06 秒/局
+已完成第 4256 局 | 58.3 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1358 | P-loss 0.1839 | 0.06 秒/局
+已完成第 4288 局 | 60.2 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1362 | P-loss 0.1999 | 0.06 秒/局
+已完成第 4320 局 | 42.0 步/局 | 抽牌率 33.7% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1336 | P-loss 0.1767 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (159356 筆, 6.7 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 4352 局 | 56.6 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1359 | P-loss 0.1955 | 0.06 秒/局
+已完成第 4384 局 | 61.2 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1325 | P-loss 0.1445 | 0.06 秒/局
+已完成第 4416 局 | 65.8 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1355 | P-loss 0.1633 | 0.06 秒/局
+已完成第 4448 局 | 43.5 步/局 | 抽牌率 34.4% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1307 | P-loss 0.1364 | 0.06 秒/局
+已完成第 4480 局 | 57.4 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1279 | P-loss 0.1646 | 0.06 秒/局
+已完成第 4512 局 | 56.4 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1388 | P-loss 0.1878 | 0.06 秒/局
+已完成第 4544 局 | 63.4 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1399 | P-loss 0.1986 | 0.06 秒/局
+已完成第 4576 局 | 59.1 步/局 | 抽牌率 37.8% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1290 | P-loss 0.1673 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (161033 筆, 6.8 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 4608 局 | 51.3 步/局 | 抽牌率 36.8% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1284 | P-loss 0.2008 | 0.06 秒/局
+已完成第 4640 局 | 85.3 步/局 | 抽牌率 39.7% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1315 | P-loss 0.1820 | 0.06 秒/局
+已完成第 4672 局 | 46.8 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 31% | Q-loss 0.1327 | P-loss 0.1967 | 0.06 秒/局
+已完成第 4704 局 | 44.5 步/局 | 抽牌率 34.7% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1423 | P-loss 0.1954 | 0.06 秒/局
+已完成第 4736 局 | 45.3 步/局 | 抽牌率 35.1% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1332 | P-loss 0.2141 | 0.06 秒/局
+已完成第 4768 局 | 48.2 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1270 | P-loss 0.1997 | 0.06 秒/局
+已完成第 4800 局 | 58.8 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1363 | P-loss 0.1906 | 0.06 秒/局
+已完成第 4832 局 | 53.2 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 78% | Q-loss 0.1470 | P-loss 0.2029 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (162799 筆, 6.9 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 4864 局 | 80.7 步/局 | 抽牌率 39.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1346 | P-loss 0.1855 | 0.06 秒/局
+已完成第 4896 局 | 60.5 步/局 | 抽牌率 38.6% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1410 | P-loss 0.1984 | 0.06 秒/局
+已完成第 4928 局 | 57.3 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1376 | P-loss 0.1916 | 0.06 秒/局
+已完成第 4960 局 | 49.6 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1336 | P-loss 0.2001 | 0.06 秒/局
+已完成第 4992 局 | 57.5 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1382 | P-loss 0.1817 | 0.06 秒/局
+已完成第 5024 局 | 42.0 步/局 | 抽牌率 34.2% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1317 | P-loss 0.2034 | 0.06 秒/局
+已完成第 5056 局 | 40.4 步/局 | 抽牌率 32.5% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1436 | P-loss 0.1999 | 0.06 秒/局
+已完成第 5088 局 | 47.8 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1324 | P-loss 0.2050 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (164306 筆, 7.0 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 5120 局 | 47.0 步/局 | 抽牌率 35.5% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1367 | P-loss 0.1835 | 0.06 秒/局
+已完成第 5152 局 | 56.8 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1446 | P-loss 0.1745 | 0.06 秒/局
+已完成第 5184 局 | 51.1 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1418 | P-loss 0.1667 | 0.06 秒/局
+已完成第 5216 局 | 58.5 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1377 | P-loss 0.1982 | 0.06 秒/局
+已完成第 5248 局 | 61.2 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1417 | P-loss 0.1879 | 0.06 秒/局
+已完成第 5280 局 | 51.7 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1404 | P-loss 0.1988 | 0.06 秒/局
+已完成第 5312 局 | 43.0 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1331 | P-loss 0.1605 | 0.06 秒/局
+已完成第 5344 局 | 53.6 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1361 | P-loss 0.1910 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (166020 筆, 7.0 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 5376 局 | 63.6 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1312 | P-loss 0.1912 | 0.06 秒/局
+已完成第 5408 局 | 42.9 步/局 | 抽牌率 33.7% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1337 | P-loss 0.1874 | 0.06 秒/局
+已完成第 5440 局 | 44.1 步/局 | 抽牌率 35.8% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1303 | P-loss 0.1795 | 0.06 秒/局
+已完成第 5472 局 | 40.8 步/局 | 抽牌率 34.5% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1315 | P-loss 0.1664 | 0.06 秒/局
+已完成第 5504 局 | 44.2 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1364 | P-loss 0.1751 | 0.06 秒/局
+已完成第 5536 局 | 67.5 步/局 | 抽牌率 39.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1356 | P-loss 0.2069 | 0.06 秒/局
+已完成第 5568 局 | 61.2 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1355 | P-loss 0.1879 | 0.06 秒/局
+已完成第 5600 局 | 57.3 步/局 | 抽牌率 37.0% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1331 | P-loss 0.1928 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (167719 筆, 7.1 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 5632 局 | 64.0 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1343 | P-loss 0.1784 | 0.06 秒/局
+已完成第 5664 局 | 45.3 步/局 | 抽牌率 35.0% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1358 | P-loss 0.1967 | 0.06 秒/局
+已完成第 5696 局 | 62.2 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1439 | P-loss 0.1893 | 0.06 秒/局
+已完成第 5728 局 | 72.2 步/局 | 抽牌率 39.5% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1460 | P-loss 0.1863 | 0.06 秒/局
+已完成第 5760 局 | 54.7 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1442 | P-loss 0.1715 | 0.06 秒/局
+已完成第 5792 局 | 60.4 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1446 | P-loss 0.2039 | 0.06 秒/局
+已完成第 5824 局 | 56.5 步/局 | 抽牌率 37.4% | 截斷 0 | 0號位勝率 34% | Q-loss 0.1482 | P-loss 0.1776 | 0.06 秒/局
+已完成第 5856 局 | 56.3 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1435 | P-loss 0.1958 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (169460 筆, 7.2 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 5888 局 | 48.2 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1469 | P-loss 0.1831 | 0.06 秒/局
+已完成第 5920 局 | 63.7 步/局 | 抽牌率 38.4% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1384 | P-loss 0.2012 | 0.06 秒/局
+已完成第 5952 局 | 51.3 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1287 | P-loss 0.1587 | 0.06 秒/局
+已完成第 5984 局 | 55.7 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1360 | P-loss 0.1766 | 0.06 秒/局
+已完成第 6016 局 | 70.3 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1316 | P-loss 0.1908 | 0.06 秒/局
+已完成第 6048 局 | 59.4 步/局 | 抽牌率 37.7% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1401 | P-loss 0.2038 | 0.06 秒/局
+已完成第 6080 局 | 51.0 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1411 | P-loss 0.1860 | 0.06 秒/局
+已完成第 6112 局 | 52.0 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1445 | P-loss 0.1853 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (171251 筆, 7.3 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 6144 局 | 43.3 步/局 | 抽牌率 34.8% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1374 | P-loss 0.1797 | 0.06 秒/局
+已完成第 6176 局 | 54.5 步/局 | 抽牌率 36.4% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1391 | P-loss 0.1867 | 0.06 秒/局
+已完成第 6208 局 | 61.7 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1337 | P-loss 0.2046 | 0.06 秒/局
+已完成第 6240 局 | 59.7 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1338 | P-loss 0.1811 | 0.06 秒/局
+已完成第 6272 局 | 63.5 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1358 | P-loss 0.1714 | 0.06 秒/局
+已完成第 6304 局 | 50.7 步/局 | 抽牌率 35.3% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1438 | P-loss 0.2060 | 0.06 秒/局
+已完成第 6336 局 | 47.4 步/局 | 抽牌率 35.5% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1396 | P-loss 0.2163 | 0.06 秒/局
+已完成第 6368 局 | 58.6 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1386 | P-loss 0.1732 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (173098 筆, 7.3 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 6400 局 | 52.0 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1433 | P-loss 0.1972 | 0.06 秒/局
+已完成第 6432 局 | 61.1 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1447 | P-loss 0.2097 | 0.06 秒/局
+已完成第 6464 局 | 49.2 步/局 | 抽牌率 36.8% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1492 | P-loss 0.1682 | 0.06 秒/局
+已完成第 6496 局 | 58.2 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1372 | P-loss 0.1910 | 0.06 秒/局
+已完成第 6528 局 | 68.3 步/局 | 抽牌率 39.3% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1404 | P-loss 0.1889 | 0.06 秒/局
+已完成第 6560 局 | 54.4 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1451 | P-loss 0.1569 | 0.06 秒/局
+已完成第 6592 局 | 51.8 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1445 | P-loss 0.2165 | 0.06 秒/局
+已完成第 6624 局 | 46.7 步/局 | 抽牌率 35.4% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1356 | P-loss 0.2214 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (174900 筆, 7.4 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 6656 局 | 63.8 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1391 | P-loss 0.1651 | 0.06 秒/局
+已完成第 6688 局 | 65.2 步/局 | 抽牌率 37.2% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1391 | P-loss 0.1844 | 0.06 秒/局
+已完成第 6720 局 | 56.2 步/局 | 抽牌率 36.9% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1470 | P-loss 0.1961 | 0.06 秒/局
+已完成第 6752 局 | 52.7 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1436 | P-loss 0.1815 | 0.06 秒/局
+已完成第 6784 局 | 58.4 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1429 | P-loss 0.1897 | 0.06 秒/局
+已完成第 6816 局 | 53.7 步/局 | 抽牌率 37.9% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1441 | P-loss 0.1768 | 0.06 秒/局
+已完成第 6848 局 | 55.7 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1335 | P-loss 0.1997 | 0.06 秒/局
+已完成第 6880 局 | 55.2 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1311 | P-loss 0.2113 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (176754 筆, 7.5 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 6912 局 | 51.4 步/局 | 抽牌率 36.1% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1401 | P-loss 0.1762 | 0.06 秒/局
+已完成第 6944 局 | 51.2 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 62% | Q-loss 0.1377 | P-loss 0.1798 | 0.06 秒/局
+已完成第 6976 局 | 54.2 步/局 | 抽牌率 36.1% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1390 | P-loss 0.1982 | 0.06 秒/局
+已完成第 7008 局 | 73.3 步/局 | 抽牌率 39.8% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1384 | P-loss 0.1991 | 0.06 秒/局
+已完成第 7040 局 | 40.9 步/局 | 抽牌率 33.2% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1406 | P-loss 0.1709 | 0.06 秒/局
+已完成第 7072 局 | 50.9 步/局 | 抽牌率 36.2% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1435 | P-loss 0.1901 | 0.06 秒/局
+已完成第 7104 局 | 62.8 步/局 | 抽牌率 38.0% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1487 | P-loss 0.1776 | 0.06 秒/局
+已完成第 7136 局 | 56.2 步/局 | 抽牌率 37.6% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1390 | P-loss 0.1602 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (178537 筆, 7.6 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 7168 局 | 55.0 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 53% | Q-loss 0.1431 | P-loss 0.1810 | 0.06 秒/局
+已完成第 7200 局 | 61.4 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1381 | P-loss 0.1969 | 0.06 秒/局
+已完成第 7232 局 | 42.1 步/局 | 抽牌率 34.4% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1326 | P-loss 0.1693 | 0.06 秒/局
+已完成第 7264 局 | 55.8 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1439 | P-loss 0.1722 | 0.06 秒/局
+已完成第 7296 局 | 50.3 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1412 | P-loss 0.1745 | 0.06 秒/局
+已完成第 7328 局 | 62.5 步/局 | 抽牌率 39.1% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1470 | P-loss 0.2370 | 0.06 秒/局
+已完成第 7360 局 | 50.2 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1333 | P-loss 0.1905 | 0.06 秒/局
+已完成第 7392 局 | 46.8 步/局 | 抽牌率 34.8% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1351 | P-loss 0.1849 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (180187 筆, 7.7 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 7424 局 | 48.8 步/局 | 抽牌率 34.7% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1370 | P-loss 0.1913 | 0.06 秒/局
+已完成第 7456 局 | 50.2 步/局 | 抽牌率 36.0% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1325 | P-loss 0.1859 | 0.06 秒/局
+已完成第 7488 局 | 49.6 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 75% | Q-loss 0.1270 | P-loss 0.1780 | 0.06 秒/局
+已完成第 7520 局 | 47.4 步/局 | 抽牌率 37.1% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1360 | P-loss 0.1738 | 0.06 秒/局
+已完成第 7552 局 | 60.8 步/局 | 抽牌率 37.5% | 截斷 0 | 0號位勝率 69% | Q-loss 0.1326 | P-loss 0.1904 | 0.06 秒/局
+已完成第 7584 局 | 47.8 步/局 | 抽牌率 35.6% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1367 | P-loss 0.2033 | 0.06 秒/局
+已完成第 7616 局 | 51.8 步/局 | 抽牌率 36.6% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1463 | P-loss 0.1695 | 0.06 秒/局
+已完成第 7648 局 | 44.3 步/局 | 抽牌率 34.3% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1362 | P-loss 0.1840 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (181993 筆, 7.7 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 7680 局 | 73.4 步/局 | 抽牌率 38.8% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1328 | P-loss 0.1871 | 0.06 秒/局
+已完成第 7712 局 | 51.5 步/局 | 抽牌率 35.9% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1400 | P-loss 0.1938 | 0.06 秒/局
+已完成第 7744 局 | 52.6 步/局 | 抽牌率 35.5% | 截斷 0 | 0號位勝率 56% | Q-loss 0.1469 | P-loss 0.2163 | 0.06 秒/局
+已完成第 7776 局 | 59.6 步/局 | 抽牌率 37.3% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1374 | P-loss 0.1878 | 0.06 秒/局
+已完成第 7808 局 | 58.3 步/局 | 抽牌率 36.5% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1325 | P-loss 0.1995 | 0.06 秒/局
+已完成第 7840 局 | 55.5 步/局 | 抽牌率 36.3% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1380 | P-loss 0.1992 | 0.06 秒/局
+已完成第 7872 局 | 65.9 步/局 | 抽牌率 38.3% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1343 | P-loss 0.1739 | 0.06 秒/局
+已完成第 7904 局 | 54.9 步/局 | 抽牌率 36.2% | 截斷 0 | 0號位勝率 72% | Q-loss 0.1339 | P-loss 0.1753 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (183853 筆, 7.8 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 7936 局 | 54.8 步/局 | 抽牌率 36.7% | 截斷 0 | 0號位勝率 59% | Q-loss 0.1338 | P-loss 0.2060 | 0.06 秒/局
+已完成第 7968 局 | 67.9 步/局 | 抽牌率 39.2% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1292 | P-loss 0.1968 | 0.06 秒/局
+已完成第 8000 局 | 47.2 步/局 | 抽牌率 35.2% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1397 | P-loss 0.1959 | 0.06 秒/局
+已完成第 8032 局 | 65.8 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 66% | Q-loss 0.1421 | P-loss 0.1961 | 0.06 秒/局
+已完成第 8064 局 | 61.7 步/局 | 抽牌率 38.7% | 截斷 0 | 0號位勝率 44% | Q-loss 0.1404 | P-loss 0.1955 | 0.06 秒/局
+已完成第 8096 局 | 56.9 步/局 | 抽牌率 38.1% | 截斷 0 | 0號位勝率 38% | Q-loss 0.1378 | P-loss 0.1783 | 0.06 秒/局
+已完成第 8128 局 | 60.7 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 47% | Q-loss 0.1384 | P-loss 0.1887 | 0.06 秒/局
+已完成第 8160 局 | 60.9 步/局 | 抽牌率 38.2% | 截斷 0 | 0號位勝率 41% | Q-loss 0.1393 | P-loss 0.1733 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (185844 筆, 7.9 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
+已完成第 8192 局 | 65.5 步/局 | 抽牌率 38.5% | 截斷 0 | 0號位勝率 50% | Q-loss 0.1412 | P-loss 0.1827 | 0.06 秒/局
+ReplayBuffer 已成功儲存至: ReplayBuffer_v1.bin (64000 筆, 6.5 MB, 已壓縮)
+Q-Network 權重已成功儲存至: q_network_v1.bin
+ReservoirMemory 已成功儲存至: ReservoirMemory_v1.bin (185844 筆, 7.9 MB, 已壓縮)
+Policy-Network 權重已成功儲存至: p_network_v1.bin
