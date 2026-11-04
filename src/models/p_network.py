@@ -4,6 +4,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
+from .serialization import save_maybe_compressed
+from .serialization import load_maybe_compressed
 from .device import DEVICE, to_device
 from torch import Tensor
 from core import Card
@@ -50,8 +52,8 @@ class PNetwork(nn.Module):
         return True
 
 class ReservoirMemory:
-    def __init__(self, file_path: str = "ReservoirMemory_v1.bin", capacity: int = 64000) -> None:
-        """ 蓄水池記憶庫 """
+    def __init__(self, file_path: str = "ReservoirMemory_v1.bin", capacity: int = 1280000) -> None:
+        """ 蓄水池記憶庫, 容量預設 640000, 約是 Q 記憶庫的 20 倍, 占用約 930 MB 記憶體 """
         self.file_path: str = file_path
         self.capacity: int = capacity   # 單純目前記憶庫容量
         self.seen_count: int = 0        # 包含被淘汰的舊資料
@@ -103,16 +105,18 @@ class ReservoirMemory:
         assert (self._masks is not None)
         assert (self._actions is not None)
         n: int = self._size
-        torch.save(
+        written, compressed = save_maybe_compressed(
             {
-                "masks":      self._masks[:n],
-                "states":     self._states[:n], 
-                "actions":    self._actions[:n], 
+                # clone(): 只存前 n 筆 (不切片)
+                "masks":      self._masks[:n].clone(),
+                "states":     self._states[:n].clone(), 
+                "actions":    self._actions[:n].clone(), 
                 "seen_count": self.seen_count,
             }, 
             self.file_path
         )
-        print(f"ReservoirMemory 已成功儲存至: {self.file_path} ({n} 筆)")
+        print(f"ReservoirMemory 已成功儲存至: {self.file_path}", end=" ")
+        print(f"({n} 筆, {written/1048576:.1f} MB{', 已壓縮' if compressed else ''})")
 
     def load(self) -> bool:
         """ 讀取二進位訓練資料 """
@@ -120,7 +124,7 @@ class ReservoirMemory:
             print(f"無法從 {self.file_path} 讀取 ReservoirMemory")
             return False
         try:
-            data = torch.load(self.file_path, map_location="cpu", weights_only=True)  # type: ignore
+            data = load_maybe_compressed(self.file_path)  # type: ignore
             states: Tensor = data["states"]  # type: ignore
             n: int = min(int(states.shape[0]), self.capacity)
             self._alloc(int(states.shape[1]))

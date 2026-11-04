@@ -8,7 +8,7 @@ class Rule:
     black_finisher:       bool = False # 黑色牌能否是最後一張
     color_retention:      bool = False # 手上必須留一張顏色牌
     allow_voluntary_draw: bool = True  # 可否主動抽牌
-    
+
     @staticmethod
     def is_valid() -> bool:
         """ 判斷規則之間是否矛盾 """

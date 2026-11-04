@@ -1,8 +1,11 @@
 import os
 import torch
+import random
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
+from .serialization import save_maybe_compressed
+from .serialization import load_maybe_compressed
 from .device import DEVICE, to_device
 from torch import Tensor
 from core import Card
@@ -50,9 +53,9 @@ class QNetwork(nn.Module):
 
 class ReplayBuffer:
     def __init__(self, file_path: str = "ReplayBuffer_v1.bin", capacity: int = 64000) -> None:
-        """ Q-Network 記憶庫"""
-        self._pos: int = 0
+        """ Q-Network 記憶庫 (reservoir memory) """
         self._size: int = 0
+        self._seen: int = 0      # 到目前為止總共 push 過幾筆
         self._protect: int = 0   # 前 _protect 筆資料不會被覆蓋 (示範資料)
         self.capacity: int = capacity
         self.file_path: str = file_path
@@ -77,8 +80,8 @@ class ReplayBuffer:
     def size(self) -> int: return self._size
 
     def freeze(self, max_ratio: float = 0.3) -> None:
-        """ 把目前已有的資料 (示範資料) 保護起來, 之後環形緩衝區只覆蓋其後的資料。
-            否則記憶庫寫滿後, 最舊的示範資料會被自己產生的資料依序蓋掉, CQL 就失去示範者行為這個錨。
+        """ 把目前已有的資料 (示範資料) 保護起來, 之後環形緩衝區只覆蓋其後的資料
+            否則記憶庫寫滿後, 最舊的示範資料會被自己產生的資料依序蓋掉, CQL 就失去示範者行為
             max_ratio: 受保護的資料最多占容量的比例, 避免新資料沒地方寫
         """
         self._protect = min(self._size, int(self.capacity*max_ratio))
@@ -93,7 +96,7 @@ class ReplayBuffer:
         next_mask: Tensor|None = None,
         mask: Tensor|None = None
     ) -> None:
-        """ 將一步遊戲經驗存入記憶庫 (FIFO, 受保護的前 _protect 筆不會被覆蓋) """
+        """ 將一步遊戲經驗存入記憶庫 (蓄水池抽樣, 受保護的前 _protect 筆不會被覆蓋) """
         if (self._states is None): self._alloc(state.shape[0])
         assert (self._states is not None)
         assert (self._actions is not None)
@@ -102,7 +105,14 @@ class ReplayBuffer:
         assert (self._dones is not None)
         assert (self._next_masks is not None)
         assert (self._masks is not None)
-        i: int = self._pos
+        self._seen += 1
+        if (self._size < self.capacity):
+            i: int = self._size
+            self._size += 1
+        else:
+            j: int = random.randrange(self._seen)
+            if (j < self._protect or j >= self.capacity): return
+            i = j
         self._states[i]      = state
         self._actions[i]     = (60 if card is None else card.id)
         self._rewards[i]     = reward
@@ -110,8 +120,6 @@ class ReplayBuffer:
         self._dones[i]       = float(done)
         self._next_masks[i]  = (True if next_mask is None else next_mask)
         self._masks[i]       = (True if mask is None else mask)
-        self._pos  = (i + 1) if (i + 1 < self.capacity) else self._protect
-        self._size = min(self._size + 1, self.capacity)
 
     def sample(self, batch_size: int) -> tuple[Tensor, ...]:
         """ 隨機抽樣一個批次進行訓練: (states, actions, rewards, next_states, dones, next_masks) """
@@ -146,20 +154,22 @@ class ReplayBuffer:
         assert (self._next_masks is not None)
         assert (self._masks is not None)
         n: int = self._size
-        torch.save(
+        written, compressed = save_maybe_compressed(
             {
-                "states": self._states[:n], 
-                "actions": self._actions[:n], 
-                "rewards": self._rewards[:n],
-                "next_states": self._next_states[:n], 
-                "dones": self._dones[:n], 
-                "next_masks": self._next_masks[:n],
-                "masks": self._masks[:n],
+                # clone(): 只存前 n 筆 (不切片)
+                "states": self._states[:n].clone(), 
+                "actions": self._actions[:n].clone(), 
+                "rewards": self._rewards[:n].clone(),
+                "next_states": self._next_states[:n].clone(), 
+                "dones": self._dones[:n].clone(), 
+                "next_masks": self._next_masks[:n].clone(),
+                "masks": self._masks[:n].clone(),
                 "protect": self._protect,
+                "seen": self._seen,
             }, 
             self.file_path
         )
-        print(f"ReplayBuffer 已成功儲存至: {self.file_path} ({n} 筆)")
+        print(f"ReplayBuffer 已成功儲存至: {self.file_path} ({n} 筆, {written/1048576:.1f} MB{', 已壓縮' if compressed else ''})")
 
     def load(self) -> bool:
         """ 讀取二進位訓練資料 """
@@ -167,7 +177,7 @@ class ReplayBuffer:
             print(f"無法從 {self.file_path} 讀取 ReplayBuffer ")
             return False
         try:
-            data = torch.load(self.file_path, map_location="cpu", weights_only=True)  # type: ignore
+            data = load_maybe_compressed(self.file_path)  # type: ignore
             n: int = min(int(data["states"].shape[0]), self.capacity)
             self._alloc(int(data["states"].shape[1]))
             assert (self._states is not None and self._actions is not None and self._rewards is not None)
@@ -183,12 +193,12 @@ class ReplayBuffer:
             print(f"無法讀取 {self.file_path} (舊版格式?)，略過: {str(error).splitlines()[0]}")
             self._states = None
             self._size = 0
-            self._pos = 0
+            self._seen = 0
             self._protect = 0
             return False
         self._size = n
         self._protect = (min(int(data["protect"]), n) if ("protect" in data) else 0)  # type: ignore
-        self._pos  = (n if (n < self.capacity) else self._protect)
+        self._seen = (max(int(data["seen"]), n) if ("seen" in data) else n)  # type: ignore
         print(f"已成功從 {self.file_path} 讀取 ReplayBuffer ({n} 筆, 其中 {self._protect} 筆受保護)")
         return True
 
@@ -208,16 +218,10 @@ class DQNTrainer:
         double_dqn: bool = True,
     ) -> None:
         """ Deep Q-Network Trainer
-            cql_alpha: 
-                保守 Q 學習 (CQL) 的強度。loss 額外加上 alpha*(logsumexp_合法動作 Q - 實際動作 Q), 
-                把資料裡沒有的動作(如示範者從不主動抽牌) 的 Q 往下壓, 避免 max 引用它們的外推值而高估。
-                測試值 0.1~0.3 (rule=True/False 的離線測試中, 0.1~0.3 都穩定, 0.03 太弱, 0 會發散)
-            double_dqn: 
-                用線上網路選動作、目標網路評價。rule=True 的 selfplay(eta=0.85) 不加時約 1200 局發散(抽牌率 95%、全部截斷),
-                加上後 2 個 seed 在 1800/2400 局都穩定 (縮小規模的重現)。
-            q_clip: 目標 Q 值截斷範圍。終局 ±1 加上每步 ±0.025 的 shaping, 折扣後回報不會超過約 ±3.5, 
-                超出代表外推誤差在滾雪球, 截斷可避免發散 (只是安全機制)
+            cql_alpha: CQL 的強度 0.1~0.3 都穩定
+            double_dqn: 用線上網路選動作, 目標網路評價
             update_every: 每新增幾筆資料做一次梯度更新
+            q_clip: 目標 Q 值截斷範圍 (安全機制)
             warmup: 記憶庫至少要有幾筆才開始訓練
         """
         self.gamma: float = gamma
@@ -268,7 +272,7 @@ class DQNTrainer:
             # 只在「下一個決策點的合法動作」中取最大 Q 值, 非法動作的 Q 從未被訓練, 不參與 max
             target_all: Tensor = self.target_net(next_states).masked_fill(~next_masks, float("-inf"))
             if (self.double_dqn):
-                # Double DQN: 用「線上網路」選動作、「目標網路」評價，避免 max 操作把估計噪音系統性地往上選 (過度樂觀)
+                # Double DQN
                 best_actions: Tensor = self.q_net(next_states).masked_fill(~next_masks, float("-inf")).argmax(1, keepdim=True)
                 next_q: Tensor = target_all.gather(1, best_actions).squeeze(1)
             else:
@@ -279,9 +283,10 @@ class DQNTrainer:
         # 計算 Loss (Huber 對離群值比 MSE 穩定)
         loss: Tensor = F.smooth_l1_loss(q_values, target_q_values)
         # CQL: 壓低合法動作中資料沒做過的 Q 
-        # logsumexp 是 max 的平滑版，實際動作的 Q 不受影響
         if (self.cql_alpha > 0):
-            cql: Tensor = (torch.logsumexp(all_q.masked_fill(~masks, float("-inf")), dim=1) - q_values).mean()
+            # logsumexp 是 max 的平滑版
+            logsumexp_Q: Tensor = torch.logsumexp(all_q.masked_fill(~masks, float("-inf")), dim=1)
+            cql: Tensor = (logsumexp_Q - q_values).mean()
             loss = loss + self.cql_alpha*cql
         # 反向傳播與優化更新
         self.optimizer.zero_grad()

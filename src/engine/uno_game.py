@@ -116,13 +116,19 @@ WIN_REWARD:   float = +1.0 # 贏牌
 LOSE_REWARD:  float = -1.0 # 輸牌
 PLAY_REWARD:  float = 0.0  # 打出手牌
 DRAW_PENALTY: float = 0.0  # 主動抽牌
-# 超過 max_steps 仍未分勝負(截斷)時，每位玩家最後一步的獎勵。None 代表舊行為: 丟棄，不給任何訊號。
-# 若丟棄，rule=True 下「一直抽牌拖到截斷」就能避開 -1，變成最安全的策略 (selfplay2.log 的發散就是這個形狀)。
-TIMEOUT_REWARD: float|None = LOSE_REWARD
-# PLAY_REWARD:  float = +0.01  # 打出手牌
-# DRAW_PENALTY: float = -0.01  # 主動抽牌
+TIMEOUT_REWARD: float|None = LOSE_REWARD # 超時直接判輸
 
-# 狀態向量: [牌堆張數(1)|廢牌(60)|手牌(60)|牌頂顏色(4)|牌頂牌面(15)|牌頂效果(1)|累加張數(1)|方向(1)|各家張數(玩家數量)]
+# 狀態向量: [
+#     牌堆張數(1)
+#     廢牌(60)
+#     手牌(60)
+#     牌頂顏色(4)
+#     牌頂牌面(15)
+#     牌頂效果(1)
+#     累加張數(1)
+#     方向(1)
+#     各家張數(玩家數量)
+# ]
 STATE_BASE: int = 1 + 60 + 60 + 4 + 15 + 1 + 1 + 1
 HAND_NORM:  float = 20.0
 
@@ -135,7 +141,7 @@ class Step:
     mask:   Tensor      # 決策前的合法動作遮罩 (61)
     card:   Card|None   # 動作 (None 代表抽牌)
     reward: float       # 即時獎懲 (不含終局 ±1)
-    is_br:  bool        # 此動作是否由最佳回應(Q)模式產生
+    is_br:  bool        # 此動作是否由 Q 模式產生
 
 class UnoGame:
     def __init__(self, agents: list[Agent]) -> None:
@@ -414,7 +420,13 @@ class UnoGame:
                     result.append((step, None))
         return result
 
-    def selfplay(self, num_episodes: int, max_steps: int = 500, log_every: int = 16, save_every: int = 0) -> None:
+    def selfplay(
+        self, 
+        num_episodes: int, 
+        max_steps: int = 500, 
+        log_every: int = 16, 
+        save_every: int = 0
+    ) -> None:
         """ 模型自我對戰訓練 (NFSP)
         max_steps: 單局步數上限, 超過視為截斷
         log_every: 每幾局輸出一次統計

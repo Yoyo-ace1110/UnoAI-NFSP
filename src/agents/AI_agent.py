@@ -9,7 +9,7 @@ import torch
 class AIAgent(Agent):
     def __init__(
         self, 
-        eta: float = 0.85, 
+        eta: float = 0.15, 
         p_network_path: str|None = None, 
         q_network_path: str|None = None, 
         replay_buffer_path: str|None = None, 
@@ -24,7 +24,7 @@ class AIAgent(Agent):
         double_dqn: bool = True,
     ) -> None:
         """ AI Agent --version 1
-            eta: 使用 Q-Network 的機率, 其餘使用 Policy Network
+            eta: 使用 Q-Network 的機率, 其餘使用 Policy Network (原論文是用 0.1)
             inference_only: 只做推論, 不建立 trainer, 不讀記憶庫
             epsilon: 訓練時, Q-Network 的初始隨機探索機率 (ε-greedy)
             epsilon_decay_steps: ε 在 epsilon_decay_steps 內線性衰減
